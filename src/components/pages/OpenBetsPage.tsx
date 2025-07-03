@@ -14,7 +14,11 @@ import {
   Eye,
   ArrowRight,
   Coins,
-  Star
+  Star,
+  Zap,
+  Trophy,
+  CheckCircle,
+  Sparkles
 } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -119,117 +123,140 @@ export const OpenBetsPage = () => {
   };
 
   return (
-    <div className="p-4 space-y-4">
-      {/* Filters */}
-      <div className="space-y-3">
+    <div className="p-4 space-y-5">
+      {/* Header и Filters */}
+      <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <h2 className="text-lg font-semibold">Открытые споры</h2>
-          <Badge variant="secondary" className="bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300">
-            {filteredBets.length} активных
+          <h2 className="text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 text-transparent bg-clip-text">
+            Открытые споры
+          </h2>
+          <Badge className="bg-gradient-to-r from-green-400 to-emerald-500 text-white border-none px-3 py-1 rounded-full">
+            <div className="flex items-center space-x-1">
+              <CheckCircle className="h-3 w-3" />
+              <span>{filteredBets.length} активных</span>
+            </div>
           </Badge>
         </div>
 
-        <div className="flex space-x-2 overflow-x-auto pb-2">
-          <Button
-            variant={selectedCurrency === "all" ? "default" : "outline"}
-            size="sm"
-            onClick={() => setSelectedCurrency("all")}
-          >
-            Все валюты
-          </Button>
-          <Button
-            variant={selectedCurrency === "TON" ? "default" : "outline"}
-            size="sm"
-            onClick={() => setSelectedCurrency("TON")}
-            className="flex items-center space-x-1"
-          >
-            <Coins className="h-4 w-4" />
-            <span>TON</span>
-          </Button>
-          <Button
-            variant={selectedCurrency === "STARS" ? "default" : "outline"}
-            size="sm"
-            onClick={() => setSelectedCurrency("STARS")}
-            className="flex items-center space-x-1"
-          >
-            <Star className="h-4 w-4" />
-            <span>STARS</span>
-          </Button>
-        </div>
+        {/* Фильтры валют */}
+        <Card className="glass-card border-none overflow-hidden p-3">
+          <CardContent className="p-0 space-y-3">
+            <div className="flex space-x-2 overflow-x-auto py-1 no-scrollbar">
+              <Button
+                variant={selectedCurrency === "all" ? "default" : "outline"}
+                size="sm"
+                onClick={() => setSelectedCurrency("all")}
+                className={`rounded-full ${selectedCurrency === "all" ? "bg-gradient-to-r from-blue-500 to-purple-500 text-white border-none shadow-md" : "bg-white/5 backdrop-blur-sm border border-white/10"}`}
+              >
+                <Filter className="h-4 w-4 mr-1" />
+                <span>Все валюты</span>
+              </Button>
+              <Button
+                variant={selectedCurrency === "TON" ? "default" : "outline"}
+                size="sm"
+                onClick={() => setSelectedCurrency("TON")}
+                className={`flex items-center space-x-1 rounded-full ${selectedCurrency === "TON" ? "bg-gradient-to-r from-blue-500 to-blue-600 text-white border-none shadow-md" : "bg-white/5 backdrop-blur-sm border border-white/10"}`}
+              >
+                <Coins className="h-4 w-4" />
+                <span>TON</span>
+              </Button>
+              <Button
+                variant={selectedCurrency === "STARS" ? "default" : "outline"}
+                size="sm"
+                onClick={() => setSelectedCurrency("STARS")}
+                className={`flex items-center space-x-1 rounded-full ${selectedCurrency === "STARS" ? "bg-gradient-to-r from-yellow-500 to-amber-500 text-white border-none shadow-md" : "bg-white/5 backdrop-blur-sm border border-white/10"}`}
+              >
+                <Star className="h-4 w-4" />
+                <span>STARS</span>
+              </Button>
+            </div>
 
-        <div className="flex space-x-2">
-          <Button
-            variant={sortBy === "time" ? "default" : "outline"}
-            size="sm"
-            onClick={() => setSortBy("time")}
-          >
-            По времени
-          </Button>
-          <Button
-            variant={sortBy === "amount" ? "default" : "outline"}
-            size="sm"
-            onClick={() => setSortBy("amount")}
-          >
-            По сумме
-          </Button>
-          <Button
-            variant={sortBy === "odds" ? "default" : "outline"}
-            size="sm"
-            onClick={() => setSortBy("odds")}
-          >
-            По коэффициенту
-          </Button>
-        </div>
+            {/* Сортировка */}
+            <div className="flex space-x-2">
+              <Button
+                variant={sortBy === "time" ? "default" : "outline"}
+                size="sm"
+                onClick={() => setSortBy("time")}
+                className={`rounded-full ${sortBy === "time" ? "bg-gradient-to-r from-blue-400 to-purple-500 text-white border-none shadow-md" : "bg-white/5 backdrop-blur-sm border border-white/10"}`}
+              >
+                <Clock className="h-4 w-4 mr-1" />
+                <span>По времени</span>
+              </Button>
+              <Button
+                variant={sortBy === "amount" ? "default" : "outline"}
+                size="sm"
+                onClick={() => setSortBy("amount")}
+                className={`rounded-full ${sortBy === "amount" ? "bg-gradient-to-r from-blue-400 to-purple-500 text-white border-none shadow-md" : "bg-white/5 backdrop-blur-sm border border-white/10"}`}
+              >
+                <Coins className="h-4 w-4 mr-1" />
+                <span>По сумме</span>
+              </Button>
+              <Button
+                variant={sortBy === "odds" ? "default" : "outline"}
+                size="sm"
+                onClick={() => setSortBy("odds")}
+                className={`rounded-full ${sortBy === "odds" ? "bg-gradient-to-r from-blue-400 to-purple-500 text-white border-none shadow-md" : "bg-white/5 backdrop-blur-sm border border-white/10"}`}
+              >
+                <TrendingUp className="h-4 w-4 mr-1" />
+                <span>По коэффициенту</span>
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
       </div>
 
       {/* Quick Stats */}
       <div className="grid grid-cols-3 gap-3">
-        <Card className="bg-blue-50 dark:bg-blue-950/20 border-blue-200 dark:border-blue-800">
-          <CardContent className="p-3 text-center">
-            <div className="text-2xl font-bold text-blue-600">12</div>
-            <div className="text-xs text-blue-600">Всего споров</div>
+        <Card className="glass-card border-none overflow-hidden relative">
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-blue-600/10 rounded-xl"></div>
+          <CardContent className="p-3 text-center relative z-10">
+            <div className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-blue-600 text-transparent bg-clip-text">12</div>
+            <div className="text-xs text-blue-400 font-medium">Всего споров</div>
           </CardContent>
         </Card>
-        <Card className="bg-green-50 dark:bg-green-950/20 border-green-200 dark:border-green-800">
-          <CardContent className="p-3 text-center">
-            <div className="text-2xl font-bold text-green-600">45</div>
-            <div className="text-xs text-green-600">TON в игре</div>
+        <Card className="glass-card border-none overflow-hidden relative">
+          <div className="absolute inset-0 bg-gradient-to-br from-green-500/10 to-green-600/10 rounded-xl"></div>
+          <CardContent className="p-3 text-center relative z-10">
+            <div className="text-2xl font-bold bg-gradient-to-r from-green-400 to-green-600 text-transparent bg-clip-text">45</div>
+            <div className="text-xs text-green-400 font-medium">TON в игре</div>
           </CardContent>
         </Card>
-        <Card className="bg-purple-50 dark:bg-purple-950/20 border-purple-200 dark:border-purple-800">
-          <CardContent className="p-3 text-center">
-            <div className="text-2xl font-bold text-purple-600">8.5k</div>
-            <div className="text-xs text-purple-600">STARS в игре</div>
+        <Card className="glass-card border-none overflow-hidden relative">
+          <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 to-purple-600/10 rounded-xl"></div>
+          <CardContent className="p-3 text-center relative z-10">
+            <div className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-purple-600 text-transparent bg-clip-text">8.5k</div>
+            <div className="text-xs text-purple-400 font-medium">STARS в игре</div>
           </CardContent>
         </Card>
       </div>
 
       {/* Bets List */}
-      <div className="space-y-3">
+      <div className="space-y-4">
         {filteredBets.map((bet, index) => (
           <motion.div
             key={bet.id}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.1 }}
+            whileHover={{ scale: 1.02, transition: { duration: 0.2 } }}
           >
-            <Card className="hover:shadow-md transition-shadow">
-              <CardHeader className="pb-3">
+            <Card className="glass-card border-none overflow-hidden relative">
+              <CardHeader className="pb-2 relative z-10">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-3">
-                    <Avatar className="h-8 w-8">
-                      <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-600 text-white text-xs">
+                    <Avatar className="h-10 w-10 border-2 border-white/20">
+                      <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-600 text-white font-semibold">
                         {bet.creator.name[0]}
                       </AvatarFallback>
                     </Avatar>
                     <div>
-                      <p className="font-medium text-sm">{bet.creator.name}</p>
-                      <div className="flex items-center space-x-2">
-                        <Badge variant="outline" className="text-xs">
+                      <p className="font-semibold">{bet.creator.name}</p>
+                      <div className="flex items-center space-x-2 mt-0.5">
+                        <Badge variant="outline" className="text-xs bg-white/10 border-white/10">
                           {bet.match.league}
                         </Badge>
-                        <div className="flex items-center space-x-1 text-xs text-muted-foreground">
-                          <Clock className="h-3 w-3" />
+                        <div className="flex items-center space-x-1 text-xs text-foreground/70">
+                          <Clock className="h-3 w-3 text-blue-400" />
                           <span>{bet.timeLeft}</span>
                         </div>
                       </div>
@@ -237,42 +264,65 @@ export const OpenBetsPage = () => {
                   </div>
 
                   <div className="text-right">
-                    <div className="flex items-center space-x-1">
-                      {bet.currency === "TON" ? (
-                        <Coins className="h-4 w-4 text-blue-500" />
-                      ) : (
-                        <Star className="h-4 w-4 text-yellow-500" />
-                      )}
+                    <div className="flex items-center space-x-1 justify-end">
+                      <div className="h-5 w-5 rounded-full flex items-center justify-center">
+                        {bet.currency === "TON" ? (
+                          <Coins className="h-4 w-4 text-blue-400" />
+                        ) : (
+                          <Star className="h-4 w-4 text-yellow-400" />
+                        )}
+                      </div>
                       <span className="font-bold text-lg">{bet.amount}</span>
                     </div>
-                    <div className="flex items-center space-x-1 text-sm text-muted-foreground">
-                      <TrendingUp className="h-3 w-3" />
-                      <span>{bet.odds}</span>
+                    <div className="flex items-center space-x-1 text-sm text-foreground/70 justify-end mt-0.5">
+                      <TrendingUp className="h-3 w-3 text-green-400" />
+                      <span className="font-medium">x{bet.odds}</span>
                     </div>
                   </div>
                 </div>
               </CardHeader>
 
-              <CardContent className="pt-0">
+              <CardContent className="pt-0 relative z-10">
                 <div className="space-y-3">
                   {/* Match Info */}
-                  <div className="space-y-1">
-                    <div className="font-semibold text-sm">
-                      {bet.match.homeTeam} vs {bet.match.awayTeam}
+                  <div className="p-3 rounded-xl bg-white/5 backdrop-blur-sm space-y-2">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-2">
+                        <div className="w-6 h-6 rounded-full bg-gradient-cosmic flex items-center justify-center text-white text-xs font-bold">
+                          {bet.match.homeTeam.charAt(0)}
+                        </div>
+                        <span className="font-medium text-sm">{bet.match.homeTeam}</span>
+                      </div>
+                      <div className="flex items-center space-x-1 text-xs text-foreground/70">
+                        <Zap className="h-3 w-3 text-blue-400" />
+                        <span>{bet.match.startTime}</span>
+                      </div>
                     </div>
-                    <div className="text-sm text-muted-foreground">
-                      Прогноз: <span className="font-medium">{bet.prediction}</span>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-2">
+                        <div className="w-6 h-6 rounded-full bg-gradient-fire flex items-center justify-center text-white text-xs font-bold">
+                          {bet.match.awayTeam.charAt(0)}
+                        </div>
+                        <span className="font-medium text-sm">{bet.match.awayTeam}</span>
+                      </div>
+                      <Badge
+                        variant="outline"
+                        className="text-xs font-medium bg-white/5 border-white/10 text-foreground/80"
+                      >
+                        {bet.prediction}
+                      </Badge>
                     </div>
                   </div>
 
-                  <Separator />
+                  <Separator className="bg-white/10" />
 
                   {/* Participants */}
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-2">
-                      <Users className="h-4 w-4 text-muted-foreground" />
+                      <Users className="h-4 w-4 text-blue-400" />
                       <span className="text-sm">
-                        {bet.participants}/{bet.maxParticipants} участников
+                        <span className="font-semibold">{bet.participants}</span>
+                        <span className="text-foreground/70">/{bet.maxParticipants} участников</span>
                       </span>
                     </div>
 
@@ -281,6 +331,7 @@ export const OpenBetsPage = () => {
                         variant="outline"
                         size="sm"
                         onClick={() => handleViewDetails(bet.id)}
+                        className="rounded-full h-9 w-9 p-0 flex items-center justify-center bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10"
                       >
                         <Eye className="h-4 w-4" />
                       </Button>
@@ -289,21 +340,44 @@ export const OpenBetsPage = () => {
                         size="sm"
                         onClick={() => handleJoinBet(bet.id)}
                         disabled={bet.participants >= bet.maxParticipants}
-                        className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800"
+                        className={`rounded-full ${
+                          bet.participants >= bet.maxParticipants
+                            ? "bg-foreground/20 text-foreground/50"
+                            : "bg-gradient-to-r from-green-400 to-emerald-500 hover:from-green-500 hover:to-emerald-600 text-white"
+                        }`}
                       >
-                        {bet.participants >= bet.maxParticipants ? "Полный" : "Присоединиться"}
-                        <ArrowRight className="h-4 w-4 ml-1" />
+                        <div className="flex items-center space-x-1">
+                          {bet.participants >= bet.maxParticipants ? (
+                            <span>Полный</span>
+                          ) : (
+                            <>
+                              <span>Присоединиться</span>
+                              <ArrowRight className="h-4 w-4" />
+                            </>
+                          )}
+                        </div>
                       </Button>
                     </div>
                   </div>
 
                   {/* Progress Bar */}
-                  <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                  <div className="w-full bg-white/10 rounded-full h-2 overflow-hidden">
                     <div
-                      className="bg-gradient-to-r from-blue-500 to-purple-600 h-2 rounded-full transition-all duration-300"
+                      className="bg-gradient-to-r from-blue-400 to-purple-500 h-2 rounded-full transition-all duration-300"
                       style={{ width: `${(bet.participants / bet.maxParticipants) * 100}%` }}
                     />
                   </div>
+
+                  {/* Потенциальный выигрыш */}
+                  {bet.participants < bet.maxParticipants && (
+                    <div className="flex items-center justify-center space-x-1 text-sm">
+                      <Sparkles className="h-3 w-3 text-yellow-400" />
+                      <span className="text-foreground/70">Потенциальный выигрыш:</span>
+                      <span className="font-semibold bg-gradient-to-r from-green-400 to-emerald-500 text-transparent bg-clip-text">
+                        {(bet.amount * bet.odds).toFixed(1)} {bet.currency}
+                      </span>
+                    </div>
+                  )}
                 </div>
               </CardContent>
             </Card>
@@ -312,8 +386,16 @@ export const OpenBetsPage = () => {
       </div>
 
       {filteredBets.length === 0 && (
-        <div className="text-center py-8">
-          <p className="text-muted-foreground">Нет открытых споров с выбранными фильтрами</p>
+        <div className="text-center py-12 bg-white/5 backdrop-blur-sm rounded-xl border border-white/10">
+          <Trophy className="h-12 w-12 text-foreground/30 mx-auto mb-3" />
+          <p className="text-foreground/60 font-medium">Нет открытых споров с выбранными фильтрами</p>
+          <Button
+            variant="outline"
+            className="mt-4 rounded-full bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10"
+            onClick={() => setSelectedCurrency("all")}
+          >
+            Сбросить фильтры
+          </Button>
         </div>
       )}
     </div>
