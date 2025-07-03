@@ -80,11 +80,44 @@ export const MenuPage = () => {
   };
 
   const handleDeposit = (currency: "TON" | "STARS") => {
-    alert(`Пополнение ${currency} через Telegram Wallet`);
+    // Предполагаем, что эта функция будет вызывать Telegram Wallet API для пополнения средств
+    const amount = currency === "TON" ? "5" : "1000";
+    alert(`Запрос на пополнение ${amount} ${currency} через Telegram Wallet отправлен`);
   };
 
   const handleWithdraw = (currency: "TON" | "STARS") => {
-    alert(`Вывод ${currency} на Telegram Wallet`);
+    // Предполагаем, что эта функция будет вызывать Telegram Wallet API для вывода средств
+    const available = currency === "TON" ? balance.TON : balance.STARS;
+    alert(`Запрос на вывод ${available} ${currency} на Telegram Wallet отправлен`);
+  };
+
+  const handleLanguageChange = (language: string) => {
+    setSettings({ ...settings, language });
+    alert(`Язык изменен на ${language === "ru" ? "русский" : "английский"}`);
+  };
+
+  const handleThemeChange = (theme: string) => {
+    setSettings({ ...settings, theme });
+    alert(`Тема изменена на ${theme === "light" ? "светлую" : "темную"}`);
+  };
+
+  const handleNotificationsToggle = (checked: boolean) => {
+    setSettings({ ...settings, notifications: checked });
+    alert(`Уведомления ${checked ? "включены" : "выключены"}`);
+  };
+
+  const handleSoundToggle = (checked: boolean) => {
+    setSettings({ ...settings, sound: checked });
+    alert(`Звук ${checked ? "включен" : "выключен"}`);
+  };
+
+  const handleVibrationToggle = (checked: boolean) => {
+    setSettings({ ...settings, vibration: checked });
+    alert(`Вибрация ${checked ? "включена" : "выключена"}`);
+  };
+
+  const handleViewTransactions = () => {
+    alert("История транзакций будет доступна в следующей версии приложения");
   };
 
   const toggleFaq = (id: string) => {
@@ -242,7 +275,7 @@ export const MenuPage = () => {
                 <History className="h-4 w-4 text-blue-400" />
                 <span>Недавние транзакции</span>
               </div>
-              <Button variant="ghost" size="sm" className="rounded-full h-8 w-8 p-0 hover:bg-white/10">
+              <Button variant="ghost" size="sm" className="rounded-full h-8 w-8 p-0 hover:bg-white/10" onClick={handleViewTransactions}>
                 <ChevronRight className="h-4 w-4 text-foreground/70" />
               </Button>
             </div>
@@ -278,7 +311,7 @@ export const MenuPage = () => {
               <Button
                 variant={settings.language === "ru" ? "default" : "outline"}
                 size="sm"
-                onClick={() => setSettings({...settings, language: "ru"})}
+                onClick={() => handleLanguageChange("ru")}
                 className={`rounded-full ${
                   settings.language === "ru"
                     ? "bg-gradient-to-r from-blue-400 to-purple-500 text-white border-none"
@@ -290,7 +323,7 @@ export const MenuPage = () => {
               <Button
                 variant={settings.language === "en" ? "default" : "outline"}
                 size="sm"
-                onClick={() => setSettings({...settings, language: "en"})}
+                onClick={() => handleLanguageChange("en")}
                 className={`rounded-full ${
                   settings.language === "en"
                     ? "bg-gradient-to-r from-blue-400 to-purple-500 text-white border-none"
@@ -312,7 +345,7 @@ export const MenuPage = () => {
               <Button
                 variant={settings.theme === "light" ? "default" : "outline"}
                 size="sm"
-                onClick={() => setSettings({...settings, theme: "light"})}
+                onClick={() => handleThemeChange("light")}
                 className={`rounded-full ${
                   settings.theme === "light"
                     ? "bg-gradient-to-r from-blue-400 to-purple-500 text-white border-none"
@@ -324,7 +357,7 @@ export const MenuPage = () => {
               <Button
                 variant={settings.theme === "dark" ? "default" : "outline"}
                 size="sm"
-                onClick={() => setSettings({...settings, theme: "dark"})}
+                onClick={() => handleThemeChange("dark")}
                 className={`rounded-full ${
                   settings.theme === "dark"
                     ? "bg-gradient-to-r from-blue-400 to-purple-500 text-white border-none"
@@ -345,7 +378,7 @@ export const MenuPage = () => {
               </div>
               <Switch
                 checked={settings.notifications}
-                onCheckedChange={(checked) => setSettings({...settings, notifications: checked})}
+                onCheckedChange={handleNotificationsToggle}
                 className="data-[state=checked]:bg-gradient-to-r from-blue-400 to-purple-500"
               />
             </div>
@@ -364,7 +397,7 @@ export const MenuPage = () => {
                   </div>
                   <Switch
                     checked={settings.sound}
-                    onCheckedChange={(checked) => setSettings({...settings, sound: checked})}
+                    onCheckedChange={handleSoundToggle}
                     className="data-[state=checked]:bg-gradient-to-r from-blue-400 to-purple-500"
                   />
                 </div>
@@ -376,7 +409,7 @@ export const MenuPage = () => {
                   </div>
                   <Switch
                     checked={settings.vibration}
-                    onCheckedChange={(checked) => setSettings({...settings, vibration: checked})}
+                    onCheckedChange={handleVibrationToggle}
                     className="data-[state=checked]:bg-gradient-to-r from-blue-400 to-purple-500"
                   />
                 </div>
