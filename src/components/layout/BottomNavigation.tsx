@@ -16,6 +16,7 @@ import { motion } from "framer-motion";
 interface BottomNavigationProps {
   currentPage: PageType;
   onPageChange: (page: PageType) => void;
+  isFullscreen?: boolean;
 }
 
 const navItems = [
@@ -27,9 +28,9 @@ const navItems = [
   { id: "menu", icon: Menu, label: "Меню" },
 ];
 
-export const BottomNavigation = ({ currentPage, onPageChange }: BottomNavigationProps) => {
+export const BottomNavigation = ({ currentPage, onPageChange, isFullscreen = false }: BottomNavigationProps) => {
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-sm border-t border-border">
+    <nav className={`fixed bottom-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-sm border-t border-border ${isFullscreen ? 'bottom-nav-safe' : ''}`}>
       <div className="flex items-center justify-around px-2 py-2">
         {navItems.map((item) => {
           const isActive = currentPage === item.id;
