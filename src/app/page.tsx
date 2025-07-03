@@ -18,13 +18,26 @@ export default function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [showAuthDialog, setShowAuthDialog] = useState(false);
   const [currentPage, setCurrentPage] = useState<PageType>("home");
+  const [isFirstTime, setIsFirstTime] = useState(true);
 
   useEffect(() => {
     if (isReady) {
+      // Проверяем, был ли пользователь уже здесь раньше
+      const hasVisited = localStorage.getItem('sports_betting_visited');
+
       if (user) {
         setIsAuthenticated(true);
+        // Если пользователь есть, но это первый визит - показываем онбординг
+        if (!hasVisited) {
+          setIsFirstTime(true);
+          setShowAuthDialog(true);
+        } else {
+          setIsFirstTime(false);
+        }
       } else {
+        // Если пользователя нет - показываем авторизацию
         setShowAuthDialog(true);
+        setIsFirstTime(true);
       }
     }
   }, [isReady, user]);
@@ -32,6 +45,9 @@ export default function App() {
   const handleLogin = () => {
     setIsAuthenticated(true);
     setShowAuthDialog(false);
+    setIsFirstTime(false);
+    // Отмечаем, что пользователь уже был здесь
+    localStorage.setItem('sports_betting_visited', 'true');
   };
 
   const renderPage = () => {
@@ -69,7 +85,13 @@ export default function App() {
       <AuthDialog
         open={showAuthDialog}
         onLogin={handleLogin}
-        onSkip={() => setShowAuthDialog(false)}
+        onSkip={() => {
+          setShowAuthDialog(false);
+          setIsFirstTime(false);
+          localStorage.setItem('sports_betting_visited', 'true');
+        }}
+        isFirstTime={isFirstTime}
+        user={user}
       />
 
       {isAuthenticated && (
