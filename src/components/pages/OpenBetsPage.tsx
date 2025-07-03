@@ -18,9 +18,11 @@ import {
   Zap,
   Trophy,
   CheckCircle,
-  Sparkles
+  Sparkles,
+  ChevronLeft,
+  ChevronRight
 } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion, useAnimation } from "framer-motion";
 
 interface OpenBet {
   id: string;
@@ -100,6 +102,37 @@ const mockBets: OpenBet[] = [
 export const OpenBetsPage = () => {
   const [selectedCurrency, setSelectedCurrency] = useState<"all" | "TON" | "STARS">("all");
   const [sortBy, setSortBy] = useState<"time" | "amount" | "odds">("time");
+  const controls = useAnimation();
+  const sortOptions = ["time", "amount", "odds"];
+
+  const getNextSortOption = (direction: "next" | "prev") => {
+    const currentIndex = sortOptions.indexOf(sortBy);
+    if (direction === "next") {
+      return sortOptions[(currentIndex + 1) % sortOptions.length] as "time" | "amount" | "odds";
+    } else {
+      return sortOptions[(currentIndex - 1 + sortOptions.length) % sortOptions.length] as "time" | "amount" | "odds";
+    }
+  };
+
+  const handleSwipe = (direction: "left" | "right") => {
+    // Свайп влево означает переход к следующей опции
+    // Свайп вправо означает переход к предыдущей опции
+    const newSortBy = direction === "left" ? getNextSortOption("next") : getNextSortOption("prev");
+
+    // Анимация при свайпе
+    controls.start({
+      x: direction === "left" ? -20 : 20,
+      opacity: 0.5,
+      transition: { duration: 0.2 }
+    }).then(() => {
+      setSortBy(newSortBy);
+      controls.start({
+        x: 0,
+        opacity: 1,
+        transition: { duration: 0.2 }
+      });
+    });
+  };
 
   const filteredBets = mockBets
     .filter(bet => selectedCurrency === "all" || bet.currency === selectedCurrency)
@@ -182,7 +215,7 @@ export const OpenBetsPage = () => {
           </Badge>
         </div>
 
-        {/* Фильтры валют */}
+        {/* Фильтры валют - БЕЗ жеста свайпа */}
         <Card className="glass-card border-none overflow-hidden p-3">
           <CardContent className="p-0 space-y-3">
             <div className="flex space-x-2 overflow-x-auto py-1 no-scrollbar">
@@ -214,37 +247,65 @@ export const OpenBetsPage = () => {
                 <span>STARS</span>
               </Button>
             </div>
+          </CardContent>
+        </Card>
 
-            {/* Сортировка */}
-            <div className="flex space-x-2">
-              <Button
-                variant={sortBy === "time" ? "default" : "outline"}
-                size="sm"
-                onClick={() => handleSort("time")}
-                className={`rounded-full ${sortBy === "time" ? "bg-gradient-to-r from-blue-400 to-purple-500 text-white border-none shadow-md" : "bg-white/5 backdrop-blur-sm border border-white/10"}`}
-              >
-                <Clock className="h-4 w-4 mr-1" />
-                <span>По времени</span>
-              </Button>
-              <Button
-                variant={sortBy === "amount" ? "default" : "outline"}
-                size="sm"
-                onClick={() => handleSort("amount")}
-                className={`rounded-full ${sortBy === "amount" ? "bg-gradient-to-r from-blue-400 to-purple-500 text-white border-none shadow-md" : "bg-white/5 backdrop-blur-sm border border-white/10"}`}
-              >
-                <Coins className="h-4 w-4 mr-1" />
-                <span>По сумме</span>
-              </Button>
-              <Button
-                variant={sortBy === "odds" ? "default" : "outline"}
-                size="sm"
-                onClick={() => handleSort("odds")}
-                className={`rounded-full ${sortBy === "odds" ? "bg-gradient-to-r from-blue-400 to-purple-500 text-white border-none shadow-md" : "bg-white/5 backdrop-blur-sm border border-white/10"}`}
-              >
-                <TrendingUp className="h-4 w-4 mr-1" />
-                <span>По коэффициенту</span>
-              </Button>
+        {/* Сортировка С жестом свайпа */}
+        <Card className="glass-card border-none overflow-hidden p-3">
+          <CardContent className="p-0 space-y-3">
+            {/* Подсказка для свайпа */}
+            <div className="flex justify-between items-center">
+              <div className="text-sm text-foreground/50 flex items-center space-x-1">
+                <ChevronLeft className="h-4 w-4" />
+                <span>Свайп для сортировки</span>
+                <ChevronRight className="h-4 w-4" />
+              </div>
             </div>
+
+            {/* Сортировка с поддержкой свайпов */}
+            <motion.div
+              drag="x"
+              dragConstraints={{ left: 0, right: 0 }}
+              dragElastic={0.2}
+              onDragEnd={(event, info) => {
+                if (info.offset.x < -50) {
+                  handleSwipe("left");
+                } else if (info.offset.x > 50) {
+                  handleSwipe("right");
+                }
+              }}
+              className="touch-none"
+            >
+              <motion.div className="flex space-x-2" animate={controls}>
+                <Button
+                  variant={sortBy === "time" ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => handleSort("time")}
+                  className={`rounded-full ${sortBy === "time" ? "bg-gradient-to-r from-blue-400 to-purple-500 text-white border-none shadow-md" : "bg-white/5 backdrop-blur-sm border border-white/10"}`}
+                >
+                  <Clock className="h-4 w-4 mr-1" />
+                  <span>По времени</span>
+                </Button>
+                <Button
+                  variant={sortBy === "amount" ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => handleSort("amount")}
+                  className={`rounded-full ${sortBy === "amount" ? "bg-gradient-to-r from-blue-400 to-purple-500 text-white border-none shadow-md" : "bg-white/5 backdrop-blur-sm border border-white/10"}`}
+                >
+                  <Coins className="h-4 w-4 mr-1" />
+                  <span>По сумме</span>
+                </Button>
+                <Button
+                  variant={sortBy === "odds" ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => handleSort("odds")}
+                  className={`rounded-full ${sortBy === "odds" ? "bg-gradient-to-r from-blue-400 to-purple-500 text-white border-none shadow-md" : "bg-white/5 backdrop-blur-sm border border-white/10"}`}
+                >
+                  <TrendingUp className="h-4 w-4 mr-1" />
+                  <span>По коэффициенту</span>
+                </Button>
+              </motion.div>
+            </motion.div>
           </CardContent>
         </Card>
       </div>
