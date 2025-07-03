@@ -261,7 +261,7 @@ export const ChatPage = () => {
 
       {/* Message Input - фиксированный внизу */}
       <div className="p-4 backdrop-blur-md bg-background/50 border-t border-white/10 z-10">
-        <div className="flex space-x-2">
+        <div className="flex space-x-2 mb-4">
           <div className="flex-1 relative">
             <Input
               placeholder="Написать сообщение..."
