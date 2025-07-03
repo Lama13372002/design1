@@ -35,11 +35,11 @@ export const Header = ({ currentPage, isFullscreen = false }: HeaderProps) => {
   const PageIcon = pageIcons[currentPage];
 
   return (
-    <header className={`fixed top-0 left-0 right-0 z-50 ${isFullscreen ? 'header-safe' : ''}`}>
+    <header className={`fixed top-0 left-0 right-0 z-50 ${isFullscreen ? 'header-safe' : ''}`} style={{ position: 'fixed' }}>
       {/* Градиентная линия вверху */}
       <div className="h-0.5 w-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500"></div>
 
-      <div className="glass-header relative backdrop-blur-xl bg-background/50">
+      <div className="glass-header backdrop-blur-xl bg-background/50" style={{ position: 'relative' }}>
         <div className="flex items-center justify-between px-4 py-3">
           <motion.div
             initial={{ opacity: 0, y: -10 }}
