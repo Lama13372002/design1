@@ -121,7 +121,7 @@ export const TelegramProvider = ({ children }: TelegramProviderProps) => {
         setIsFullscreen(window.innerHeight >= screen.height * 0.9);
 
         // Симулируем safe area для разработки (типичные значения для мобильных устройств)
-        updateSafeAreaVars({ top: 44, bottom: 34, left: 0, right: 0 });
+        updateSafeAreaVars({ top: 60, bottom: 34, left: 0, right: 0 });
 
         setUser({
           id: 123456789,
