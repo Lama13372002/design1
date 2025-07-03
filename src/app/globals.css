@@ -452,7 +452,7 @@ input:focus-visible {
   --tg-safe-area-inset-right: env(safe-area-inset-right, 0px);
 
   /* Additional padding for system elements */
-  --system-safe-top: max(var(--tg-safe-area-inset-top), 60px);
+  --system-safe-top: max(var(--tg-safe-area-inset-top), 50px);
   --system-safe-bottom: max(var(--tg-safe-area-inset-bottom), 20px);
 }
 
@@ -526,4 +526,27 @@ html, body {
 .fullscreen-app {
   scrollbar-width: none;
   -ms-overflow-style: none;
+}
+
+.glass-header {
+  background: rgba(255, 255, 255, 0.07);
+  backdrop-filter: blur(15px);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.dark .glass-header {
+  background: rgba(20, 20, 40, 0.7);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Убираем scrollbar в разных списках */
+.no-scrollbar {
+  -ms-overflow-style: none;  /* IE и Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none; /* Chrome, Safari и Opera */
 }
