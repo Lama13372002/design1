@@ -13,7 +13,22 @@ interface AuthDialogProps {
   onSkip: () => void;
 }
 
-export const AuthDialog = ({ open, onLogin, onSkip }: AuthDialogProps) => {
+interface TelegramUser {
+  id: number;
+  first_name: string;
+  last_name?: string;
+  username?: string;
+  language_code?: string;
+  is_premium?: boolean;
+}
+
+export const AuthDialog = ({ open, onLogin, onSkip, isFirstTime = true, user }: {
+  open: boolean;
+  onLogin: () => void;
+  onSkip: () => void;
+  isFirstTime?: boolean;
+  user?: TelegramUser | null;
+}) => {
   const features = [
     {
       icon: TrendingUp,
@@ -56,10 +71,13 @@ export const AuthDialog = ({ open, onLogin, onSkip }: AuthDialogProps) => {
                   <TrendingUp className="h-8 w-8 text-white" />
                 </div>
                 <CardTitle className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                  Sports Betting
+                  {user ? `Добро пожаловать, ${user.first_name}!` : 'Sports Betting'}
                 </CardTitle>
                 <CardDescription className="text-sm text-muted-foreground mt-2">
-                  P2P споры на спортивных событиях с криптооплатежами
+                  {user
+                    ? 'Готовы начать делать споры на спортивных событиях?'
+                    : 'P2P споры на спортивных событиях с криптооплатежами'
+                  }
                 </CardDescription>
               </motion.div>
             </CardHeader>
@@ -112,7 +130,7 @@ export const AuthDialog = ({ open, onLogin, onSkip }: AuthDialogProps) => {
                   className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold"
                   size="lg"
                 >
-                  Начать
+                  {user ? 'Понятно, поехали!' : 'Начать'}
                 </Button>
 
                 <Button
@@ -121,7 +139,7 @@ export const AuthDialog = ({ open, onLogin, onSkip }: AuthDialogProps) => {
                   className="w-full text-muted-foreground hover:text-foreground"
                   size="sm"
                 >
-                  Пропустить
+                  {user ? 'Пропустить объяснение' : 'Пропустить'}
                 </Button>
               </motion.div>
 
