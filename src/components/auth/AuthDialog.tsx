@@ -91,7 +91,7 @@ export const AuthDialog = ({ open, onLogin, onSkip, isFirstTime = true, user }: 
                     <p className="text-sm text-foreground/80 mt-2 max-w-xs mx-auto">
                       {user
                         ? 'Готовы начать делать споры на спортивных событиях?'
-                        : 'P2P споры на спортивных событиях с криптооплатежами'
+                        : 'P2P споры на спортивных событиях'
                       }
                     </p>
                   </motion.div>
