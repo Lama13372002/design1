@@ -15,6 +15,8 @@ interface TelegramWebApp {
   ready: () => void;
   expand: () => void;
   colorScheme: string;
+  isFullscreen?: boolean;
+  viewportHeight?: number;
   initDataUnsafe?: {
     user?: TelegramUser;
   };
@@ -30,6 +32,7 @@ interface TelegramContextType {
   user: TelegramUser | null;
   isReady: boolean;
   theme: "light" | "dark";
+  isFullscreen: boolean;
 }
 
 const TelegramContext = createContext<TelegramContextType>({
@@ -37,6 +40,7 @@ const TelegramContext = createContext<TelegramContextType>({
   user: null,
   isReady: false,
   theme: "light",
+  isFullscreen: false,
 });
 
 export const useTelegram = () => useContext(TelegramContext);
@@ -58,6 +62,7 @@ export const TelegramProvider = ({ children }: TelegramProviderProps) => {
   const [user, setUser] = useState<TelegramUser | null>(null);
   const [isReady, setIsReady] = useState(false);
   const [theme, setTheme] = useState<"light" | "dark">("light");
+  const [isFullscreen, setIsFullscreen] = useState(false);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -70,11 +75,22 @@ export const TelegramProvider = ({ children }: TelegramProviderProps) => {
         setWebApp(tg);
         setUser(tg.initDataUnsafe?.user || null);
         setTheme(tg.colorScheme === "dark" ? "dark" : "light");
+
+        // Определяем полноэкранный режим
+        const fullscreen = tg.isFullscreen || window.innerHeight >= screen.height * 0.9;
+        setIsFullscreen(fullscreen);
+
         setIsReady(true);
 
         // Слушаем изменения темы
         tg.onEvent("themeChanged", () => {
           setTheme(tg.colorScheme === "dark" ? "dark" : "light");
+        });
+
+        // Слушаем изменения viewport
+        tg.onEvent("viewportChanged", () => {
+          const newFullscreen = tg.isFullscreen || window.innerHeight >= screen.height * 0.9;
+          setIsFullscreen(newFullscreen);
         });
 
         // Настройка главной кнопки
@@ -83,6 +99,7 @@ export const TelegramProvider = ({ children }: TelegramProviderProps) => {
       } else {
         // Для разработки без Telegram
         setIsReady(true);
+        setIsFullscreen(window.innerHeight >= screen.height * 0.9);
         setUser({
           id: 123456789,
           first_name: "Test",
@@ -95,7 +112,7 @@ export const TelegramProvider = ({ children }: TelegramProviderProps) => {
   }, []);
 
   return (
-    <TelegramContext.Provider value={{ webApp, user, isReady, theme }}>
+    <TelegramContext.Provider value={{ webApp, user, isReady, theme, isFullscreen }}>
       {children}
     </TelegramContext.Provider>
   );
