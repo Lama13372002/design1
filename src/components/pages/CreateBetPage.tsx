@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -43,6 +43,16 @@ export const CreateBetPage = ({ onBack }: CreateBetPageProps) => {
   const [selectedOutcome, setSelectedOutcome] = useState("");
   const [comment, setComment] = useState("");
   const [showPreview, setShowPreview] = useState(false);
+  const [validationError, setValidationError] = useState<string | null>(null);
+
+  // Получаем данные о выбранном событии, если оно было передано
+  useEffect(() => {
+    const storedEventId = localStorage.getItem('selectedEventId');
+    if (storedEventId) {
+      // В реальном приложении здесь был бы запрос к API для получения полных данных о событии
+      console.log(`Загружено событие ${storedEventId}`);
+    }
+  }, []);
 
   const currentCurrency = currencies.find(c => c.id === selectedCurrency)!;
   const amountNum = Number.parseFloat(amount) || 0;
@@ -56,15 +66,68 @@ export const CreateBetPage = ({ onBack }: CreateBetPageProps) => {
     startTime: "19:00"
   };
 
+  const validateForm = () => {
+    if (!isValidAmount) {
+      setValidationError(`Минимальная сумма: ${currentCurrency.min} ${selectedCurrency}`);
+      return false;
+    }
+
+    if (!selectedOutcome) {
+      setValidationError("Выберите прогноз");
+      return false;
+    }
+
+    setValidationError(null);
+    return true;
+  };
+
   const handleCreateBet = () => {
-    if (!isValidAmount || !selectedOutcome) return;
+    if (!validateForm()) return;
     setShowPreview(true);
   };
 
   const handleConfirmBet = () => {
-    // Здесь будет логика создания спора
-    alert("Спор создан!");
+    // В реальном приложении здесь был бы API запрос для создания спора
+    alert("Спор успешно создан!");
+
+    // Очищаем выбранное событие из localStorage
+    localStorage.removeItem('selectedEventId');
+
     onBack();
+  };
+
+  const handleChangeCurrency = (currency: string) => {
+    setSelectedCurrency(currency);
+    // Сбрасываем сумму, если она меньше минимальной для новой валюты
+    const newMinAmount = currencies.find(c => c.id === currency)!.min;
+    if (Number.parseFloat(amount) < newMinAmount) {
+      setAmount("");
+    }
+  };
+
+  const handleSetAmount = (value: string) => {
+    // Проверяем, что введено число
+    if (/^\d*\.?\d*$/.test(value) || value === "") {
+      setAmount(value);
+      setValidationError(null);
+    }
+  };
+
+  const handleSelectOutcome = (outcome: string) => {
+    setSelectedOutcome(outcome);
+    setValidationError(null);
+  };
+
+  const handleSetPresetAmount = (preset: number) => {
+    setAmount(preset.toString());
+    setValidationError(null);
+  };
+
+  const handleCommentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const value = e.target.value;
+    if (value.length <= 222) {
+      setComment(value);
+    }
   };
 
   if (showPreview) {
@@ -255,7 +318,7 @@ export const CreateBetPage = ({ onBack }: CreateBetPageProps) => {
                 <motion.div key={currency.id} whileTap={{ scale: 0.95 }}>
                   <Button
                     variant={selectedCurrency === currency.id ? "default" : "outline"}
-                    onClick={() => setSelectedCurrency(currency.id)}
+                    onClick={() => handleChangeCurrency(currency.id)}
                     className={`w-full p-4 h-auto flex flex-col space-y-2 rounded-xl ${
                       selectedCurrency === currency.id
                         ? `bg-gradient-to-r ${currency.color} text-white shadow-lg border-none`
@@ -294,7 +357,7 @@ export const CreateBetPage = ({ onBack }: CreateBetPageProps) => {
                 type="number"
                 placeholder={`Минимум ${currentCurrency.min} ${selectedCurrency}`}
                 value={amount}
-                onChange={(e) => setAmount(e.target.value)}
+                onChange={(e) => handleSetAmount(e.target.value)}
                 className={`text-lg rounded-xl bg-white/5 backdrop-blur-sm border border-white/10 focus:border-blue-400 focus:ring-1 focus:ring-blue-400 ${!isValidAmount && amount ? "border-red-500 focus:border-red-500 focus:ring-red-500" : ""}`}
               />
               <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
@@ -311,13 +374,20 @@ export const CreateBetPage = ({ onBack }: CreateBetPageProps) => {
               </div>
             )}
 
+            {validationError && (
+              <div className="flex items-center space-x-2 text-red-500 text-sm">
+                <AlertCircle className="h-4 w-4" />
+                <span>{validationError}</span>
+              </div>
+            )}
+
             <div className="flex space-x-2">
               {[currentCurrency.min, currentCurrency.min * 2, currentCurrency.min * 5].map((preset) => (
                 <Button
                   key={preset}
                   variant="outline"
                   size="sm"
-                  onClick={() => setAmount(preset.toString())}
+                  onClick={() => handleSetPresetAmount(preset)}
                   className="rounded-lg bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10"
                 >
                   {preset}
@@ -346,7 +416,7 @@ export const CreateBetPage = ({ onBack }: CreateBetPageProps) => {
               <motion.div key={outcome.id} whileTap={{ scale: 0.98 }}>
                 <Button
                   variant={selectedOutcome === outcome.id ? "default" : "outline"}
-                  onClick={() => setSelectedOutcome(outcome.id)}
+                  onClick={() => handleSelectOutcome(outcome.id)}
                   className={`w-full justify-between p-4 h-auto rounded-xl ${
                     selectedOutcome === outcome.id
                       ? "bg-gradient-to-r from-blue-400 to-purple-500 text-white border-none"
@@ -382,7 +452,7 @@ export const CreateBetPage = ({ onBack }: CreateBetPageProps) => {
             <textarea
               placeholder="Ваш комментарий к спору..."
               value={comment}
-              onChange={(e) => setComment(e.target.value.slice(0, 222))}
+              onChange={handleCommentChange}
               className="w-full p-3 rounded-xl resize-none h-20 bg-white/5 backdrop-blur-sm border border-white/10 focus:border-blue-400 focus:ring-1 focus:ring-blue-400"
               maxLength={222}
             />
