@@ -22,10 +22,11 @@ export default function App() {
 
   useEffect(() => {
     if (isReady) {
-      // Проверяем, был ли пользователь уже здесь раньше
-      const hasVisited = localStorage.getItem('sports_betting_visited');
-
       if (user) {
+        // Создаем уникальный ключ для каждого пользователя Telegram
+        const userKey = `sports_betting_visited_${user.id}`;
+        const hasVisited = localStorage.getItem(userKey);
+
         setIsAuthenticated(true);
         // Если пользователь есть, но это первый визит - показываем онбординг
         if (!hasVisited) {
@@ -46,8 +47,11 @@ export default function App() {
     setIsAuthenticated(true);
     setShowAuthDialog(false);
     setIsFirstTime(false);
-    // Отмечаем, что пользователь уже был здесь
-    localStorage.setItem('sports_betting_visited', 'true');
+    // Отмечаем, что пользователь уже был здесь (используем уникальный ключ)
+    if (user) {
+      const userKey = `sports_betting_visited_${user.id}`;
+      localStorage.setItem(userKey, 'true');
+    }
   };
 
   const renderPage = () => {
@@ -88,7 +92,11 @@ export default function App() {
         onSkip={() => {
           setShowAuthDialog(false);
           setIsFirstTime(false);
-          localStorage.setItem('sports_betting_visited', 'true');
+          // Отмечаем, что пользователь уже был здесь (используем уникальный ключ)
+          if (user) {
+            const userKey = `sports_betting_visited_${user.id}`;
+            localStorage.setItem(userKey, 'true');
+          }
         }}
         isFirstTime={isFirstTime}
         user={user}
