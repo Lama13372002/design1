@@ -262,7 +262,7 @@ export const OpenBetsPage = () => {
               </div>
             </div>
 
-            {/* Сортировка с поддержкой свайпов */}
+            {/* Сортировка с поддержкой свайпов - компактная версия */}
             <motion.div
               drag="x"
               dragConstraints={{ left: 0, right: 0 }}
@@ -276,33 +276,33 @@ export const OpenBetsPage = () => {
               }}
               className="touch-none"
             >
-              <motion.div className="flex space-x-2" animate={controls}>
+              <motion.div className="flex justify-between w-full" animate={controls}>
                 <Button
                   variant={sortBy === "time" ? "default" : "outline"}
                   size="sm"
                   onClick={() => handleSort("time")}
-                  className={`rounded-full ${sortBy === "time" ? "bg-gradient-to-r from-blue-400 to-purple-500 text-white border-none shadow-md" : "bg-white/5 backdrop-blur-sm border border-white/10"}`}
+                  className={`flex-1 mr-2 rounded-full text-xs ${sortBy === "time" ? "bg-gradient-to-r from-blue-400 to-purple-500 text-white border-none shadow-md" : "bg-white/5 backdrop-blur-sm border border-white/10"}`}
                 >
-                  <Clock className="h-4 w-4 mr-1" />
+                  <Clock className="h-3 w-3 mr-1" />
                   <span>По времени</span>
                 </Button>
                 <Button
                   variant={sortBy === "amount" ? "default" : "outline"}
                   size="sm"
                   onClick={() => handleSort("amount")}
-                  className={`rounded-full ${sortBy === "amount" ? "bg-gradient-to-r from-blue-400 to-purple-500 text-white border-none shadow-md" : "bg-white/5 backdrop-blur-sm border border-white/10"}`}
+                  className={`flex-1 mr-2 rounded-full text-xs ${sortBy === "amount" ? "bg-gradient-to-r from-blue-400 to-purple-500 text-white border-none shadow-md" : "bg-white/5 backdrop-blur-sm border border-white/10"}`}
                 >
-                  <Coins className="h-4 w-4 mr-1" />
+                  <Coins className="h-3 w-3 mr-1" />
                   <span>По сумме</span>
                 </Button>
                 <Button
                   variant={sortBy === "odds" ? "default" : "outline"}
                   size="sm"
                   onClick={() => handleSort("odds")}
-                  className={`rounded-full ${sortBy === "odds" ? "bg-gradient-to-r from-blue-400 to-purple-500 text-white border-none shadow-md" : "bg-white/5 backdrop-blur-sm border border-white/10"}`}
+                  className={`flex-1 rounded-full text-xs ${sortBy === "odds" ? "bg-gradient-to-r from-blue-400 to-purple-500 text-white border-none shadow-md" : "bg-white/5 backdrop-blur-sm border border-white/10"}`}
                 >
-                  <TrendingUp className="h-4 w-4 mr-1" />
-                  <span>По коэффициенту</span>
+                  <TrendingUp className="h-3 w-3 mr-1" />
+                  <span>Коэфф.</span>
                 </Button>
               </motion.div>
             </motion.div>
