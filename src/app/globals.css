@@ -444,12 +444,22 @@ input:focus-visible {
 }
 
 /* 🔲 FULLSCREEN TELEGRAM MINI APP SUPPORT */
+:root {
+  /* Telegram safe area CSS variables fallbacks */
+  --tg-safe-area-inset-top: env(safe-area-inset-top, 0px);
+  --tg-safe-area-inset-bottom: env(safe-area-inset-bottom, 0px);
+  --tg-safe-area-inset-left: env(safe-area-inset-left, 0px);
+  --tg-safe-area-inset-right: env(safe-area-inset-right, 0px);
+
+  /* Additional padding for system elements */
+  --system-safe-top: max(var(--tg-safe-area-inset-top), 20px);
+  --system-safe-bottom: max(var(--tg-safe-area-inset-bottom), 20px);
+}
+
 body {
-  /* iOS Safari safe area support */
-  padding-top: env(safe-area-inset-top);
-  padding-bottom: env(safe-area-inset-bottom);
-  padding-left: env(safe-area-inset-left);
-  padding-right: env(safe-area-inset-right);
+  /* Remove default padding on body */
+  margin: 0;
+  padding: 0;
 }
 
 /* Fullscreen app container */
@@ -463,15 +473,11 @@ body {
   height: 100vh;
   height: 100dvh; /* Dynamic viewport height for mobile */
   overflow: hidden;
-  padding-top: env(safe-area-inset-top);
-  padding-bottom: env(safe-area-inset-bottom);
-  padding-left: env(safe-area-inset-left);
-  padding-right: env(safe-area-inset-right);
 }
 
 /* Header with safe area */
 .header-safe {
-  padding-top: env(safe-area-inset-top);
+  padding-top: var(--system-safe-top);
   position: fixed;
   top: 0;
   left: 0;
@@ -481,7 +487,7 @@ body {
 
 /* Bottom navigation with safe area */
 .bottom-nav-safe {
-  padding-bottom: env(safe-area-inset-bottom);
+  padding-bottom: var(--system-safe-bottom);
   position: fixed;
   bottom: 0;
   left: 0;
@@ -491,10 +497,10 @@ body {
 
 /* Main content with proper spacing for fullscreen */
 .main-content-safe {
-  padding-top: calc(4rem + env(safe-area-inset-top)); /* Header height + safe area */
-  padding-bottom: calc(5rem + env(safe-area-inset-bottom)); /* Bottom nav height + safe area */
-  padding-left: env(safe-area-inset-left);
-  padding-right: env(safe-area-inset-right);
+  padding-top: calc(4rem + var(--system-safe-top)); /* Header height + safe area */
+  padding-bottom: calc(5rem + var(--system-safe-bottom)); /* Bottom nav height + safe area */
+  padding-left: var(--tg-safe-area-inset-left);
+  padding-right: var(--tg-safe-area-inset-right);
   height: 100vh;
   height: 100dvh;
   overflow-y: auto;
