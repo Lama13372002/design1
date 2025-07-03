@@ -84,10 +84,19 @@ export const ChatPage = () => {
 
   const handleSendMessage = () => {
     if (newMessage.trim()) {
+      // Проверка на наличие нецензурных слов (базовый пример)
+      const badWords = ["мат", "плохоеслово", "нецензурно"];
+      let filteredMessage = newMessage;
+
+      badWords.forEach(word => {
+        const regex = new RegExp(word, 'gi');
+        filteredMessage = filteredMessage.replace(regex, '***');
+      });
+
       const message: ChatMessage = {
         id: Date.now().toString(),
         user: { name: "Test User" },
-        message: newMessage.trim(),
+        message: filteredMessage.trim(),
         timestamp: new Date().toLocaleTimeString("ru", {
           hour: "2-digit",
           minute: "2-digit"
@@ -97,11 +106,32 @@ export const ChatPage = () => {
 
       setMessages([...messages, message]);
       setNewMessage("");
+
+      // Имитируем ответ бота через небольшую задержку
+      if (Math.random() > 0.7) {
+        setTimeout(() => {
+          const botResponse: ChatMessage = {
+            id: (Date.now() + 1).toString(),
+            user: { name: "SportsFan" },
+            message: "Привет! Какие матчи сегодня смотришь?",
+            timestamp: new Date().toLocaleTimeString("ru", {
+              hour: "2-digit",
+              minute: "2-digit"
+            }),
+            isOwn: false
+          };
+          setMessages(prev => [...prev, botResponse]);
+          scrollToBottom();
+        }, 2000);
+      }
     }
   };
 
   const handleReportMessage = (messageId: string) => {
-    alert(`Жалоба на сообщение ${messageId} отправлена модераторам`);
+    const message = messages.find(msg => msg.id === messageId);
+    if (!message) return;
+
+    alert(`Жалоба на сообщение от ${message.user.name} отправлена модераторам.`);
   };
 
   const getRoleColor = (role?: string) => {
@@ -123,6 +153,25 @@ export const ChatPage = () => {
         return <Badge className="text-xs bg-gradient-to-r from-blue-500 to-blue-600 text-white border-none">Mod</Badge>;
       default:
         return null;
+    }
+  };
+
+  const handleToggleRules = () => {
+    setShowRules(!showRules);
+  };
+
+  const handleOpenEmoji = () => {
+    alert("Выбор эмодзи будет доступен в следующей версии");
+  };
+
+  const handleAttachFile = () => {
+    alert("Прикрепление файлов будет доступно в следующей версии");
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleSendMessage();
     }
   };
 
@@ -150,7 +199,7 @@ export const ChatPage = () => {
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => setShowRules(!showRules)}
+              onClick={handleToggleRules}
               className="hover:bg-white/10 rounded-full h-9 w-9 p-0 flex items-center justify-center"
             >
               <Pin className={`h-4 w-4 ${showRules ? 'text-yellow-400' : 'text-foreground/70'}`} />
@@ -267,15 +316,15 @@ export const ChatPage = () => {
               placeholder="Написать сообщение..."
               value={newMessage}
               onChange={(e) => setNewMessage(e.target.value)}
-              onKeyPress={(e) => e.key === "Enter" && handleSendMessage()}
+              onKeyPress={handleKeyPress}
               className="pl-10 pr-12 rounded-full bg-white/5 backdrop-blur-sm border-white/10 focus:border-blue-400 focus:ring-1 focus:ring-blue-400 h-12"
               maxLength={500}
             />
             <div className="absolute left-3 top-1/2 transform -translate-y-1/2">
-              <Smile className="h-5 w-5 text-foreground/50 hover:text-foreground/80 cursor-pointer" />
+              <Smile className="h-5 w-5 text-foreground/50 hover:text-foreground/80 cursor-pointer" onClick={handleOpenEmoji} />
             </div>
             <div className="absolute right-3 top-1/2 transform -translate-y-1/2 flex items-center space-x-2">
-              <Paperclip className="h-5 w-5 text-foreground/50 hover:text-foreground/80 cursor-pointer" />
+              <Paperclip className="h-5 w-5 text-foreground/50 hover:text-foreground/80 cursor-pointer" onClick={handleAttachFile} />
             </div>
           </div>
           <Button
