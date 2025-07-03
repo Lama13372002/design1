@@ -17,7 +17,8 @@ import {
   Scale,
   Zap,
   ChevronRight,
-  Sparkles
+  Sparkles,
+  MessageCircle
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
