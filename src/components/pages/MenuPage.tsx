@@ -92,7 +92,7 @@ export const MenuPage = () => {
   };
 
   return (
-    <div className="p-4 space-y-6">
+    <div className="p-4 space-y-6 pb-24">
       {/* User Profile */}
       <Card className="glass-card border-none overflow-hidden relative shadow-md">
         <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-purple-500/10 to-pink-500/10 rounded-xl"></div>
