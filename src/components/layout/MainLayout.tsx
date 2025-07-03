@@ -5,6 +5,7 @@ import type { PageType } from "@/app/page";
 import { BottomNavigation } from "./BottomNavigation";
 import { Header } from "./Header";
 import { motion } from "framer-motion";
+import { useTelegram } from "@/components/providers/TelegramProvider";
 
 interface MainLayoutProps {
   children: ReactNode;
@@ -13,12 +14,14 @@ interface MainLayoutProps {
 }
 
 export const MainLayout = ({ children, currentPage, onPageChange }: MainLayoutProps) => {
+  const { isFullscreen } = useTelegram();
+
   return (
-    <div className="min-h-screen bg-background flex flex-col">
-      <Header currentPage={currentPage} />
+    <div className={`bg-background flex flex-col ${isFullscreen ? 'fullscreen-app' : 'min-h-screen'}`}>
+      <Header currentPage={currentPage} isFullscreen={isFullscreen} />
 
       <motion.main
-        className="flex-1 pb-20 pt-16"
+        className={isFullscreen ? 'main-content-safe flex-1' : 'flex-1 pb-20 pt-16'}
         key={currentPage}
         initial={{ opacity: 0, x: 20 }}
         animate={{ opacity: 1, x: 0 }}
@@ -28,7 +31,7 @@ export const MainLayout = ({ children, currentPage, onPageChange }: MainLayoutPr
         {children}
       </motion.main>
 
-      <BottomNavigation currentPage={currentPage} onPageChange={onPageChange} />
+      <BottomNavigation currentPage={currentPage} onPageChange={onPageChange} isFullscreen={isFullscreen} />
     </div>
   );
 };
