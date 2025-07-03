@@ -15,7 +15,12 @@ import {
   Trophy,
   BarChart3,
   Coins,
-  Star
+  Star,
+  Sparkles,
+  ChevronRight,
+  AlertCircle,
+  Zap,
+  Info
 } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -112,17 +117,17 @@ const mockBets: MyBet[] = [
 const getStatusIcon = (status: string) => {
   switch (status) {
     case "won":
-      return <CheckCircle className="h-5 w-5 text-green-500" />;
+      return <CheckCircle className="h-5 w-5 text-green-400" />;
     case "lost":
-      return <XCircle className="h-5 w-5 text-red-500" />;
+      return <XCircle className="h-5 w-5 text-red-400" />;
     case "active":
-      return <Clock className="h-5 w-5 text-blue-500" />;
+      return <Clock className="h-5 w-5 text-blue-400" />;
     case "pending_payment":
-      return <DollarSign className="h-5 w-5 text-yellow-500" />;
+      return <DollarSign className="h-5 w-5 text-yellow-400" />;
     case "cancelled":
-      return <XCircle className="h-5 w-5 text-gray-500" />;
+      return <XCircle className="h-5 w-5 text-foreground/50" />;
     default:
-      return <Clock className="h-5 w-5 text-gray-500" />;
+      return <Clock className="h-5 w-5 text-foreground/50" />;
   }
 };
 
@@ -146,17 +151,17 @@ const getStatusText = (status: string) => {
 const getStatusColor = (status: string) => {
   switch (status) {
     case "won":
-      return "bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300";
+      return "bg-gradient-to-r from-green-400 to-emerald-500 text-white border-none";
     case "lost":
-      return "bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300";
+      return "bg-gradient-to-r from-red-400 to-rose-500 text-white border-none";
     case "active":
-      return "bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300";
+      return "bg-gradient-to-r from-blue-400 to-blue-500 text-white border-none";
     case "pending_payment":
-      return "bg-yellow-100 text-yellow-700 dark:bg-yellow-900 dark:text-yellow-300";
+      return "bg-gradient-to-r from-yellow-400 to-amber-500 text-white border-none";
     case "cancelled":
-      return "bg-gray-100 text-gray-700 dark:bg-gray-900 dark:text-gray-300";
+      return "bg-foreground/20 text-foreground/60 border-none";
     default:
-      return "bg-gray-100 text-gray-700 dark:bg-gray-900 dark:text-gray-300";
+      return "bg-foreground/20 text-foreground/60 border-none";
   }
 };
 
@@ -183,89 +188,119 @@ export const MyBetsPage = () => {
 
   return (
     <div className="p-4 space-y-6">
+      {/* Header */}
+      <div>
+        <h2 className="text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 text-transparent bg-clip-text mb-1">
+          Мои споры
+        </h2>
+        <p className="text-sm text-foreground/70">Управляйте своими ставками и отслеживайте результаты</p>
+      </div>
+
       {/* Statistics */}
       <div className="grid grid-cols-2 gap-4">
-        <Card className="bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-950/20 dark:to-purple-950/20 border-blue-200 dark:border-blue-800">
-          <CardContent className="p-4">
+        <Card className="glass-card border-none overflow-hidden relative shadow-md">
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-purple-600/10 rounded-xl"></div>
+          <CardContent className="p-4 relative z-10">
             <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
-                <BarChart3 className="h-5 w-5 text-white" />
+              <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center shadow-md relative overflow-hidden">
+                <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full animate-shimmer"></div>
+                <BarChart3 className="h-6 w-6 text-white" />
               </div>
               <div>
-                <p className="text-2xl font-bold">{winRate}%</p>
-                <p className="text-sm text-muted-foreground">Процент побед</p>
+                <p className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 text-transparent bg-clip-text">{winRate}%</p>
+                <p className="text-sm text-foreground/70">Процент побед</p>
               </div>
             </div>
-            <div className="mt-3 w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+            <div className="mt-3 w-full bg-white/10 rounded-full h-2.5 overflow-hidden">
               <div
-                className="bg-gradient-to-r from-blue-500 to-purple-600 h-2 rounded-full transition-all duration-300"
+                className="bg-gradient-to-r from-blue-400 to-purple-500 h-2.5 rounded-full transition-all duration-1000"
                 style={{ width: `${winRate}%` }}
               />
             </div>
           </CardContent>
         </Card>
 
-        <Card className="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-950/20 dark:to-emerald-950/20 border-green-200 dark:border-green-800">
-          <CardContent className="p-4">
+        <Card className="glass-card border-none overflow-hidden relative shadow-md">
+          <div className="absolute inset-0 bg-gradient-to-br from-green-500/10 to-emerald-600/10 rounded-xl"></div>
+          <CardContent className="p-4 relative z-10">
             <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center">
-                <Trophy className="h-5 w-5 text-white" />
+              <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center shadow-md relative overflow-hidden">
+                <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full animate-shimmer"></div>
+                <Trophy className="h-6 w-6 text-white" />
               </div>
               <div>
-                <p className="text-2xl font-bold">{wonBets}</p>
-                <p className="text-sm text-muted-foreground">Выигранных</p>
+                <div className="flex items-center space-x-1">
+                  <p className="text-2xl font-bold bg-gradient-to-r from-green-400 to-emerald-500 text-transparent bg-clip-text">{wonBets}</p>
+                  <Sparkles className="h-4 w-4 text-yellow-400" />
+                </div>
+                <p className="text-sm text-foreground/70">Выигранных споров</p>
               </div>
             </div>
-            <p className="text-xs text-green-600 dark:text-green-400 mt-1">
-              из {totalBets} споров
+            <p className="text-xs text-green-400 mt-2 flex items-center">
+              <CheckCircle className="h-3 w-3 mr-1" />
+              <span>из {totalBets} споров ({Math.round(wonBets/totalBets*100) || 0}%)</span>
             </p>
           </CardContent>
         </Card>
       </div>
 
       {/* Status Filters */}
-      <div className="space-y-3">
-        <h2 className="text-lg font-semibold">История споров</h2>
-        <div className="flex space-x-2 overflow-x-auto pb-2">
-          {statuses.map((status) => (
-            <Button
-              key={status}
-              variant={selectedStatus === status ? "default" : "outline"}
-              size="sm"
-              onClick={() => setSelectedStatus(status)}
-              className="whitespace-nowrap"
-            >
-              {status === "all" ? "Все" : getStatusText(status)}
-            </Button>
-          ))}
-        </div>
-      </div>
+      <Card className="glass-card border-none overflow-hidden p-3">
+        <CardContent className="p-0 space-y-3">
+          <div className="flex space-x-2 overflow-x-auto py-1 no-scrollbar">
+            {statuses.map((status) => (
+              <Button
+                key={status}
+                variant={selectedStatus === status ? "default" : "outline"}
+                size="sm"
+                onClick={() => setSelectedStatus(status)}
+                className={`rounded-full whitespace-nowrap ${
+                  selectedStatus === status
+                    ? status === "all"
+                      ? "bg-gradient-to-r from-blue-400 to-purple-500 text-white border-none shadow-md"
+                      : getStatusColor(status)
+                    : "bg-white/5 backdrop-blur-sm border border-white/10"
+                }`}
+              >
+                {status !== "all" && getStatusIcon(status)}
+                <span className="ml-1">{status === "all" ? "Все" : getStatusText(status)}</span>
+              </Button>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Bets List */}
-      <div className="space-y-3">
+      <div className="space-y-4">
         {filteredBets.map((bet, index) => (
           <motion.div
             key={bet.id}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.1 }}
+            whileHover={{ scale: 1.02, transition: { duration: 0.2 } }}
           >
-            <Card className="hover:shadow-md transition-shadow">
-              <CardHeader className="pb-3">
+            <Card className="glass-card border-none overflow-hidden relative">
+              <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-400 to-purple-500 rounded-t-xl"></div>
+
+              <CardHeader className="pb-2 pt-4 relative z-10">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-3">
                     {getStatusIcon(bet.status)}
                     <div>
-                      <CardTitle className="text-base">
-                        {bet.match.homeTeam} vs {bet.match.awayTeam}
+                      <CardTitle className="text-base font-semibold flex items-center">
+                        <span>{bet.match.homeTeam}</span>
+                        <span className="mx-1 text-foreground/70">vs</span>
+                        <span>{bet.match.awayTeam}</span>
                       </CardTitle>
                       <div className="flex items-center space-x-2 mt-1">
-                        <Badge variant="outline" className="text-xs">
+                        <Badge variant="outline" className="text-xs bg-white/10 border-white/10">
                           {bet.match.league}
                         </Badge>
-                        <span className="text-xs text-muted-foreground">
-                          {bet.match.date}
-                        </span>
+                        <div className="flex items-center space-x-1 text-xs text-foreground/70">
+                          <Clock className="h-3 w-3 text-blue-400" />
+                          <span>{bet.match.date}</span>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -276,95 +311,108 @@ export const MyBetsPage = () => {
                 </div>
               </CardHeader>
 
-              <CardContent className="pt-0">
+              <CardContent className="pt-0 relative z-10">
                 <div className="space-y-3">
                   {/* Bet Details */}
-                  <div className="grid grid-cols-2 gap-4 text-sm">
-                    <div>
-                      <p className="text-muted-foreground">Прогноз</p>
-                      <p className="font-medium">{bet.prediction}</p>
-                    </div>
-                    <div>
-                      <p className="text-muted-foreground">Сумма</p>
-                      <div className="flex items-center space-x-1">
-                        {bet.currency === "TON" ? (
-                          <Coins className="h-4 w-4 text-blue-500" />
-                        ) : (
-                          <Star className="h-4 w-4 text-yellow-500" />
-                        )}
-                        <span className="font-bold">{bet.amount}</span>
+                  <div className="p-3 rounded-xl bg-white/5 backdrop-blur-sm space-y-3">
+                    <div className="grid grid-cols-2 gap-4 text-sm">
+                      <div>
+                        <p className="text-foreground/70 text-xs">Прогноз</p>
+                        <p className="font-medium flex items-center">
+                          <TrendingUp className="h-3.5 w-3.5 mr-1 text-blue-400" />
+                          {bet.prediction}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-foreground/70 text-xs">Сумма</p>
+                        <div className="flex items-center space-x-1">
+                          {bet.currency === "TON" ? (
+                            <Coins className="h-4 w-4 text-blue-400" />
+                          ) : (
+                            <Star className="h-4 w-4 text-yellow-400" />
+                          )}
+                          <span className="font-bold">{bet.amount}</span>
+                        </div>
+                      </div>
+                      <div>
+                        <p className="text-foreground/70 text-xs">Коэффициент</p>
+                        <div className="flex items-center space-x-1">
+                          <Zap className="h-3.5 w-3.5 text-purple-400" />
+                          <span className="font-medium">x{bet.odds}</span>
+                        </div>
+                      </div>
+                      <div>
+                        <p className="text-foreground/70 text-xs">Соперники</p>
+                        <p className="font-medium truncate">
+                          {bet.opponents.length > 0 ? bet.opponents.join(", ") : "Нет"}
+                        </p>
                       </div>
                     </div>
-                    <div>
-                      <p className="text-muted-foreground">Коэффициент</p>
-                      <div className="flex items-center space-x-1">
-                        <TrendingUp className="h-3 w-3" />
-                        <span className="font-medium">{bet.odds}</span>
-                      </div>
-                    </div>
-                    <div>
-                      <p className="text-muted-foreground">Соперники</p>
-                      <p className="font-medium">
-                        {bet.opponents.length > 0 ? bet.opponents.join(", ") : "Нет"}
-                      </p>
-                    </div>
-                  </div>
 
-                  {/* Result */}
-                  {bet.result && (
-                    <>
-                      <Separator />
-                      <div className="space-y-2">
-                        {bet.result.finalScore && (
-                          <div className="flex items-center justify-between text-sm">
-                            <span className="text-muted-foreground">Итоговый счет:</span>
-                            <span className="font-bold">
-                              {bet.result.finalScore.home} - {bet.result.finalScore.away}
-                            </span>
-                          </div>
-                        )}
-                        {bet.result.payout && (
-                          <div className="flex items-center justify-between text-sm">
-                            <span className="text-muted-foreground">Выплата:</span>
-                            <div className="flex items-center space-x-1">
-                              {bet.currency === "TON" ? (
-                                <Coins className="h-4 w-4 text-green-500" />
-                              ) : (
-                                <Star className="h-4 w-4 text-green-500" />
-                              )}
-                              <span className="font-bold text-green-600">
-                                +{bet.result.payout}
+                    {/* Result */}
+                    {bet.result && (
+                      <>
+                        <Separator className="bg-white/10" />
+                        <div className="space-y-2">
+                          {bet.result.finalScore && (
+                            <div className="flex items-center justify-between text-sm">
+                              <span className="text-foreground/70">Итоговый счет:</span>
+                              <span className="font-bold bg-gradient-to-r from-blue-400 to-purple-500 text-transparent bg-clip-text">
+                                {bet.result.finalScore.home} - {bet.result.finalScore.away}
                               </span>
                             </div>
-                          </div>
-                        )}
-                      </div>
-                    </>
-                  )}
+                          )}
+                          {bet.result.payout && (
+                            <div className="flex items-center justify-between text-sm">
+                              <span className="text-foreground/70">Выплата:</span>
+                              <div className="flex items-center space-x-1">
+                                <Sparkles className="h-4 w-4 text-yellow-400" />
+                                <span className="font-bold bg-gradient-to-r from-green-400 to-emerald-500 text-transparent bg-clip-text">
+                                  +{bet.result.payout} {bet.currency}
+                                </span>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      </>
+                    )}
+                  </div>
 
                   {/* Actions */}
-                  <div className="flex space-x-2 pt-2">
+                  <div className="flex space-x-2 pt-1">
                     {bet.status === "won" || bet.status === "lost" ? (
                       <Button
                         variant="outline"
                         size="sm"
                         onClick={() => handleRepeatBet(bet.id)}
-                        className="flex-1"
+                        className="flex-1 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10"
                       >
-                        <Repeat className="h-4 w-4 mr-2" />
-                        Повторить спор
+                        <div className="flex items-center space-x-2">
+                          <Repeat className="h-4 w-4" />
+                          <span>Повторить спор</span>
+                        </div>
                       </Button>
                     ) : bet.status === "pending_payment" ? (
                       <Button
-                        className="flex-1 bg-gradient-to-r from-yellow-600 to-orange-600 hover:from-yellow-700 hover:to-orange-700"
+                        className="flex-1 rounded-xl bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-500 hover:to-amber-600 text-white shadow-md"
                         size="sm"
                       >
-                        <DollarSign className="h-4 w-4 mr-2" />
-                        Оплатить
+                        <div className="flex items-center space-x-2">
+                          <DollarSign className="h-4 w-4" />
+                          <span>Оплатить сейчас</span>
+                          <ChevronRight className="h-4 w-4" />
+                        </div>
                       </Button>
                     ) : (
-                      <Button variant="outline" size="sm" className="flex-1">
-                        Подробности
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="flex-1 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10"
+                      >
+                        <div className="flex items-center space-x-2">
+                          <Info className="h-4 w-4" />
+                          <span>Подробности</span>
+                        </div>
                       </Button>
                     )}
                   </div>
@@ -376,13 +424,23 @@ export const MyBetsPage = () => {
       </div>
 
       {filteredBets.length === 0 && (
-        <div className="text-center py-8">
-          <p className="text-muted-foreground">
+        <div className="text-center py-12 bg-white/5 backdrop-blur-sm rounded-xl border border-white/10">
+          <AlertCircle className="h-12 w-12 text-foreground/30 mx-auto mb-3" />
+          <p className="text-foreground/60 font-medium">
             {selectedStatus === "all"
               ? "У вас пока нет споров"
               : `Нет споров со статусом "${getStatusText(selectedStatus)}"`
             }
           </p>
+          {selectedStatus !== "all" && (
+            <Button
+              variant="outline"
+              className="mt-4 rounded-full bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10"
+              onClick={() => setSelectedStatus("all")}
+            >
+              Показать все споры
+            </Button>
+          )}
         </div>
       )}
     </div>
