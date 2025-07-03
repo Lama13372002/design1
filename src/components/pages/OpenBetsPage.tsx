@@ -115,11 +115,55 @@ export const OpenBetsPage = () => {
     });
 
   const handleJoinBet = (betId: string) => {
-    alert(`Присоединяемся к спору ${betId}`);
+    // Проверяем, есть ли свободные места
+    const bet = mockBets.find(b => b.id === betId);
+
+    if (!bet || bet.participants >= bet.maxParticipants) {
+      alert("Невозможно присоединиться к спору: все места заняты");
+      return;
+    }
+
+    // Здесь будет логика присоединения к спору
+    alert(`Вы успешно присоединились к спору #${betId}`);
+
+    // Обновляем состояние (в реальном приложении данные пришли бы с сервера)
+    const updatedBets = mockBets.map(b => {
+      if (b.id === betId) {
+        return { ...b, participants: b.participants + 1 };
+      }
+      return b;
+    });
+
+    // Обновляем список споров с новыми данными
+    // В реальном приложении здесь был бы запрос к API
   };
 
   const handleViewDetails = (betId: string) => {
-    alert(`Детали спора ${betId}`);
+    const bet = mockBets.find(b => b.id === betId);
+    if (!bet) return;
+
+    const formattedText = `
+Детали спора #${bet.id}
+-------------------
+Матч: ${bet.match.homeTeam} vs ${bet.match.awayTeam}
+Лига: ${bet.match.league}
+Время: ${bet.match.startTime}
+Прогноз: ${bet.prediction}
+Сумма: ${bet.amount} ${bet.currency}
+Коэффициент: ${bet.odds}
+Создатель: ${bet.creator.name}
+Участники: ${bet.participants}/${bet.maxParticipants}
+    `;
+
+    alert(formattedText);
+  };
+
+  const handleFilterByStatus = (status: "all" | "TON" | "STARS") => {
+    setSelectedCurrency(status);
+  };
+
+  const handleSort = (sortType: "time" | "amount" | "odds") => {
+    setSortBy(sortType);
   };
 
   return (
@@ -145,7 +189,7 @@ export const OpenBetsPage = () => {
               <Button
                 variant={selectedCurrency === "all" ? "default" : "outline"}
                 size="sm"
-                onClick={() => setSelectedCurrency("all")}
+                onClick={() => handleFilterByStatus("all")}
                 className={`rounded-full ${selectedCurrency === "all" ? "bg-gradient-to-r from-blue-500 to-purple-500 text-white border-none shadow-md" : "bg-white/5 backdrop-blur-sm border border-white/10"}`}
               >
                 <Filter className="h-4 w-4 mr-1" />
@@ -154,7 +198,7 @@ export const OpenBetsPage = () => {
               <Button
                 variant={selectedCurrency === "TON" ? "default" : "outline"}
                 size="sm"
-                onClick={() => setSelectedCurrency("TON")}
+                onClick={() => handleFilterByStatus("TON")}
                 className={`flex items-center space-x-1 rounded-full ${selectedCurrency === "TON" ? "bg-gradient-to-r from-blue-500 to-blue-600 text-white border-none shadow-md" : "bg-white/5 backdrop-blur-sm border border-white/10"}`}
               >
                 <Coins className="h-4 w-4" />
@@ -163,7 +207,7 @@ export const OpenBetsPage = () => {
               <Button
                 variant={selectedCurrency === "STARS" ? "default" : "outline"}
                 size="sm"
-                onClick={() => setSelectedCurrency("STARS")}
+                onClick={() => handleFilterByStatus("STARS")}
                 className={`flex items-center space-x-1 rounded-full ${selectedCurrency === "STARS" ? "bg-gradient-to-r from-yellow-500 to-amber-500 text-white border-none shadow-md" : "bg-white/5 backdrop-blur-sm border border-white/10"}`}
               >
                 <Star className="h-4 w-4" />
@@ -176,7 +220,7 @@ export const OpenBetsPage = () => {
               <Button
                 variant={sortBy === "time" ? "default" : "outline"}
                 size="sm"
-                onClick={() => setSortBy("time")}
+                onClick={() => handleSort("time")}
                 className={`rounded-full ${sortBy === "time" ? "bg-gradient-to-r from-blue-400 to-purple-500 text-white border-none shadow-md" : "bg-white/5 backdrop-blur-sm border border-white/10"}`}
               >
                 <Clock className="h-4 w-4 mr-1" />
@@ -185,7 +229,7 @@ export const OpenBetsPage = () => {
               <Button
                 variant={sortBy === "amount" ? "default" : "outline"}
                 size="sm"
-                onClick={() => setSortBy("amount")}
+                onClick={() => handleSort("amount")}
                 className={`rounded-full ${sortBy === "amount" ? "bg-gradient-to-r from-blue-400 to-purple-500 text-white border-none shadow-md" : "bg-white/5 backdrop-blur-sm border border-white/10"}`}
               >
                 <Coins className="h-4 w-4 mr-1" />
@@ -194,7 +238,7 @@ export const OpenBetsPage = () => {
               <Button
                 variant={sortBy === "odds" ? "default" : "outline"}
                 size="sm"
-                onClick={() => setSortBy("odds")}
+                onClick={() => handleSort("odds")}
                 className={`rounded-full ${sortBy === "odds" ? "bg-gradient-to-r from-blue-400 to-purple-500 text-white border-none shadow-md" : "bg-white/5 backdrop-blur-sm border border-white/10"}`}
               >
                 <TrendingUp className="h-4 w-4 mr-1" />
