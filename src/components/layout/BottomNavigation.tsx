@@ -24,7 +24,7 @@ interface BottomNavigationProps {
 const navItems = [
   { id: "home", icon: Home, label: "Главная" },
   { id: "open-bets", icon: Users, label: "Споры" },
-  // Кнопка "Создать" перемещается в отдельную часть для стилизации
+  { id: "create-bet", icon: Plus, label: "Создать" }, // Добавляем кнопку создания в общий массив
   { id: "chat", icon: MessageCircle, label: "Чат", badge: 3 },
   { id: "my-bets", icon: BarChart3, label: "Мои" },
   { id: "menu", icon: Menu, label: "Меню" },
@@ -35,38 +35,14 @@ export const BottomNavigation = ({ currentPage, onPageChange, isFullscreen = fal
     <div
       className={`fixed bottom-0 left-0 right-0 z-50 px-3 pb-3 ${isFullscreen ? 'bottom-nav-safe pb-[calc(0.75rem+var(--system-safe-bottom))]' : 'pb-3'}`}
     >
-      {/* Плавающая центральная кнопка создания */}
-      <motion.div
-        initial={{ y: 0 }}
-        animate={{ y: -20 }}
-        className="absolute left-1/2 -translate-x-1/2 -translate-y-1/2 top-0 z-10"
-        whileTap={{ scale: 0.92 }}
-        whileHover={{ scale: 1.05, y: -25 }}
-      >
-        <Button
-          onClick={() => onPageChange("create-bet")}
-          className="h-16 w-16 rounded-full shadow-lg bg-gradient-to-br from-purple-500 to-blue-600 hover:from-purple-600 hover:to-blue-700 flex items-center justify-center animate-glow"
-        >
-          <Plus className="h-7 w-7 text-white" strokeWidth={2.5} />
-        </Button>
-      </motion.div>
-
       {/* Стильное овальное меню */}
       <div className="relative">
         <div className="absolute inset-0 rounded-full blur-md bg-background/50 backdrop-blur-md"></div>
-        <nav className="glass relative rounded-full border border-white/20 shadow-xl backdrop-blur-md flex items-center justify-between px-5 py-3">
+        <nav className="glass relative rounded-full border border-white/20 shadow-xl backdrop-blur-md flex items-center justify-between px-4 py-3">
           <div className="flex justify-between w-full items-center">
-            {/* Первая половина кнопок */}
-            <div className="flex space-x-1 items-center">
-              {navItems.slice(0, 2).map((item) => renderNavItem(item, currentPage, onPageChange))}
-            </div>
-
-            {/* Пустое пространство для центральной кнопки */}
-            <div className="w-16"></div>
-
-            {/* Вторая половина кнопок */}
-            <div className="flex space-x-1 items-center">
-              {navItems.slice(2).map((item) => renderNavItem(item, currentPage, onPageChange))}
+            {/* Все кнопки в одной линии */}
+            <div className="flex justify-between w-full space-x-1 items-center">
+              {navItems.map((item) => renderNavItem(item, currentPage, onPageChange))}
             </div>
           </div>
         </nav>
@@ -83,6 +59,9 @@ const renderNavItem = (
 ) => {
   const isActive = currentPage === item.id;
 
+  // Особые стили для кнопки создания
+  const isCreateButton = item.id === "create-bet";
+
   return (
     <motion.div
       key={item.id}
@@ -94,9 +73,11 @@ const renderNavItem = (
         size="sm"
         onClick={() => onPageChange(item.id as PageType)}
         className={`
-          flex flex-col items-center justify-center h-14 w-14 p-0 rounded-full
+          flex flex-col items-center justify-center h-12 w-12 p-0 rounded-full
           ${isActive
-            ? "bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-md"
+            ? isCreateButton
+              ? "bg-gradient-to-r from-purple-500 to-blue-600 text-white shadow-md"
+              : "bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-md"
             : "bg-transparent text-muted-foreground hover:text-foreground"}
         `}
       >
@@ -116,8 +97,9 @@ const renderNavItem = (
       {isActive && (
         <motion.div
           layoutId="activeTabIndicator"
-          className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-8 h-1 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full"
+          className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-6 h-1 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full"
           transition={{ type: "spring", duration: 0.3 }}
+          style={{ left: '50%', translateX: '-50%' }}
         />
       )}
     </motion.div>
