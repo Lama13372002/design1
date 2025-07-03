@@ -13,7 +13,12 @@ import {
   MoreHorizontal,
   Shield,
   MessageCircle,
-  Users
+  Users,
+  Smile,
+  Image,
+  PlusCircle,
+  Sparkles,
+  Paperclip
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -102,9 +107,9 @@ export const ChatPage = () => {
   const getRoleColor = (role?: string) => {
     switch (role) {
       case "admin":
-        return "bg-red-500";
+        return "bg-gradient-to-r from-red-500 to-rose-500";
       case "moderator":
-        return "bg-blue-500";
+        return "bg-gradient-to-r from-blue-500 to-blue-600";
       default:
         return "bg-gradient-to-br from-blue-500 to-purple-600";
     }
@@ -113,40 +118,51 @@ export const ChatPage = () => {
   const getRoleBadge = (role?: string) => {
     switch (role) {
       case "admin":
-        return <Badge variant="destructive" className="text-xs">Admin</Badge>;
+        return <Badge className="text-xs bg-gradient-to-r from-red-500 to-rose-500 text-white border-none">Admin</Badge>;
       case "moderator":
-        return <Badge variant="default" className="text-xs">Mod</Badge>;
+        return <Badge className="text-xs bg-gradient-to-r from-blue-500 to-blue-600 text-white border-none">Mod</Badge>;
       default:
         return null;
     }
   };
 
   return (
-    <div className="flex flex-col h-[calc(100vh-8rem)]">
+    <div className="flex flex-col h-[calc(100vh-8rem)] bg-gradient-to-b from-background to-background/60">
       {/* Chat Header */}
-      <div className="p-4 border-b border-border">
+      <div className="p-4 backdrop-blur-md bg-background/50 border-b border-white/10">
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-blue-600 rounded-full flex items-center justify-center">
+            <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center shadow-md relative overflow-hidden group">
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-all duration-700"></div>
               <MessageCircle className="h-5 w-5 text-white" />
             </div>
             <div>
-              <h2 className="font-semibold">Общий чат</h2>
-              <div className="flex items-center space-x-2 text-sm text-muted-foreground">
-                <Users className="h-4 w-4" />
+              <h2 className="font-bold text-lg bg-gradient-to-r from-blue-400 to-purple-500 text-transparent bg-clip-text">Общий чат</h2>
+              <div className="flex items-center space-x-2 text-sm text-foreground/70">
+                <Users className="h-4 w-4 text-blue-400" />
                 <span>127 онлайн</span>
-                <div className="w-1 h-1 bg-green-500 rounded-full"></div>
+                <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></div>
               </div>
             </div>
           </div>
 
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => setShowRules(!showRules)}
-          >
-            <Pin className="h-4 w-4" />
-          </Button>
+          <div className="flex space-x-1">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setShowRules(!showRules)}
+              className="hover:bg-white/10 rounded-full h-9 w-9 p-0 flex items-center justify-center"
+            >
+              <Pin className={`h-4 w-4 ${showRules ? 'text-yellow-400' : 'text-foreground/70'}`} />
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="hover:bg-white/10 rounded-full h-9 w-9 p-0 flex items-center justify-center"
+            >
+              <MoreHorizontal className="h-4 w-4 text-foreground/70" />
+            </Button>
+          </div>
         </div>
 
         {/* Pinned Rules */}
@@ -158,18 +174,20 @@ export const ChatPage = () => {
               exit={{ opacity: 0, height: 0 }}
               transition={{ duration: 0.2 }}
             >
-              <Card className="bg-yellow-50 dark:bg-yellow-950/20 border-yellow-200 dark:border-yellow-800">
-                <CardContent className="p-3">
+              <Card className="glass-card border-none overflow-hidden relative">
+                <div className="absolute inset-0 bg-gradient-to-r from-yellow-500/10 to-amber-500/10 rounded-xl"></div>
+                <CardContent className="p-3 relative z-10">
                   <div className="flex items-center space-x-2 mb-2">
-                    <Pin className="h-4 w-4 text-yellow-600" />
-                    <span className="font-semibold text-yellow-700 dark:text-yellow-300 text-sm">
+                    <Pin className="h-4 w-4 text-yellow-400" />
+                    <span className="font-semibold text-yellow-400 text-sm">
                       Правила чата
                     </span>
                   </div>
                   <ul className="space-y-1">
                     {pinnedRules.map((rule, index) => (
-                      <li key={index} className="text-sm text-yellow-700 dark:text-yellow-300">
-                        • {rule}
+                      <li key={index} className="text-sm text-foreground/80 flex items-start space-x-2">
+                        <div className="min-w-4 text-yellow-400">•</div>
+                        <span>{rule}</span>
                       </li>
                     ))}
                   </ul>
@@ -181,34 +199,37 @@ export const ChatPage = () => {
       </div>
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-3">
+      <div className="flex-1 overflow-y-auto p-4 space-y-4 scrollbar-hide" style={{ scrollbarWidth: 'none' }}>
         {messages.map((message, index) => (
           <motion.div
             key={message.id}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.05 }}
+            transition={{ type: "spring", stiffness: 350, damping: 30, delay: index * 0.05 }}
             className={`flex ${message.isOwn ? "justify-end" : "justify-start"}`}
           >
             <div className={`max-w-[80%] ${message.isOwn ? "order-2" : ""}`}>
               {!message.isOwn && (
-                <div className="flex items-center space-x-2 mb-1">
-                  <Avatar className="h-6 w-6">
-                    <AvatarFallback className={`${getRoleColor(message.user.role)} text-white text-xs`}>
+                <div className="flex items-center space-x-2 mb-1 ml-2">
+                  <Avatar className="h-7 w-7 border-2 border-white/10">
+                    <AvatarFallback className={`${getRoleColor(message.user.role)} text-white text-xs font-semibold`}>
                       {message.user.name[0]}
                     </AvatarFallback>
                   </Avatar>
-                  <span className="font-medium text-sm">{message.user.name}</span>
-                  {getRoleBadge(message.user.role)}
-                  <span className="text-xs text-muted-foreground">{message.timestamp}</span>
+                  <div className="flex items-center space-x-1">
+                    <span className="font-semibold text-sm">{message.user.name}</span>
+                    {getRoleBadge(message.user.role)}
+                  </div>
+                  <span className="text-xs text-foreground/50">{message.timestamp}</span>
                 </div>
               )}
 
               <div className="flex items-start space-x-2">
                 <Card className={`
+                  border-none shadow-md
                   ${message.isOwn
-                    ? "bg-gradient-to-r from-blue-500 to-purple-600 text-white"
-                    : "bg-card"
+                    ? "bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-2xl rounded-br-none"
+                    : "glass-card bg-white/5 backdrop-blur-sm rounded-2xl rounded-bl-none"
                   }
                 `}>
                   <CardContent className="p-3">
@@ -226,9 +247,9 @@ export const ChatPage = () => {
                     variant="ghost"
                     size="sm"
                     onClick={() => handleReportMessage(message.id)}
-                    className="opacity-0 hover:opacity-100 transition-opacity"
+                    className="opacity-0 hover:opacity-100 focus:opacity-100 transition-opacity hover:bg-white/10 rounded-full h-7 w-7 p-0 flex items-center justify-center"
                   >
-                    <Flag className="h-4 w-4" />
+                    <Flag className="h-3.5 w-3.5 text-foreground/70" />
                   </Button>
                 )}
               </div>
@@ -239,31 +260,39 @@ export const ChatPage = () => {
       </div>
 
       {/* Message Input */}
-      <div className="p-4 border-t border-border">
+      <div className="p-4 backdrop-blur-md bg-background/50 border-t border-white/10">
         <div className="flex space-x-2">
-          <Input
-            placeholder="Написать сообщение..."
-            value={newMessage}
-            onChange={(e) => setNewMessage(e.target.value)}
-            onKeyPress={(e) => e.key === "Enter" && handleSendMessage()}
-            className="flex-1"
-            maxLength={500}
-          />
+          <div className="flex-1 relative">
+            <Input
+              placeholder="Написать сообщение..."
+              value={newMessage}
+              onChange={(e) => setNewMessage(e.target.value)}
+              onKeyPress={(e) => e.key === "Enter" && handleSendMessage()}
+              className="pl-10 pr-12 rounded-full bg-white/5 backdrop-blur-sm border-white/10 focus:border-blue-400 focus:ring-1 focus:ring-blue-400 h-12"
+              maxLength={500}
+            />
+            <div className="absolute left-3 top-1/2 transform -translate-y-1/2">
+              <Smile className="h-5 w-5 text-foreground/50 hover:text-foreground/80 cursor-pointer" />
+            </div>
+            <div className="absolute right-3 top-1/2 transform -translate-y-1/2 flex items-center space-x-2">
+              <Paperclip className="h-5 w-5 text-foreground/50 hover:text-foreground/80 cursor-pointer" />
+            </div>
+          </div>
           <Button
             onClick={handleSendMessage}
             disabled={!newMessage.trim()}
-            className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+            className="rounded-full h-12 w-12 p-0 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 disabled:opacity-50 shadow-md"
           >
-            <Send className="h-4 w-4" />
+            <Send className="h-5 w-5" />
           </Button>
         </div>
 
-        <div className="flex items-center justify-between mt-2 text-xs text-muted-foreground">
+        <div className="flex items-center justify-between mt-2 text-xs text-foreground/60">
           <div className="flex items-center space-x-2">
-            <Shield className="h-3 w-3" />
+            <Shield className="h-3 w-3 text-blue-400" />
             <span>Модерация включена</span>
           </div>
-          <span>{newMessage.length}/500</span>
+          <span className={newMessage.length > 400 ? 'text-yellow-400' : ''}>{newMessage.length}/500</span>
         </div>
       </div>
     </div>
