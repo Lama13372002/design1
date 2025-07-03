@@ -68,13 +68,13 @@ export const AuthDialog = ({ open, onLogin, onSkip, isFirstTime = true, user }: 
               transition={{ type: "spring", stiffness: 350, damping: 25 }}
               className="overflow-hidden"
             >
-              <Card className="glass-card border-none overflow-hidden shadow-xl">
-                {/* Градиентный фон вверху */}
-                <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-br from-blue-500/20 via-purple-500/20 to-pink-500/20 backdrop-blur-xl -z-10"></div>
+              <Card className="glass-card border-none overflow-hidden shadow-xl bg-white/50 dark:bg-white/20">
+                {/* Градиентный фон вверху - более светлый */}
+                <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-br from-blue-300/30 via-purple-300/30 to-pink-300/30 backdrop-blur-xl -z-10"></div>
 
-                {/* Декоративные элементы */}
-                <div className="absolute top-12 left-10 w-20 h-20 rounded-full bg-blue-500/10 blur-2xl"></div>
-                <div className="absolute top-20 right-10 w-16 h-16 rounded-full bg-purple-500/10 blur-2xl"></div>
+                {/* Декоративные элементы - более светлые */}
+                <div className="absolute top-12 left-10 w-20 h-20 rounded-full bg-blue-300/20 blur-2xl"></div>
+                <div className="absolute top-20 right-10 w-16 h-16 rounded-full bg-purple-300/20 blur-2xl"></div>
 
                 <CardHeader className="text-center pb-4 relative z-10">
                   <motion.div
@@ -113,7 +113,7 @@ export const AuthDialog = ({ open, onLogin, onSkip, isFirstTime = true, user }: 
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.2 + index * 0.1, type: "spring" }}
                       >
-                        <Card className="p-3 h-full border-none bg-white/5 backdrop-blur-md hover:bg-white/10 transition-all rounded-xl overflow-hidden relative">
+                        <Card className="p-3 h-full border-none bg-white/30 dark:bg-white/10 backdrop-blur-md hover:bg-white/40 dark:hover:bg-white/15 transition-all rounded-xl overflow-hidden relative">
                           <div className={`absolute inset-0 opacity-20 bg-gradient-to-br ${feature.color}`}></div>
                           <div className="flex flex-col items-center text-center space-y-2 relative z-10">
                             <div className={`w-8 h-8 rounded-full bg-gradient-to-br ${feature.color} flex items-center justify-center shadow-md`}>
@@ -130,16 +130,16 @@ export const AuthDialog = ({ open, onLogin, onSkip, isFirstTime = true, user }: 
                   </div>
 
                   <div className="flex flex-wrap gap-2 justify-center">
-                    <Badge variant="secondary" className="bg-white/10 border-none text-xs font-medium px-3 py-1 rounded-full">
+                    <Badge variant="secondary" className="bg-white/40 dark:bg-white/20 border-none text-xs font-medium px-3 py-1 rounded-full">
                       TON
                     </Badge>
-                    <Badge variant="secondary" className="bg-white/10 border-none text-xs font-medium px-3 py-1 rounded-full">
+                    <Badge variant="secondary" className="bg-white/40 dark:bg-white/20 border-none text-xs font-medium px-3 py-1 rounded-full">
                       STARS
                     </Badge>
-                    <Badge variant="secondary" className="bg-white/10 border-none text-xs font-medium px-3 py-1 rounded-full">
+                    <Badge variant="secondary" className="bg-white/40 dark:bg-white/20 border-none text-xs font-medium px-3 py-1 rounded-full">
                       Real-time
                     </Badge>
-                    <Badge variant="secondary" className="bg-white/10 border-none text-xs font-medium px-3 py-1 rounded-full">
+                    <Badge variant="secondary" className="bg-white/40 dark:bg-white/20 border-none text-xs font-medium px-3 py-1 rounded-full">
                       P2P
                     </Badge>
                   </div>
