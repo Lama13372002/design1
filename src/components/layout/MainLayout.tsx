@@ -17,11 +17,13 @@ export const MainLayout = ({ children, currentPage, onPageChange }: MainLayoutPr
   const { isFullscreen } = useTelegram();
 
   return (
-    <div className={`bg-background flex flex-col ${isFullscreen ? 'fullscreen-app' : 'min-h-screen'}`}>
+    <div className={`bg-background flex flex-col ${isFullscreen ? 'fullscreen-app' : 'min-h-screen'}`}
+         style={{ height: '100vh', overflow: 'hidden' }}>
       <Header currentPage={currentPage} isFullscreen={isFullscreen} />
 
       <motion.main
-        className={isFullscreen ? 'main-content-safe flex-1' : 'flex-1 pb-20 pt-16'}
+        className="flex-1 overflow-y-auto"
+        style={{ height: 'calc(100vh - 126px)', paddingBottom: '70px' }}
         key={currentPage}
         initial={{ opacity: 0, x: 20 }}
         animate={{ opacity: 1, x: 0 }}
