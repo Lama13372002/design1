@@ -182,8 +182,47 @@ export const MyBetsPage = () => {
     .filter(bet => bet.status === "won")
     .reduce((sum, bet) => sum + (bet.result?.payout || 0), 0);
 
+  const handleStatusFilter = (status: string) => {
+    setSelectedStatus(status);
+  };
+
   const handleRepeatBet = (betId: string) => {
-    alert(`Отправляем предложение повторить спор ${betId}`);
+    const bet = mockBets.find(b => b.id === betId);
+    if (!bet) return;
+
+    const message = `
+Предложение спора отправлено:
+Матч: ${bet.match.homeTeam} vs ${bet.match.awayTeam}
+Прогноз: ${bet.prediction}
+Сумма: ${bet.amount} ${bet.currency}
+    `;
+
+    alert(message);
+  };
+
+  const handlePayNow = (betId: string) => {
+    const bet = mockBets.find(b => b.id === betId);
+    if (!bet) return;
+
+    alert(`Перенаправление на страницу оплаты спора на сумму ${bet.amount} ${bet.currency}`);
+  };
+
+  const handleViewDetails = (betId: string) => {
+    const bet = mockBets.find(b => b.id === betId);
+    if (!bet) return;
+
+    const message = `
+Детали спора #${bet.id}:
+Матч: ${bet.match.homeTeam} vs ${bet.match.awayTeam}
+Лига: ${bet.match.league}
+Прогноз: ${bet.prediction}
+Сумма: ${bet.amount} ${bet.currency}
+Статус: ${getStatusText(bet.status)}
+${bet.result?.finalScore ? `Итоговый счет: ${bet.result.finalScore.home} - ${bet.result.finalScore.away}` : ''}
+${bet.result?.payout ? `Выплата: ${bet.result.payout} ${bet.currency}` : ''}
+    `;
+
+    alert(message);
   };
 
   return (
@@ -253,7 +292,7 @@ export const MyBetsPage = () => {
                 key={status}
                 variant={selectedStatus === status ? "default" : "outline"}
                 size="sm"
-                onClick={() => setSelectedStatus(status)}
+                onClick={() => handleStatusFilter(status)}
                 className={`rounded-full whitespace-nowrap ${
                   selectedStatus === status
                     ? status === "all"
@@ -396,6 +435,7 @@ export const MyBetsPage = () => {
                       <Button
                         className="flex-1 rounded-xl bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-500 hover:to-amber-600 text-white shadow-md"
                         size="sm"
+                        onClick={() => handlePayNow(bet.id)}
                       >
                         <div className="flex items-center space-x-2">
                           <DollarSign className="h-4 w-4" />
@@ -408,6 +448,7 @@ export const MyBetsPage = () => {
                         variant="outline"
                         size="sm"
                         className="flex-1 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10"
+                        onClick={() => handleViewDetails(bet.id)}
                       >
                         <div className="flex items-center space-x-2">
                           <Info className="h-4 w-4" />
