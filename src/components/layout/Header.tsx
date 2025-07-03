@@ -8,6 +8,7 @@ import { TrendingUp, Bell } from "lucide-react";
 
 interface HeaderProps {
   currentPage: PageType;
+  isFullscreen?: boolean;
 }
 
 const pageNames = {
@@ -19,11 +20,11 @@ const pageNames = {
   "menu": "Меню"
 };
 
-export const Header = ({ currentPage }: HeaderProps) => {
+export const Header = ({ currentPage, isFullscreen = false }: HeaderProps) => {
   const { user } = useTelegram();
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border">
+    <header className={`fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border ${isFullscreen ? 'header-safe' : ''}`}>
       <div className="flex items-center justify-between px-4 py-3">
         <div className="flex items-center space-x-3">
           <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
