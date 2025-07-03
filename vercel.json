@@ -1,14 +1,8 @@
 {
-  "framework": "nextjs",
   "buildCommand": "bun run build",
   "devCommand": "bun run dev",
   "installCommand": "bun install",
-  "outputDirectory": ".next",
-  "functions": {
-    "src/app/**": {
-      "runtime": "nodejs20.x"
-    }
-  },
+  "framework": "nextjs",
   "rewrites": [
     {
       "source": "/(.*)",
@@ -17,7 +11,7 @@
   ],
   "headers": [
     {
-      "source": "/(.*)",
+      "source": "/.*",
       "headers": [
         {
           "key": "X-Frame-Options",
