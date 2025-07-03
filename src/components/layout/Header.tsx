@@ -44,8 +44,7 @@ export const Header = ({ currentPage, isFullscreen = false }: HeaderProps) => {
         paddingTop: isFullscreen ? 'var(--system-safe-top)' : '0'
       }}
     >
-      {/* Градиентная линия вверху */}
-      <div className="h-0.5 w-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500"></div>
+      {/* Удалена градиентная линия */}
 
       <div
         className="glass-header backdrop-blur-xl bg-background/50"
