@@ -23,7 +23,7 @@ export const MainLayout = ({ children, currentPage, onPageChange }: MainLayoutPr
 
       <motion.main
         className="flex-1 overflow-y-auto"
-        style={{ height: 'calc(100vh - 126px)', paddingBottom: '70px' }}
+        style={{ height: 'calc(100vh - 70px)', paddingBottom: '80px' }}
         key={currentPage}
         initial={{ opacity: 0, x: 20 }}
         animate={{ opacity: 1, x: 0 }}
