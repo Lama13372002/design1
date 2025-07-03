@@ -116,6 +116,27 @@ export const HomePage = ({ onPageChange }: HomePageProps) => {
     return matchesSearch && matchesLeague;
   });
 
+  // Добавляем обработчики для кнопок фильтрации и поиска
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
+  };
+
+  const handleFilterByLeague = (league: string) => {
+    setSelectedLeague(league);
+  };
+
+  const handleCreateBet = (eventId: string) => {
+    if (onPageChange) {
+      // Сохраняем выбранное событие в localStorage для использования на странице создания спора
+      localStorage.setItem('selectedEventId', eventId);
+      onPageChange("create-bet");
+    }
+  };
+
+  const handleViewLiveEvents = () => {
+    alert("Функция просмотра всех live-событий будет доступна в следующей версии");
+  };
+
   return (
     <div className="p-4 space-y-4 pb-24">
       {/* Search bar with enhanced styling */}
@@ -125,7 +146,7 @@ export const HomePage = ({ onPageChange }: HomePageProps) => {
           <Input
             placeholder="Поиск команд..."
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            onChange={handleSearch}
             className="pl-10 border-none shadow-md rounded-full bg-white/10 backdrop-blur-lg"
           />
         </div>
@@ -137,7 +158,7 @@ export const HomePage = ({ onPageChange }: HomePageProps) => {
               key={league}
               variant={selectedLeague === league ? "default" : "outline"}
               size="sm"
-              onClick={() => setSelectedLeague(league)}
+              onClick={() => handleFilterByLeague(league)}
               className={`whitespace-nowrap rounded-full font-medium
                 ${selectedLeague === league
                   ? "bg-gradient-to-r from-blue-500 to-purple-500 text-white border-none shadow-md"
@@ -165,7 +186,12 @@ export const HomePage = ({ onPageChange }: HomePageProps) => {
                   2 матча идут сейчас
                 </span>
               </div>
-              <Button variant="ghost" size="sm" className="text-red-500 dark:text-red-400 p-0 h-8">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="text-red-500 dark:text-red-400 p-0 h-8"
+                onClick={handleViewLiveEvents}
+              >
                 Смотреть все
               </Button>
             </div>
@@ -274,7 +300,7 @@ export const HomePage = ({ onPageChange }: HomePageProps) => {
                   {/* Gorgeous call-to-action button */}
                   <Button
                     className="w-full h-11 rounded-xl bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 border-none relative overflow-hidden shadow-lg group"
-                    onClick={() => onPageChange && onPageChange("create-bet")}
+                    onClick={() => handleCreateBet(event.id)}
                   >
                     <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-all duration-700"></span>
                     <div className="flex items-center justify-center space-x-2">
