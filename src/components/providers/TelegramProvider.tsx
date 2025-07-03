@@ -17,6 +17,12 @@ interface TelegramWebApp {
   colorScheme: string;
   isFullscreen?: boolean;
   viewportHeight?: number;
+  safeAreaInset?: {
+    top: number;
+    bottom: number;
+    left: number;
+    right: number;
+  };
   initDataUnsafe?: {
     user?: TelegramUser;
   };
@@ -68,6 +74,15 @@ export const TelegramProvider = ({ children }: TelegramProviderProps) => {
     if (typeof window !== "undefined") {
       const tg = window.Telegram?.WebApp;
 
+      // Функция для установки CSS переменных safe area
+      const updateSafeAreaVars = (safeArea?: { top: number; bottom: number; left: number; right: number }) => {
+        const area = safeArea || { top: 0, bottom: 0, left: 0, right: 0 };
+        document.documentElement.style.setProperty('--tg-safe-area-inset-top', `${area.top}px`);
+        document.documentElement.style.setProperty('--tg-safe-area-inset-bottom', `${area.bottom}px`);
+        document.documentElement.style.setProperty('--tg-safe-area-inset-left', `${area.left}px`);
+        document.documentElement.style.setProperty('--tg-safe-area-inset-right', `${area.right}px`);
+      };
+
       if (tg) {
         tg.ready();
         tg.expand();
@@ -80,6 +95,9 @@ export const TelegramProvider = ({ children }: TelegramProviderProps) => {
         const fullscreen = tg.isFullscreen || window.innerHeight >= screen.height * 0.9;
         setIsFullscreen(fullscreen);
 
+        // Устанавливаем CSS переменные для safe area
+        updateSafeAreaVars(tg.safeAreaInset);
+
         setIsReady(true);
 
         // Слушаем изменения темы
@@ -91,15 +109,20 @@ export const TelegramProvider = ({ children }: TelegramProviderProps) => {
         tg.onEvent("viewportChanged", () => {
           const newFullscreen = tg.isFullscreen || window.innerHeight >= screen.height * 0.9;
           setIsFullscreen(newFullscreen);
+          updateSafeAreaVars(tg.safeAreaInset);
         });
 
         // Настройка главной кнопки
         tg.MainButton.color = "#3b82f6";
         tg.MainButton.textColor = "#ffffff";
       } else {
-        // Для разработки без Telegram
+        // Для разработки без Telegram - устанавливаем безопасные отступы
         setIsReady(true);
         setIsFullscreen(window.innerHeight >= screen.height * 0.9);
+
+        // Симулируем safe area для разработки (типичные значения для мобильных устройств)
+        updateSafeAreaVars({ top: 44, bottom: 34, left: 0, right: 0 });
+
         setUser({
           id: 123456789,
           first_name: "Test",
