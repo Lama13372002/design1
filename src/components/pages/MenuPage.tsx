@@ -304,7 +304,6 @@ export const MenuPage = () => {
                   <Switch
                     checked={settings.sound}
                     onCheckedChange={(checked) => setSettings({...settings, sound: checked})}
-                    size="sm"
                   />
                 </div>
 
@@ -316,7 +315,7 @@ export const MenuPage = () => {
                   <Switch
                     checked={settings.vibration}
                     onCheckedChange={(checked) => setSettings({...settings, vibration: checked})}
-                    size="sm"
+
                   />
                 </div>
               </motion.div>
