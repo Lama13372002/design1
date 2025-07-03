@@ -180,7 +180,7 @@ export const CreateBetPage = ({ onBack }: CreateBetPageProps) => {
   }
 
   return (
-    <div className="p-4 space-y-6">
+    <div className="p-4 space-y-6 pb-24">
       <div className="flex items-center space-x-3 mb-6">
         <Button
           variant="ghost"
