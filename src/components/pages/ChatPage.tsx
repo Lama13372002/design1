@@ -127,9 +127,9 @@ export const ChatPage = () => {
   };
 
   return (
-    <div className="flex flex-col h-[calc(100vh-8rem)] bg-gradient-to-b from-background to-background/60">
+    <div className="flex flex-col h-full" style={{ overflow: 'hidden' }}>
       {/* Chat Header - фиксированный */}
-      <div className="p-4 backdrop-blur-md bg-background/50 border-b border-white/10 sticky top-0 z-10">
+      <div className="p-4 backdrop-blur-md bg-background/50 border-b border-white/10 z-10">
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center space-x-3">
             <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center shadow-md relative overflow-hidden group">
@@ -199,7 +199,7 @@ export const ChatPage = () => {
       </div>
 
       {/* Messages - только эта часть должна прокручиваться */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4 scrollbar-hide" style={{ scrollbarWidth: 'none', height: 'calc(100% - 150px)', overflowY: 'auto' }}>
+      <div className="flex-1 overflow-y-auto p-4 space-y-4 scrollbar-hide" style={{ height: 'calc(100% - 240px)', overflowY: 'auto', scrollbarWidth: 'none' }}>
         {messages.map((message, index) => (
           <motion.div
             key={message.id}
@@ -260,7 +260,7 @@ export const ChatPage = () => {
       </div>
 
       {/* Message Input - фиксированный внизу */}
-      <div className="p-4 backdrop-blur-md bg-background/50 border-t border-white/10 sticky bottom-0 z-10">
+      <div className="p-4 backdrop-blur-md bg-background/50 border-t border-white/10 z-10">
         <div className="flex space-x-2">
           <div className="flex-1 relative">
             <Input
