@@ -11,8 +11,22 @@ interface TelegramUser {
   is_premium?: boolean;
 }
 
+interface TelegramWebApp {
+  ready: () => void;
+  expand: () => void;
+  colorScheme: string;
+  initDataUnsafe?: {
+    user?: TelegramUser;
+  };
+  MainButton: {
+    color: string;
+    textColor: string;
+  };
+  onEvent: (event: string, callback: () => void) => void;
+}
+
 interface TelegramContextType {
-  webApp: any;
+  webApp: TelegramWebApp | null;
   user: TelegramUser | null;
   isReady: boolean;
   theme: "light" | "dark";
@@ -31,15 +45,23 @@ interface TelegramProviderProps {
   children: ReactNode;
 }
 
+declare global {
+  interface Window {
+    Telegram?: {
+      WebApp: TelegramWebApp;
+    };
+  }
+}
+
 export const TelegramProvider = ({ children }: TelegramProviderProps) => {
-  const [webApp, setWebApp] = useState<any>(null);
+  const [webApp, setWebApp] = useState<TelegramWebApp | null>(null);
   const [user, setUser] = useState<TelegramUser | null>(null);
   const [isReady, setIsReady] = useState(false);
   const [theme, setTheme] = useState<"light" | "dark">("light");
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const tg = (window as any).Telegram?.WebApp;
+      const tg = window.Telegram?.WebApp;
 
       if (tg) {
         tg.ready();
