@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import type { PageType } from "@/app/page";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -76,7 +77,7 @@ export const BottomNavigation = ({ currentPage, onPageChange, isFullscreen = fal
 
 // Выносим рендер кнопки в отдельную функцию для чистоты кода
 const renderNavItem = (
-  item: { id: string; icon: any; label: string; badge?: number },
+  item: { id: string; icon: React.ComponentType<{ className?: string }>; label: string; badge?: number },
   currentPage: PageType,
   onPageChange: (page: PageType) => void
 ) => {
