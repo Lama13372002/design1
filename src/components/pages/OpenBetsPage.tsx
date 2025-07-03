@@ -123,7 +123,7 @@ export const OpenBetsPage = () => {
   };
 
   return (
-    <div className="p-4 space-y-5">
+    <div className="p-4 space-y-5 pb-24">
       {/* Header и Filters */}
       <div className="space-y-4">
         <div className="flex items-center justify-between">
