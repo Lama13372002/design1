@@ -66,7 +66,7 @@ const renderNavItem = (
     <motion.div
       key={item.id}
       whileTap={{ scale: 0.92 }}
-      className="relative"
+      className="relative flex flex-col items-center"
     >
       <Button
         variant={isActive ? "default" : "ghost"}
@@ -95,12 +95,7 @@ const renderNavItem = (
       </Button>
 
       {isActive && (
-        <motion.div
-          layoutId="activeTabIndicator"
-          className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-6 h-1 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full"
-          transition={{ type: "spring", duration: 0.3 }}
-          style={{ left: '50%', translateX: '-50%' }}
-        />
+        <div className="absolute -bottom-1 w-6 h-1 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full" />
       )}
     </motion.div>
   );
