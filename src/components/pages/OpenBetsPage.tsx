@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -103,7 +103,13 @@ export const OpenBetsPage = () => {
   const [selectedCurrency, setSelectedCurrency] = useState<"all" | "TON" | "STARS">("all");
   const [sortBy, setSortBy] = useState<"time" | "amount" | "odds">("time");
   const controls = useAnimation();
+  const buttonsRef = useRef<HTMLDivElement>(null);
   const sortOptions = ["time", "amount", "odds"];
+  const sortLabels = {
+    time: "По времени",
+    amount: "По сумме",
+    odds: "По коэффициенту"
+  };
 
   const getNextSortOption = (direction: "next" | "prev") => {
     const currentIndex = sortOptions.indexOf(sortBy);
@@ -131,21 +137,35 @@ export const OpenBetsPage = () => {
         opacity: 1,
         transition: { duration: 0.2 }
       });
+
+      // Прокручиваем до активной кнопки
+      scrollToActiveButton(newSortBy);
     });
   };
 
-  const filteredBets = mockBets
-    .filter(bet => selectedCurrency === "all" || bet.currency === selectedCurrency)
-    .sort((a, b) => {
-      switch (sortBy) {
-        case "amount":
-          return b.amount - a.amount;
-        case "odds":
-          return b.odds - a.odds;
-        default:
-          return 0; // По времени (в реальности нужна сортировка по дате)
-      }
-    });
+  // Функция для прокрутки к активной кнопке
+  const scrollToActiveButton = (activeSortBy: "time" | "amount" | "odds") => {
+    if (buttonsRef.current) {
+      const container = buttonsRef.current;
+      const activeButtonIndex = sortOptions.indexOf(activeSortBy);
+
+      // Расчет позиции прокрутки на основе индекса активной кнопки
+      // Предполагаем, что каждая кнопка имеет примерно одинаковую ширину
+      const buttonWidth = container.scrollWidth / sortOptions.length;
+      const scrollPosition = buttonWidth * activeButtonIndex;
+
+      // Плавная прокрутка до нужной позиции
+      container.scrollTo({
+        left: scrollPosition,
+        behavior: 'smooth'
+      });
+    }
+  };
+
+  // Эффект для начальной прокрутки к активной кнопке
+  useEffect(() => {
+    scrollToActiveButton(sortBy);
+  }, []);
 
   const handleJoinBet = (betId: string) => {
     // Проверяем, есть ли свободные места
@@ -198,6 +218,19 @@ export const OpenBetsPage = () => {
   const handleSort = (sortType: "time" | "amount" | "odds") => {
     setSortBy(sortType);
   };
+
+  const filteredBets = mockBets
+    .filter(bet => selectedCurrency === "all" || bet.currency === selectedCurrency)
+    .sort((a, b) => {
+      switch (sortBy) {
+        case "amount":
+          return b.amount - a.amount;
+        case "odds":
+          return b.odds - a.odds;
+        default:
+          return 0; // По времени (в реальности нужна сортировка по дате)
+      }
+    });
 
   return (
     <div className="p-4 space-y-5 pb-24">
@@ -262,7 +295,7 @@ export const OpenBetsPage = () => {
               </div>
             </div>
 
-            {/* Сортировка с поддержкой свайпов - компактная версия */}
+            {/* Сортировка с поддержкой свайпов и прокруткой */}
             <motion.div
               drag="x"
               dragConstraints={{ left: 0, right: 0 }}
@@ -276,33 +309,46 @@ export const OpenBetsPage = () => {
               }}
               className="touch-none"
             >
-              <motion.div className="flex justify-between w-full" animate={controls}>
+              <motion.div
+                className="flex overflow-x-auto no-scrollbar snap-x"
+                ref={buttonsRef}
+                animate={controls}
+              >
                 <Button
                   variant={sortBy === "time" ? "default" : "outline"}
                   size="sm"
-                  onClick={() => handleSort("time")}
-                  className={`flex-1 mr-2 rounded-full text-xs ${sortBy === "time" ? "bg-gradient-to-r from-blue-400 to-purple-500 text-white border-none shadow-md" : "bg-white/5 backdrop-blur-sm border border-white/10"}`}
+                  onClick={() => {
+                    handleSort("time");
+                    scrollToActiveButton("time");
+                  }}
+                  className={`min-w-max shrink-0 mr-2 snap-center rounded-full ${sortBy === "time" ? "bg-gradient-to-r from-blue-400 to-purple-500 text-white border-none shadow-md" : "bg-white/5 backdrop-blur-sm border border-white/10"}`}
                 >
-                  <Clock className="h-3 w-3 mr-1" />
-                  <span>По времени</span>
+                  <Clock className="h-4 w-4 mr-1" />
+                  <span>{sortLabels.time}</span>
                 </Button>
                 <Button
                   variant={sortBy === "amount" ? "default" : "outline"}
                   size="sm"
-                  onClick={() => handleSort("amount")}
-                  className={`flex-1 mr-2 rounded-full text-xs ${sortBy === "amount" ? "bg-gradient-to-r from-blue-400 to-purple-500 text-white border-none shadow-md" : "bg-white/5 backdrop-blur-sm border border-white/10"}`}
+                  onClick={() => {
+                    handleSort("amount");
+                    scrollToActiveButton("amount");
+                  }}
+                  className={`min-w-max shrink-0 mr-2 snap-center rounded-full ${sortBy === "amount" ? "bg-gradient-to-r from-blue-400 to-purple-500 text-white border-none shadow-md" : "bg-white/5 backdrop-blur-sm border border-white/10"}`}
                 >
-                  <Coins className="h-3 w-3 mr-1" />
-                  <span>По сумме</span>
+                  <Coins className="h-4 w-4 mr-1" />
+                  <span>{sortLabels.amount}</span>
                 </Button>
                 <Button
                   variant={sortBy === "odds" ? "default" : "outline"}
                   size="sm"
-                  onClick={() => handleSort("odds")}
-                  className={`flex-1 rounded-full text-xs ${sortBy === "odds" ? "bg-gradient-to-r from-blue-400 to-purple-500 text-white border-none shadow-md" : "bg-white/5 backdrop-blur-sm border border-white/10"}`}
+                  onClick={() => {
+                    handleSort("odds");
+                    scrollToActiveButton("odds");
+                  }}
+                  className={`min-w-max shrink-0 snap-center rounded-full ${sortBy === "odds" ? "bg-gradient-to-r from-blue-400 to-purple-500 text-white border-none shadow-md" : "bg-white/5 backdrop-blur-sm border border-white/10"}`}
                 >
-                  <TrendingUp className="h-3 w-3 mr-1" />
-                  <span>Коэфф.</span>
+                  <TrendingUp className="h-4 w-4 mr-1" />
+                  <span>{sortLabels.odds}</span>
                 </Button>
               </motion.div>
             </motion.div>
