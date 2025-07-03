@@ -57,7 +57,7 @@ export default function App() {
   const renderPage = () => {
     switch (currentPage) {
       case "home":
-        return <HomePage />;
+        return <HomePage onPageChange={setCurrentPage} />;
       case "create-bet":
         return <CreateBetPage onBack={() => setCurrentPage("home")} />;
       case "open-bets":
@@ -69,7 +69,7 @@ export default function App() {
       case "menu":
         return <MenuPage />;
       default:
-        return <HomePage />;
+        return <HomePage onPageChange={setCurrentPage} />;
     }
   };
 
