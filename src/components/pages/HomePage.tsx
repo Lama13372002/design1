@@ -117,7 +117,7 @@ export const HomePage = ({ onPageChange }: HomePageProps) => {
   });
 
   return (
-    <div className="p-4 space-y-4">
+    <div className="p-4 space-y-4 pb-24">
       {/* Search bar with enhanced styling */}
       <div className="space-y-3">
         <div className="relative">
@@ -138,12 +138,10 @@ export const HomePage = ({ onPageChange }: HomePageProps) => {
               variant={selectedLeague === league ? "default" : "outline"}
               size="sm"
               onClick={() => setSelectedLeague(league)}
-              className={`
-                whitespace-nowrap rounded-full font-medium
+              className={`whitespace-nowrap rounded-full font-medium
                 ${selectedLeague === league
                   ? "bg-gradient-to-r from-blue-500 to-purple-500 text-white border-none shadow-md"
-                  : "bg-white/10 backdrop-blur-sm border border-white/20 text-foreground"}
-              `}
+                  : "bg-white/10 backdrop-blur-sm border border-white/20 text-foreground"}`}
             >
               {league === "all" ? "Все лиги" : league}
             </Button>
