@@ -73,8 +73,10 @@ export const ChatPage = ({ onInputFocusChange }: ChatPageProps) => {
   const [messages, setMessages] = useState(mockMessages);
   const [newMessage, setNewMessage] = useState("");
   const [showRules, setShowRules] = useState(true);
+  const [isInputFocused, setIsInputFocused] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const initialViewportHeight = useRef<number>(0);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -83,6 +85,43 @@ export const ChatPage = ({ onInputFocusChange }: ChatPageProps) => {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  // Отслеживание закрытия клавиатуры через изменение размера
+  useEffect(() => {
+    initialViewportHeight.current = window.innerHeight;
+
+    const handleViewportChange = () => {
+      const currentHeight = window.innerHeight;
+      const heightDifference = initialViewportHeight.current - currentHeight;
+
+      // Если инпут в фокусе, но высота экрана восстановилась (клавиатура закрылась)
+      if (isInputFocused && heightDifference < 100) {
+        console.log('Keyboard closed detected - showing bottom nav');
+        setIsInputFocused(false);
+        onInputFocusChange?.(false);
+
+        // Убираем фокус с инпута
+        if (inputRef.current) {
+          inputRef.current.blur();
+        }
+      }
+    };
+
+    // Используем Visual Viewport API если доступно, иначе resize
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener('resize', handleViewportChange);
+    } else {
+      window.addEventListener('resize', handleViewportChange);
+    }
+
+    return () => {
+      if (window.visualViewport) {
+        window.visualViewport.removeEventListener('resize', handleViewportChange);
+      } else {
+        window.removeEventListener('resize', handleViewportChange);
+      }
+    };
+  }, [isInputFocused, onInputFocusChange]);
 
   const handleSendMessage = () => {
     if (newMessage.trim()) {
@@ -177,14 +216,16 @@ export const ChatPage = ({ onInputFocusChange }: ChatPageProps) => {
     }
   };
 
-  // ПРОСТЫЕ обработчики фокуса - без всяких проверок и задержек
+  // ПРОСТЫЕ обработчики фокуса
   const handleInputFocus = () => {
     console.log('Input focused - hiding bottom nav');
+    setIsInputFocused(true);
     onInputFocusChange?.(true);
   };
 
   const handleInputBlur = () => {
     console.log('Input blurred - showing bottom nav');
+    setIsInputFocused(false);
     onInputFocusChange?.(false);
   };
 
