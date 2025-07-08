@@ -73,9 +73,7 @@ export const ChatPage = ({ onInputFocusChange }: ChatPageProps) => {
   const [messages, setMessages] = useState(mockMessages);
   const [newMessage, setNewMessage] = useState("");
   const [showRules, setShowRules] = useState(true);
-  const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const initialViewportHeight = useRef<number>(0);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const scrollToBottom = () => {
@@ -86,82 +84,16 @@ export const ChatPage = ({ onInputFocusChange }: ChatPageProps) => {
     scrollToBottom();
   }, [messages]);
 
-  useEffect(() => {
-    // Сохраняем изначальную высоту окна
-    initialViewportHeight.current = window.innerHeight;
-
-    // Используем только Visual Viewport API если доступно
-    const handleVisualViewportChange = () => {
-      if (window.visualViewport) {
-        const heightDifference = window.innerHeight - window.visualViewport.height;
-        const keyboardVisible = heightDifference > 50; // Уменьшаем порог
-
-        console.log('Visual Viewport change:', {
-          windowHeight: window.innerHeight,
-          viewportHeight: window.visualViewport.height,
-          difference: heightDifference,
-          keyboardVisible,
-          currentState: isKeyboardVisible
-        });
-
-        // Обновляем состояние только если есть реальное изменение
-        if (keyboardVisible !== isKeyboardVisible) {
-          setIsKeyboardVisible(keyboardVisible);
-          onInputFocusChange?.(keyboardVisible);
-        }
-      }
-    };
-
-    // Fallback для устройств без Visual Viewport API
-    const handleResize = () => {
-      if (!window.visualViewport) {
-        const currentHeight = window.innerHeight;
-        const heightDifference = initialViewportHeight.current - currentHeight;
-        const keyboardVisible = heightDifference > 100;
-
-        console.log('Fallback resize:', {
-          initial: initialViewportHeight.current,
-          current: currentHeight,
-          difference: heightDifference,
-          keyboardVisible,
-          currentState: isKeyboardVisible
-        });
-
-        if (keyboardVisible !== isKeyboardVisible) {
-          setIsKeyboardVisible(keyboardVisible);
-          onInputFocusChange?.(keyboardVisible);
-        }
-      }
-    };
-
-    // Добавляем слушатели
-    if (window.visualViewport) {
-      window.visualViewport.addEventListener('resize', handleVisualViewportChange);
-    } else {
-      // Fallback для старых браузеров
-      window.addEventListener('resize', handleResize);
-    }
-
-    // Очищаем слушатели при размонтировании
-    return () => {
-      if (window.visualViewport) {
-        window.visualViewport.removeEventListener('resize', handleVisualViewportChange);
-      } else {
-        window.removeEventListener('resize', handleResize);
-      }
-    };
-  }, [isKeyboardVisible, onInputFocusChange]);
-
   const handleSendMessage = () => {
     if (newMessage.trim()) {
       // Проверка на наличие нецензурных слов (базовый пример)
       const badWords = ["мат", "плохоеслово", "нецензурно"];
       let filteredMessage = newMessage;
 
-      badWords.forEach(word => {
+      for (const word of badWords) {
         const regex = new RegExp(word, 'gi');
         filteredMessage = filteredMessage.replace(regex, '***');
-      });
+      }
 
       const message: ChatMessage = {
         id: Date.now().toString(),
@@ -245,20 +177,15 @@ export const ChatPage = ({ onInputFocusChange }: ChatPageProps) => {
     }
   };
 
+  // ПРОСТЫЕ обработчики фокуса - без всяких проверок и задержек
   const handleInputFocus = () => {
-    console.log('Direct input focus');
-    if (!isKeyboardVisible) {
-      setIsKeyboardVisible(true);
-      onInputFocusChange?.(true);
-    }
+    console.log('Input focused - hiding bottom nav');
+    onInputFocusChange?.(true);
   };
 
   const handleInputBlur = () => {
-    console.log('Direct input blur');
-    if (isKeyboardVisible) {
-      setIsKeyboardVisible(false);
-      onInputFocusChange?.(false);
-    }
+    console.log('Input blurred - showing bottom nav');
+    onInputFocusChange?.(false);
   };
 
   return (
