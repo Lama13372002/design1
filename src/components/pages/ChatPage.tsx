@@ -76,6 +76,7 @@ export const ChatPage = ({ onInputFocusChange }: ChatPageProps) => {
   const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const initialViewportHeight = useRef<number>(0);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -97,6 +98,13 @@ export const ChatPage = ({ onInputFocusChange }: ChatPageProps) => {
       // считаем что клавиатура открыта
       const keyboardVisible = heightDifference > 150;
 
+      console.log('Window resize:', {
+        initial: initialViewportHeight.current,
+        current: currentHeight,
+        difference: heightDifference,
+        keyboardVisible
+      });
+
       if (keyboardVisible !== isKeyboardVisible) {
         setIsKeyboardVisible(keyboardVisible);
         onInputFocusChange?.(keyboardVisible);
@@ -108,6 +116,13 @@ export const ChatPage = ({ onInputFocusChange }: ChatPageProps) => {
       if (window.visualViewport) {
         const heightDifference = window.innerHeight - window.visualViewport.height;
         const keyboardVisible = heightDifference > 150;
+
+        console.log('Visual Viewport change:', {
+          windowHeight: window.innerHeight,
+          viewportHeight: window.visualViewport.height,
+          difference: heightDifference,
+          keyboardVisible
+        });
 
         if (keyboardVisible !== isKeyboardVisible) {
           setIsKeyboardVisible(keyboardVisible);
@@ -223,6 +238,21 @@ export const ChatPage = ({ onInputFocusChange }: ChatPageProps) => {
       e.preventDefault();
       handleSendMessage();
     }
+  };
+
+  const handleInputFocus = () => {
+    console.log('Direct input focus');
+    setIsKeyboardVisible(true);
+    onInputFocusChange?.(true);
+  };
+
+  const handleInputBlur = () => {
+    console.log('Direct input blur');
+    // Небольшая задержка чтобы убедиться что клавиатура действительно скрылась
+    setTimeout(() => {
+      setIsKeyboardVisible(false);
+      onInputFocusChange?.(false);
+    }, 100);
   };
 
   return (
@@ -361,10 +391,13 @@ export const ChatPage = ({ onInputFocusChange }: ChatPageProps) => {
         <div className="flex space-x-2 mb-4">
           <div className="flex-1 relative">
             <Input
+              ref={inputRef}
               placeholder="Написать сообщение..."
               value={newMessage}
               onChange={(e) => setNewMessage(e.target.value)}
               onKeyPress={handleKeyPress}
+              onFocus={handleInputFocus}
+              onBlur={handleInputBlur}
               className="pl-10 pr-12 rounded-full bg-white/5 backdrop-blur-sm border-white/10 focus:border-blue-400 focus:ring-1 focus:ring-blue-400 h-12"
               maxLength={500}
             />
