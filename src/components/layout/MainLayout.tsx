@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 import type { PageType } from "@/app/page";
 import { BottomNavigation } from "./BottomNavigation";
 import { Header } from "./Header";
+
 import { motion } from "framer-motion";
 import { useTelegram } from "@/components/providers/TelegramProvider";
 
