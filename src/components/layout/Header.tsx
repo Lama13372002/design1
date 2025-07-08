@@ -3,8 +3,9 @@
 import type { PageType } from "@/app/page";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { useTelegram } from "@/components/providers/TelegramProvider";
-import { TrendingUp, Bell, Award, Sparkles } from "lucide-react";
+import { TrendingUp, Bell, Award, Sparkles, MessageCircle, Users, Pin, MoreHorizontal } from "lucide-react";
 import { motion } from "framer-motion";
 
 interface HeaderProps {
@@ -25,14 +26,77 @@ const pageIcons = {
   "home": TrendingUp,
   "create-bet": Award,
   "open-bets": TrendingUp,
-  "chat": TrendingUp,
+  "chat": MessageCircle,
   "my-bets": TrendingUp,
   "menu": TrendingUp
+};
+
+// Специальный header для чата
+const ChatPageHeader = ({ isFullscreen }: { isFullscreen: boolean }) => {
+  return (
+    <header
+      className="sticky top-0 left-0 right-0 z-50"
+      style={{
+        position: "sticky",
+        top: 0,
+        zIndex: 50,
+        paddingTop: isFullscreen ? 'var(--system-safe-top)' : '0'
+      }}
+    >
+      <div
+        className="glass-header backdrop-blur-xl bg-background/50 border-b border-white/10"
+        style={{
+          backdropFilter: "blur(10px)",
+          WebkitBackdropFilter: "blur(10px)"
+        }}
+      >
+        <div className="p-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-3">
+              <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center shadow-md">
+                <MessageCircle className="h-5 w-5 text-white" />
+              </div>
+              <div>
+                <h2 className="font-bold text-lg bg-gradient-to-r from-blue-400 to-purple-500 text-transparent bg-clip-text">Общий чат</h2>
+                <div className="flex items-center space-x-2 text-sm text-foreground/70">
+                  <Users className="h-4 w-4 text-blue-400" />
+                  <span>127 онлайн</span>
+                  <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></div>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex space-x-1">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="hover:bg-white/10 rounded-full h-9 w-9 p-0 flex items-center justify-center"
+              >
+                <Pin className="h-4 w-4 text-foreground/70" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="hover:bg-white/10 rounded-full h-9 w-9 p-0 flex items-center justify-center"
+              >
+                <MoreHorizontal className="h-4 w-4 text-foreground/70" />
+              </Button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+  );
 };
 
 export const Header = ({ currentPage, isFullscreen = false }: HeaderProps) => {
   const { user } = useTelegram();
   const PageIcon = pageIcons[currentPage];
+
+  // Если это страница чата, используем специальный header
+  if (currentPage === 'chat') {
+    return <ChatPageHeader isFullscreen={isFullscreen} />;
+  }
 
   return (
     <header
