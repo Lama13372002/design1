@@ -201,7 +201,7 @@ export const MenuPage = () => {
               <Button
                 variant="outline"
                 size="sm"
-                className="flex-1 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10"
+                className="flex-1 rounded-xl bg-white/5 backdrop-blur-sm border-2 border-blue-500 hover:bg-white/10 hover:border-blue-400"
                 onClick={() => handleDeposit("TON")}
               >
                 <div className="flex items-center space-x-2">
@@ -212,7 +212,7 @@ export const MenuPage = () => {
               <Button
                 variant="outline"
                 size="sm"
-                className="flex-1 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10"
+                className="flex-1 rounded-xl bg-white/5 backdrop-blur-sm border-2 border-blue-500 hover:bg-white/10 hover:border-blue-400"
                 onClick={() => handleWithdraw("TON")}
               >
                 <div className="flex items-center space-x-2">
@@ -247,7 +247,7 @@ export const MenuPage = () => {
               <Button
                 variant="outline"
                 size="sm"
-                className="flex-1 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10"
+                className="flex-1 rounded-xl bg-white/5 backdrop-blur-sm border-2 border-yellow-500 hover:bg-white/10 hover:border-yellow-400"
                 onClick={() => handleDeposit("STARS")}
               >
                 <div className="flex items-center space-x-2">
@@ -258,7 +258,7 @@ export const MenuPage = () => {
               <Button
                 variant="outline"
                 size="sm"
-                className="flex-1 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10"
+                className="flex-1 rounded-xl bg-white/5 backdrop-blur-sm border-2 border-yellow-500 hover:bg-white/10 hover:border-yellow-400"
                 onClick={() => handleWithdraw("STARS")}
               >
                 <div className="flex items-center space-x-2">
