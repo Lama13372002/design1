@@ -19,6 +19,7 @@ export default function App() {
   const [showAuthDialog, setShowAuthDialog] = useState(false);
   const [currentPage, setCurrentPage] = useState<PageType>("home");
   const [isFirstTime, setIsFirstTime] = useState(true);
+  const [isChatInputFocused, setIsChatInputFocused] = useState(false);
 
   useEffect(() => {
     if (isReady) {
@@ -63,7 +64,7 @@ export default function App() {
       case "open-bets":
         return <OpenBetsPage />;
       case "chat":
-        return <ChatPage />;
+        return <ChatPage onInputFocusChange={setIsChatInputFocused} />;
       case "my-bets":
         return <MyBetsPage />;
       case "menu":
@@ -103,7 +104,11 @@ export default function App() {
       />
 
       {isAuthenticated && (
-        <MainLayout currentPage={currentPage} onPageChange={setCurrentPage}>
+        <MainLayout
+          currentPage={currentPage}
+          onPageChange={setCurrentPage}
+          hideBottomNav={currentPage === "chat" && isChatInputFocused}
+        >
           {renderPage()}
         </MainLayout>
       )}
