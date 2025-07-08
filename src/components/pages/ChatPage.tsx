@@ -73,7 +73,9 @@ export const ChatPage = ({ onInputFocusChange }: ChatPageProps) => {
   const [messages, setMessages] = useState(mockMessages);
   const [newMessage, setNewMessage] = useState("");
   const [showRules, setShowRules] = useState(true);
+  const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const initialViewportHeight = useRef<number>(0);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -82,6 +84,53 @@ export const ChatPage = ({ onInputFocusChange }: ChatPageProps) => {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  useEffect(() => {
+    // Сохраняем изначальную высоту окна
+    initialViewportHeight.current = window.innerHeight;
+
+    const handleResize = () => {
+      const currentHeight = window.innerHeight;
+      const heightDifference = initialViewportHeight.current - currentHeight;
+
+      // Если высота уменьшилась на значительную величину (больше 150px),
+      // считаем что клавиатура открыта
+      const keyboardVisible = heightDifference > 150;
+
+      if (keyboardVisible !== isKeyboardVisible) {
+        setIsKeyboardVisible(keyboardVisible);
+        onInputFocusChange?.(keyboardVisible);
+      }
+    };
+
+    // Также используем Visual Viewport API если доступно
+    const handleVisualViewportChange = () => {
+      if (window.visualViewport) {
+        const heightDifference = window.innerHeight - window.visualViewport.height;
+        const keyboardVisible = heightDifference > 150;
+
+        if (keyboardVisible !== isKeyboardVisible) {
+          setIsKeyboardVisible(keyboardVisible);
+          onInputFocusChange?.(keyboardVisible);
+        }
+      }
+    };
+
+    // Добавляем слушатели событий
+    window.addEventListener('resize', handleResize);
+
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener('resize', handleVisualViewportChange);
+    }
+
+    // Очищаем слушатели при размонтировании
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      if (window.visualViewport) {
+        window.visualViewport.removeEventListener('resize', handleVisualViewportChange);
+      }
+    };
+  }, [isKeyboardVisible, onInputFocusChange]);
 
   const handleSendMessage = () => {
     if (newMessage.trim()) {
@@ -174,14 +223,6 @@ export const ChatPage = ({ onInputFocusChange }: ChatPageProps) => {
       e.preventDefault();
       handleSendMessage();
     }
-  };
-
-  const handleInputFocus = () => {
-    onInputFocusChange?.(true);
-  };
-
-  const handleInputBlur = () => {
-    onInputFocusChange?.(false);
   };
 
   return (
@@ -282,8 +323,7 @@ export const ChatPage = ({ onInputFocusChange }: ChatPageProps) => {
               )}
 
               <div className="flex items-start space-x-2">
-                <Card className={`
-                  border-none shadow-md
+                <Card className={`border-none shadow-md
                   ${message.isOwn
                     ? "bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-2xl rounded-br-none"
                     : "glass-card bg-white/5 backdrop-blur-sm rounded-2xl rounded-bl-none"
@@ -325,8 +365,6 @@ export const ChatPage = ({ onInputFocusChange }: ChatPageProps) => {
               value={newMessage}
               onChange={(e) => setNewMessage(e.target.value)}
               onKeyPress={handleKeyPress}
-              onFocus={handleInputFocus}
-              onBlur={handleInputBlur}
               className="pl-10 pr-12 rounded-full bg-white/5 backdrop-blur-sm border-white/10 focus:border-blue-400 focus:ring-1 focus:ring-blue-400 h-12"
               maxLength={500}
             />
