@@ -1,12 +1,14 @@
 "use client";
 
+import { useState } from "react";
 import type { PageType } from "@/app/page";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import { useTelegram } from "@/components/providers/TelegramProvider";
 import { TrendingUp, Bell, Award, Sparkles, MessageCircle, Users, Pin, MoreHorizontal } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface HeaderProps {
   currentPage: PageType;
@@ -31,8 +33,20 @@ const pageIcons = {
   "menu": TrendingUp
 };
 
+const pinnedRules = [
+  "Запрещены оскорбления",
+  "Запрещен спам",
+  "Споры разрешаются только через платформу"
+];
+
 // Специальный header для чата
 const ChatPageHeader = ({ isFullscreen }: { isFullscreen: boolean }) => {
+  const [showRules, setShowRules] = useState(true);
+
+  const handleToggleRules = () => {
+    setShowRules(!showRules);
+  };
+
   return (
     <header
       className="sticky top-0 left-0 right-0 z-50"
@@ -51,7 +65,7 @@ const ChatPageHeader = ({ isFullscreen }: { isFullscreen: boolean }) => {
         }}
       >
         <div className="p-4">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between mb-3">
             <div className="flex items-center space-x-3">
               <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center shadow-md">
                 <MessageCircle className="h-5 w-5 text-white" />
@@ -70,9 +84,10 @@ const ChatPageHeader = ({ isFullscreen }: { isFullscreen: boolean }) => {
               <Button
                 variant="ghost"
                 size="sm"
+                onClick={handleToggleRules}
                 className="hover:bg-white/10 rounded-full h-9 w-9 p-0 flex items-center justify-center"
               >
-                <Pin className="h-4 w-4 text-foreground/70" />
+                <Pin className={`h-4 w-4 ${showRules ? 'text-yellow-400' : 'text-foreground/70'}`} />
               </Button>
               <Button
                 variant="ghost"
@@ -83,6 +98,38 @@ const ChatPageHeader = ({ isFullscreen }: { isFullscreen: boolean }) => {
               </Button>
             </div>
           </div>
+
+          {/* Pinned Rules */}
+          <AnimatePresence>
+            {showRules && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={{ duration: 0.2 }}
+              >
+                <Card className="glass-card border-none overflow-hidden relative">
+                  <div className="absolute inset-0 bg-gradient-to-r from-yellow-500/10 to-amber-500/10 rounded-xl"></div>
+                  <CardContent className="p-3 relative z-10">
+                    <div className="flex items-center space-x-2 mb-2">
+                      <Pin className="h-4 w-4 text-yellow-400" />
+                      <span className="font-semibold text-yellow-400 text-sm">
+                        Правила чата
+                      </span>
+                    </div>
+                    <ul className="space-y-1">
+                      {pinnedRules.map((rule, index) => (
+                        <li key={index} className="text-sm text-foreground/80 flex items-start space-x-2">
+                          <div className="min-w-4 text-yellow-400">•</div>
+                          <span>{rule}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </div>
     </header>
