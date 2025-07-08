@@ -550,3 +550,27 @@ html, body {
 .no-scrollbar::-webkit-scrollbar {
   display: none; /* Chrome, Safari и Opera */
 }
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* TMA специфичные стили для обработки клавиатуры */
+.keyboard-active {
+  height: 100vh !important;
+  height: 100dvh !important;
+  max-height: 100vh !important;
+  max-height: 100dvh !important;
+}
+
+/* iOS viewport fix для TMA */
+@supports (-webkit-touch-callout: none) {
+  .ios-vh-fix {
+    height: -webkit-fill-available;
+  }
+}
