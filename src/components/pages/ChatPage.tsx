@@ -65,7 +65,11 @@ const pinnedRules = [
   "Споры разрешаются только через платформу"
 ];
 
-export const ChatPage = () => {
+interface ChatPageProps {
+  onInputFocusChange?: (focused: boolean) => void;
+}
+
+export const ChatPage = ({ onInputFocusChange }: ChatPageProps) => {
   const [messages, setMessages] = useState(mockMessages);
   const [newMessage, setNewMessage] = useState("");
   const [showRules, setShowRules] = useState(true);
@@ -170,6 +174,14 @@ export const ChatPage = () => {
       e.preventDefault();
       handleSendMessage();
     }
+  };
+
+  const handleInputFocus = () => {
+    onInputFocusChange?.(true);
+  };
+
+  const handleInputBlur = () => {
+    onInputFocusChange?.(false);
   };
 
   return (
@@ -313,6 +325,8 @@ export const ChatPage = () => {
               value={newMessage}
               onChange={(e) => setNewMessage(e.target.value)}
               onKeyPress={handleKeyPress}
+              onFocus={handleInputFocus}
+              onBlur={handleInputBlur}
               className="pl-10 pr-12 rounded-full bg-white/5 backdrop-blur-sm border-white/10 focus:border-blue-400 focus:ring-1 focus:ring-blue-400 h-12"
               maxLength={500}
             />
