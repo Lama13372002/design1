@@ -6,8 +6,8 @@ interface VisualViewport extends EventTarget {
   readonly width: number;
   readonly height: number;
   readonly scale: number;
-  onresize: ((this: VisualViewport, ev: Event) => any) | null;
-  onscroll: ((this: VisualViewport, ev: Event) => any) | null;
+  onresize: ((this: VisualViewport, ev: Event) => unknown) | null;
+  onscroll: ((this: VisualViewport, ev: Event) => unknown) | null;
 }
 
 interface Window {
