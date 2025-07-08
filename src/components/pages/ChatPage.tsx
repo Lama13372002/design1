@@ -231,74 +231,7 @@ export const ChatPage = ({ onInputFocusChange }: ChatPageProps) => {
 
   return (
     <div className="flex flex-col h-full">
-      {/* Chat Header */}
-      <div className="p-4 backdrop-blur-md bg-background/50 border-b border-white/10">
-        <div className="flex items-center justify-between mb-3">
-          <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center shadow-md">
-              <MessageCircle className="h-5 w-5 text-white" />
-            </div>
-            <div>
-              <h2 className="font-bold text-lg bg-gradient-to-r from-blue-400 to-purple-500 text-transparent bg-clip-text">Общий чат</h2>
-              <div className="flex items-center space-x-2 text-sm text-foreground/70">
-                <Users className="h-4 w-4 text-blue-400" />
-                <span>127 онлайн</span>
-                <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></div>
-              </div>
-            </div>
-          </div>
 
-          <div className="flex space-x-1">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={handleToggleRules}
-              className="hover:bg-white/10 rounded-full h-9 w-9 p-0 flex items-center justify-center"
-            >
-              <Pin className={`h-4 w-4 ${showRules ? 'text-yellow-400' : 'text-foreground/70'}`} />
-            </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="hover:bg-white/10 rounded-full h-9 w-9 p-0 flex items-center justify-center"
-            >
-              <MoreHorizontal className="h-4 w-4 text-foreground/70" />
-            </Button>
-          </div>
-        </div>
-
-        {/* Pinned Rules */}
-        <AnimatePresence>
-          {showRules && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.2 }}
-            >
-              <Card className="glass-card border-none overflow-hidden relative">
-                <div className="absolute inset-0 bg-gradient-to-r from-yellow-500/10 to-amber-500/10 rounded-xl"></div>
-                <CardContent className="p-3 relative z-10">
-                  <div className="flex items-center space-x-2 mb-2">
-                    <Pin className="h-4 w-4 text-yellow-400" />
-                    <span className="font-semibold text-yellow-400 text-sm">
-                      Правила чата
-                    </span>
-                  </div>
-                  <ul className="space-y-1">
-                    {pinnedRules.map((rule, index) => (
-                      <li key={index} className="text-sm text-foreground/80 flex items-start space-x-2">
-                        <div className="min-w-4 text-yellow-400">•</div>
-                        <span>{rule}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </CardContent>
-              </Card>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
 
       {/* Messages */}
       <div className="flex-1 overflow-y-auto p-4 space-y-4 scrollbar-hide">
