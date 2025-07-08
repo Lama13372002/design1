@@ -72,7 +72,10 @@ export const ChatPage = () => {
   const [messages, setMessages] = useState(mockMessages);
   const [newMessage, setNewMessage] = useState("");
   const [showRules, setShowRules] = useState(true);
+  const [viewportHeight, setViewportHeight] = useState(window.innerHeight);
+  const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -81,6 +84,51 @@ export const ChatPage = () => {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  // Обработка изменения viewport при появлении клавиатуры
+  useEffect(() => {
+    const handleResize = () => {
+      const currentHeight = window.innerHeight;
+      const heightDiff = viewportHeight - currentHeight;
+
+      // Если высота уменьшилась более чем на 150px, считаем что открылась клавиатура
+      if (heightDiff > 150) {
+        setIsKeyboardOpen(true);
+      } else {
+        setIsKeyboardOpen(false);
+      }
+
+      setViewportHeight(currentHeight);
+    };
+
+    const handleFocus = () => {
+      setTimeout(() => {
+        setIsKeyboardOpen(true);
+        // Прокручиваем к последнему сообщению при фокусе на input
+        scrollToBottom();
+      }, 300);
+    };
+
+    const handleBlur = () => {
+      setTimeout(() => {
+        setIsKeyboardOpen(false);
+      }, 300);
+    };
+
+    window.addEventListener('resize', handleResize);
+    if (inputRef.current) {
+      inputRef.current.addEventListener('focus', handleFocus);
+      inputRef.current.addEventListener('blur', handleBlur);
+    }
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      if (inputRef.current) {
+        inputRef.current.removeEventListener('focus', handleFocus);
+        inputRef.current.removeEventListener('blur', handleBlur);
+      }
+    };
+  }, [viewportHeight]);
 
   const handleSendMessage = () => {
     if (newMessage.trim()) {
@@ -176,9 +224,16 @@ export const ChatPage = () => {
   };
 
   return (
-    <div className="flex flex-col h-full" style={{ overflow: 'hidden' }}>
+    <div
+      className="flex flex-col"
+      style={{
+        height: isKeyboardOpen ? `${viewportHeight}px` : '100vh',
+        maxHeight: isKeyboardOpen ? `${viewportHeight}px` : '100vh',
+        overflow: 'hidden'
+      }}
+    >
       {/* Chat Header - фиксированный */}
-      <div className="p-4 backdrop-blur-md bg-background/50 border-b border-white/10 z-10">
+      <div className={`p-4 backdrop-blur-md bg-background/50 border-b border-white/10 z-10 ${isKeyboardOpen ? 'pb-2' : ''}`}>
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center space-x-3">
             <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center shadow-md relative overflow-hidden group">
@@ -216,7 +271,7 @@ export const ChatPage = () => {
 
         {/* Pinned Rules */}
         <AnimatePresence>
-          {showRules && (
+          {showRules && !isKeyboardOpen && (
             <motion.div
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: "auto" }}
@@ -248,7 +303,15 @@ export const ChatPage = () => {
       </div>
 
       {/* Messages - только эта часть должна прокручиваться */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4 scrollbar-hide" style={{ height: 'calc(100% - 240px)', overflowY: 'auto', scrollbarWidth: 'none' }}>
+      <div
+        className="flex-1 overflow-y-auto p-4 space-y-4 scrollbar-hide"
+        style={{
+          flex: 1,
+          overflowY: 'auto',
+          scrollbarWidth: 'none',
+          paddingBottom: isKeyboardOpen ? '8px' : '16px'
+        }}
+      >
         {messages.map((message, index) => (
           <motion.div
             key={message.id}
@@ -309,10 +372,11 @@ export const ChatPage = () => {
       </div>
 
       {/* Message Input - фиксированный внизу */}
-      <div className="p-4 backdrop-blur-md bg-background/50 border-t border-white/10 z-10">
-        <div className="flex space-x-2 mb-4">
+      <div className={`backdrop-blur-md bg-background/50 border-t border-white/10 z-10 ${isKeyboardOpen ? 'p-2' : 'p-4'}`}>
+        <div className={`flex space-x-2 ${isKeyboardOpen ? 'mb-2' : 'mb-4'}`}>
           <div className="flex-1 relative">
             <Input
+              ref={inputRef}
               placeholder="Написать сообщение..."
               value={newMessage}
               onChange={(e) => setNewMessage(e.target.value)}
@@ -336,13 +400,15 @@ export const ChatPage = () => {
           </Button>
         </div>
 
-        <div className="flex items-center justify-between mt-2 text-xs text-foreground/60">
-          <div className="flex items-center space-x-2">
-            <Shield className="h-3 w-3 text-blue-400" />
-            <span>Модерация включена</span>
+        {!isKeyboardOpen && (
+          <div className="flex items-center justify-between mt-2 text-xs text-foreground/60">
+            <div className="flex items-center space-x-2">
+              <Shield className="h-3 w-3 text-blue-400" />
+              <span>Модерация включена</span>
+            </div>
+            <span className={newMessage.length > 400 ? 'text-yellow-400' : ''}>{newMessage.length}/500</span>
           </div>
-          <span className={newMessage.length > 400 ? 'text-yellow-400' : ''}>{newMessage.length}/500</span>
-        </div>
+        )}
       </div>
     </div>
   );
