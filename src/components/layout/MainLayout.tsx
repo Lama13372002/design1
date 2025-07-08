@@ -11,9 +11,10 @@ interface MainLayoutProps {
   children: ReactNode;
   currentPage: PageType;
   onPageChange: (page: PageType) => void;
+  hideBottomNav?: boolean;
 }
 
-export const MainLayout = ({ children, currentPage, onPageChange }: MainLayoutProps) => {
+export const MainLayout = ({ children, currentPage, onPageChange, hideBottomNav }: MainLayoutProps) => {
   const { isFullscreen } = useTelegram();
 
   return (
@@ -23,7 +24,10 @@ export const MainLayout = ({ children, currentPage, onPageChange }: MainLayoutPr
 
       <motion.main
         className="flex-1 overflow-y-auto"
-        style={{ height: 'calc(100vh - 70px)', paddingBottom: '80px' }}
+        style={{
+          height: 'calc(100vh - 70px)',
+          paddingBottom: hideBottomNav ? '0px' : '80px'
+        }}
         key={currentPage}
         initial={{ opacity: 0, x: 20 }}
         animate={{ opacity: 1, x: 0 }}
@@ -33,7 +37,9 @@ export const MainLayout = ({ children, currentPage, onPageChange }: MainLayoutPr
         {children}
       </motion.main>
 
-      <BottomNavigation currentPage={currentPage} onPageChange={onPageChange} isFullscreen={isFullscreen} />
+      {!hideBottomNav && (
+        <BottomNavigation currentPage={currentPage} onPageChange={onPageChange} isFullscreen={isFullscreen} />
+      )}
     </div>
   );
 };
