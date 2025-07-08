@@ -118,7 +118,10 @@ export const HomePage = ({ onPageChange }: HomePageProps) => {
   const handleCreateBet = (eventId: string) => {
     if (onPageChange) {
       // Сохраняем выбранное событие в localStorage для использования на странице создания спора
-      localStorage.setItem('selectedEventId', eventId);
+      const selectedEvent = mockEvents.find(event => event.id === eventId);
+      if (selectedEvent) {
+        localStorage.setItem('selectedEvent', JSON.stringify(selectedEvent));
+      }
       onPageChange("create-bet");
     }
   };
