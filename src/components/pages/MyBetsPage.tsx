@@ -9,7 +9,6 @@ import {
   Clock,
   CheckCircle,
   XCircle,
-  DollarSign,
   Repeat,
   TrendingUp,
   Trophy,
@@ -17,7 +16,6 @@ import {
   Coins,
   Star,
   Sparkles,
-  ChevronRight,
   AlertCircle,
   Zap,
   Info
@@ -35,7 +33,7 @@ interface MyBet {
   prediction: string;
   amount: number;
   currency: "TON" | "STARS";
-  status: "active" | "won" | "lost" | "cancelled" | "pending_payment";
+  status: "active" | "won" | "lost" | "cancelled";
   result?: {
     finalScore?: { home: number; away: number };
     payout?: number;
@@ -108,8 +106,8 @@ const mockBets: MyBet[] = [
     prediction: "П2 - Победа гостей",
     amount: 1200,
     currency: "STARS",
-    status: "pending_payment",
-    opponents: [],
+    status: "active",
+    opponents: ["CryptoKing"],
     odds: 4.5
   }
 ];
@@ -122,8 +120,6 @@ const getStatusIcon = (status: string) => {
       return <XCircle className="h-5 w-5 text-red-400" />;
     case "active":
       return <Clock className="h-5 w-5 text-blue-400" />;
-    case "pending_payment":
-      return <DollarSign className="h-5 w-5 text-yellow-400" />;
     case "cancelled":
       return <XCircle className="h-5 w-5 text-foreground/50" />;
     default:
@@ -139,8 +135,7 @@ const getStatusText = (status: string) => {
       return "Проигран";
     case "active":
       return "Активный";
-    case "pending_payment":
-      return "Ожидание оплаты";
+
     case "cancelled":
       return "Отменен";
     default:
@@ -156,8 +151,6 @@ const getStatusColor = (status: string) => {
       return "bg-gradient-to-r from-red-400 to-rose-500 text-white border-none";
     case "active":
       return "bg-gradient-to-r from-blue-400 to-blue-500 text-white border-none";
-    case "pending_payment":
-      return "bg-gradient-to-r from-yellow-400 to-amber-500 text-white border-none";
     case "cancelled":
       return "bg-foreground/20 text-foreground/60 border-none";
     default:
@@ -168,7 +161,7 @@ const getStatusColor = (status: string) => {
 export const MyBetsPage = () => {
   const [selectedStatus, setSelectedStatus] = useState<string>("all");
 
-  const statuses = ["all", "active", "won", "lost", "pending_payment"];
+  const statuses = ["all", "active", "won", "lost"];
 
   const filteredBets = mockBets.filter(bet =>
     selectedStatus === "all" || bet.status === selectedStatus
@@ -200,12 +193,7 @@ export const MyBetsPage = () => {
     alert(message);
   };
 
-  const handlePayNow = (betId: string) => {
-    const bet = mockBets.find(b => b.id === betId);
-    if (!bet) return;
 
-    alert(`Перенаправление на страницу оплаты спора на сумму ${bet.amount} ${bet.currency}`);
-  };
 
   const handleViewDetails = (betId: string) => {
     const bet = mockBets.find(b => b.id === betId);
@@ -429,18 +417,6 @@ ${bet.result?.payout ? `Выплата: ${bet.result.payout} ${bet.currency}` : 
                         <div className="flex items-center space-x-2">
                           <Repeat className="h-4 w-4" />
                           <span>Повторить спор</span>
-                        </div>
-                      </Button>
-                    ) : bet.status === "pending_payment" ? (
-                      <Button
-                        className="flex-1 rounded-xl bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-500 hover:to-amber-600 text-white shadow-md"
-                        size="sm"
-                        onClick={() => handlePayNow(bet.id)}
-                      >
-                        <div className="flex items-center space-x-2">
-                          <DollarSign className="h-4 w-4" />
-                          <span>Оплатить сейчас</span>
-                          <ChevronRight className="h-4 w-4" />
                         </div>
                       </Button>
                     ) : (
