@@ -90,38 +90,41 @@ export const ChatPage = ({ onInputFocusChange }: ChatPageProps) => {
     // Сохраняем изначальную высоту окна
     initialViewportHeight.current = window.innerHeight;
 
-    const handleResize = () => {
-      const currentHeight = window.innerHeight;
-      const heightDifference = initialViewportHeight.current - currentHeight;
-
-      // Если высота уменьшилась на значительную величину (больше 150px),
-      // считаем что клавиатура открыта
-      const keyboardVisible = heightDifference > 150;
-
-      console.log('Window resize:', {
-        initial: initialViewportHeight.current,
-        current: currentHeight,
-        difference: heightDifference,
-        keyboardVisible
-      });
-
-      if (keyboardVisible !== isKeyboardVisible) {
-        setIsKeyboardVisible(keyboardVisible);
-        onInputFocusChange?.(keyboardVisible);
-      }
-    };
-
-    // Также используем Visual Viewport API если доступно
+    // Используем только Visual Viewport API если доступно
     const handleVisualViewportChange = () => {
       if (window.visualViewport) {
         const heightDifference = window.innerHeight - window.visualViewport.height;
-        const keyboardVisible = heightDifference > 150;
+        const keyboardVisible = heightDifference > 50; // Уменьшаем порог
 
         console.log('Visual Viewport change:', {
           windowHeight: window.innerHeight,
           viewportHeight: window.visualViewport.height,
           difference: heightDifference,
-          keyboardVisible
+          keyboardVisible,
+          currentState: isKeyboardVisible
+        });
+
+        // Обновляем состояние только если есть реальное изменение
+        if (keyboardVisible !== isKeyboardVisible) {
+          setIsKeyboardVisible(keyboardVisible);
+          onInputFocusChange?.(keyboardVisible);
+        }
+      }
+    };
+
+    // Fallback для устройств без Visual Viewport API
+    const handleResize = () => {
+      if (!window.visualViewport) {
+        const currentHeight = window.innerHeight;
+        const heightDifference = initialViewportHeight.current - currentHeight;
+        const keyboardVisible = heightDifference > 100;
+
+        console.log('Fallback resize:', {
+          initial: initialViewportHeight.current,
+          current: currentHeight,
+          difference: heightDifference,
+          keyboardVisible,
+          currentState: isKeyboardVisible
         });
 
         if (keyboardVisible !== isKeyboardVisible) {
@@ -131,18 +134,20 @@ export const ChatPage = ({ onInputFocusChange }: ChatPageProps) => {
       }
     };
 
-    // Добавляем слушатели событий
-    window.addEventListener('resize', handleResize);
-
+    // Добавляем слушатели
     if (window.visualViewport) {
       window.visualViewport.addEventListener('resize', handleVisualViewportChange);
+    } else {
+      // Fallback для старых браузеров
+      window.addEventListener('resize', handleResize);
     }
 
     // Очищаем слушатели при размонтировании
     return () => {
-      window.removeEventListener('resize', handleResize);
       if (window.visualViewport) {
         window.visualViewport.removeEventListener('resize', handleVisualViewportChange);
+      } else {
+        window.removeEventListener('resize', handleResize);
       }
     };
   }, [isKeyboardVisible, onInputFocusChange]);
@@ -242,17 +247,18 @@ export const ChatPage = ({ onInputFocusChange }: ChatPageProps) => {
 
   const handleInputFocus = () => {
     console.log('Direct input focus');
-    setIsKeyboardVisible(true);
-    onInputFocusChange?.(true);
+    if (!isKeyboardVisible) {
+      setIsKeyboardVisible(true);
+      onInputFocusChange?.(true);
+    }
   };
 
   const handleInputBlur = () => {
     console.log('Direct input blur');
-    // Небольшая задержка чтобы убедиться что клавиатура действительно скрылась
-    setTimeout(() => {
+    if (isKeyboardVisible) {
       setIsKeyboardVisible(false);
       onInputFocusChange?.(false);
-    }, 100);
+    }
   };
 
   return (
