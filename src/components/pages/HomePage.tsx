@@ -11,12 +11,10 @@ import {
   Filter,
   Clock,
   MapPin,
-  TrendingUp,
   Play,
   Pause,
   MoreHorizontal,
-  Trophy,
-  Star
+  Trophy
 } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -29,11 +27,6 @@ interface MatchEvent {
   status: "upcoming" | "live" | "halftime" | "finished";
   score?: { home: number; away: number };
   minute?: number;
-  odds: {
-    home: number;
-    draw: number;
-    away: number;
-  };
 }
 
 interface HomePageProps {
@@ -47,8 +40,7 @@ const mockEvents: MatchEvent[] = [
     awayTeam: "Барселона",
     league: "Ла Лига",
     startTime: "19:00",
-    status: "upcoming",
-    odds: { home: 2.1, draw: 3.2, away: 3.4 }
+    status: "upcoming"
   },
   {
     id: "2",
@@ -58,8 +50,7 @@ const mockEvents: MatchEvent[] = [
     startTime: "17:30",
     status: "live",
     score: { home: 1, away: 0 },
-    minute: 34,
-    odds: { home: 1.8, draw: 3.8, away: 4.2 }
+    minute: 34
   },
   {
     id: "3",
@@ -67,8 +58,7 @@ const mockEvents: MatchEvent[] = [
     awayTeam: "Марсель",
     league: "Лига 1",
     startTime: "21:45",
-    status: "upcoming",
-    odds: { home: 1.5, draw: 4.1, away: 6.2 }
+    status: "upcoming"
   }
 ];
 
@@ -259,43 +249,6 @@ export const HomePage = ({ onPageChange }: HomePageProps) => {
                   </div>
 
                   <Separator className="bg-white/10" />
-
-                  {/* Odds with floating glass effect */}
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between text-sm text-muted-foreground">
-                      <span className="flex items-center">
-                        <TrendingUp className="h-4 w-4 mr-1 text-green-400" />
-                        <span>Коэффициенты</span>
-                      </span>
-                      <Star className="h-4 w-4 text-yellow-400" />
-                    </div>
-                    <div className="grid grid-cols-3 gap-2">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="flex flex-col p-2 h-auto rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10"
-                      >
-                        <span className="text-xs text-muted-foreground">П1</span>
-                        <span className="font-semibold text-blue-400">{event.odds.home}</span>
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="flex flex-col p-2 h-auto rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10"
-                      >
-                        <span className="text-xs text-muted-foreground">X</span>
-                        <span className="font-semibold text-purple-400">{event.odds.draw}</span>
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="flex flex-col p-2 h-auto rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10"
-                      >
-                        <span className="text-xs text-muted-foreground">П2</span>
-                        <span className="font-semibold text-pink-400">{event.odds.away}</span>
-                      </Button>
-                    </div>
-                  </div>
 
                   {/* Gorgeous call-to-action button */}
                   <Button
