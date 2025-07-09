@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
@@ -75,7 +76,7 @@ export const ChatPage = ({ onInputFocusChange }: ChatPageProps) => {
   const [showRules, setShowRules] = useState(true);
   const [isInputFocused, setIsInputFocused] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
   const initialViewportHeight = useRef<number>(0);
 
   const scrollToBottom = () => {
@@ -209,12 +210,26 @@ export const ChatPage = ({ onInputFocusChange }: ChatPageProps) => {
     alert("Прикрепление файлов будет доступно в следующей версии");
   };
 
-  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
-      handleSendMessage();
-    }
+  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setNewMessage(e.target.value);
   };
+
+  // Автоматическое изменение высоты textarea
+  useEffect(() => {
+    const textarea = inputRef.current;
+    if (textarea) {
+      // Сбрасываем высоту до минимальной
+      textarea.style.height = '48px';
+
+      // Вычисляем нужную высоту (максимум 120px = ~4 строки)
+      const scrollHeight = textarea.scrollHeight;
+      const maxHeight = 120;
+      const newHeight = Math.min(scrollHeight, maxHeight);
+
+      textarea.style.height = newHeight + 'px';
+      textarea.style.overflowY = scrollHeight > maxHeight ? 'auto' : 'hidden';
+    }
+  }, [newMessage]);
 
   // ПРОСТЫЕ обработчики фокуса
   const handleInputFocus = () => {
@@ -295,23 +310,33 @@ export const ChatPage = ({ onInputFocusChange }: ChatPageProps) => {
 
       {/* Message Input - фиксированный внизу */}
       <div className="p-4 backdrop-blur-md bg-background/50 border-t border-white/10">
-        <div className="flex space-x-2 mb-4">
+        <div className="flex items-end space-x-2 mb-4">
           <div className="flex-1 relative">
-            <Input
+            <Textarea
               ref={inputRef}
               placeholder="Написать сообщение..."
               value={newMessage}
-              onChange={(e) => setNewMessage(e.target.value)}
-              onKeyPress={handleKeyPress}
+              onChange={handleInputChange}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && !e.shiftKey) {
+                  e.preventDefault();
+                  handleSendMessage();
+                }
+              }}
               onFocus={handleInputFocus}
               onBlur={handleInputBlur}
-              className="pl-10 pr-12 rounded-full bg-white/5 backdrop-blur-sm border-white/10 focus:border-blue-400 focus:ring-1 focus:ring-blue-400 h-12"
+              className="pl-10 pr-12 rounded-2xl bg-white/5 backdrop-blur-sm border-white/10 focus:border-blue-400 focus:ring-1 focus:ring-blue-400 resize-none overflow-hidden"
+              style={{
+                minHeight: '48px',
+                height: '48px'
+              }}
               maxLength={500}
+              rows={1}
             />
-            <div className="absolute left-3 top-1/2 transform -translate-y-1/2">
+            <div className="absolute left-3 bottom-3">
               <Smile className="h-5 w-5 text-foreground/50 hover:text-foreground/80 cursor-pointer" onClick={handleOpenEmoji} />
             </div>
-            <div className="absolute right-3 top-1/2 transform -translate-y-1/2 flex items-center space-x-2">
+            <div className="absolute right-3 bottom-3 flex items-center space-x-2">
               <Paperclip className="h-5 w-5 text-foreground/50 hover:text-foreground/80 cursor-pointer" onClick={handleAttachFile} />
             </div>
           </div>
