@@ -275,14 +275,14 @@ export const ChatPage = ({ onInputFocusChange }: ChatPageProps) => {
               )}
 
               <div className="flex items-start space-x-2">
-                <Card className={`border-none shadow-md
+                <Card className={`border-none shadow-md overflow-hidden
                   ${message.isOwn
                     ? "bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-2xl rounded-br-none"
                     : "glass-card bg-white/5 backdrop-blur-sm rounded-2xl rounded-bl-none"
                   }
                 `}>
-                  <CardContent className="p-3">
-                    <p className="text-sm leading-relaxed">{message.message}</p>
+                  <CardContent className="p-3 overflow-hidden">
+                    <p className="text-sm leading-relaxed break-words whitespace-pre-wrap">{message.message}</p>
                     {message.isOwn && (
                       <div className="text-xs opacity-80 mt-1 text-right">
                         {message.timestamp}
