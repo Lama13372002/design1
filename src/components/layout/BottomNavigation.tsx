@@ -94,9 +94,7 @@ const renderNavItem = (
         )}
       </Button>
 
-      {isActive && (
-        <div className="absolute -bottom-1 w-6 h-1 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full" />
-      )}
+
     </motion.div>
   );
 };
