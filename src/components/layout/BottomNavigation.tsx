@@ -32,13 +32,11 @@ const navItems = [
 
 export const BottomNavigation = ({ currentPage, onPageChange, isFullscreen = false }: BottomNavigationProps) => {
   return (
-    <div
-      className={`fixed bottom-0 left-0 right-0 z-50 ${isFullscreen ? 'bottom-nav-safe' : ''}`}
-    >
-      {/* Прямоугольное меню на всю ширину */}
+    <div className="fixed bottom-0 left-0 right-0 z-50">
+      {/* Прямоугольное меню на всю ширину без закруглений */}
       <div className="relative">
         <div className="absolute inset-0 bg-background/50 backdrop-blur-md"></div>
-        <nav className="glass relative border-t border-white/20 shadow-xl backdrop-blur-md flex items-center justify-between px-4 py-4">
+        <nav className={`glass-nav relative border-t border-white/20 shadow-xl backdrop-blur-md flex items-center justify-between px-4 ${isFullscreen ? 'pb-[env(safe-area-inset-bottom)] pt-4' : 'py-4'}`}>
           <div className="flex justify-between w-full items-center">
             {/* Все кнопки в одной линии */}
             <div className="flex justify-between w-full space-x-1 items-center">
