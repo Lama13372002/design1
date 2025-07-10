@@ -542,7 +542,7 @@ body {
 /* Main content with proper spacing for fullscreen */
 .main-content-safe {
   padding-top: calc(1.5rem + var(--system-safe-top)); /* Header height + safe area */
-  padding-bottom: calc(4rem + var(--system-safe-bottom)); /* Bottom nav height + safe area + extra space */
+  padding-bottom: calc(7rem + var(--system-safe-bottom)); /* Bottom nav height for circular menu + safe area */
   padding-left: var(--tg-safe-area-inset-left);
   padding-right: var(--tg-safe-area-inset-right);
   height: 100vh;
@@ -764,4 +764,58 @@ body.fullscreen-mode {
 .text-glow-sm {
   text-shadow: 0 0 4px currentColor;
   filter: brightness(1.2);
+}
+
+/* 🌀 СТИЛИ КРУГОВОГО МЕНЮ 🌀 */
+
+/* Основа кругового меню */
+.circular-menu {
+  position: relative;
+  width: 190px;
+  height: 190px;
+  border-radius: 50%;
+  transform-origin: center center;
+}
+
+/* Внешнее кольцо основы */
+.outer-ring-bg {
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  box-shadow:
+    0 20px 40px rgba(0, 0, 0, 0.3),
+    inset 0 1px 2px rgba(255, 255, 255, 0.1);
+}
+
+/* Центральный логотип */
+.central-logo-bg {
+  background: rgba(15, 23, 42, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.35),
+    inset 0 1px 3px rgba(255, 255, 255, 0.2);
+  z-index: 30;
+  backdrop-filter: blur(12px);
+}
+
+/* Трехмерная трансформация для подъема меню над интерфейсом */
+.circular-menu, .central-logo-bg, .outer-ring-bg {
+  transform-style: preserve-3d;
+  perspective: 1000px;
+}
+
+/* Плавное появление элементов при загрузке */
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.8) translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.circular-menu {
+  animation: fadeInScale 0.8s ease-out forwards;
 }
