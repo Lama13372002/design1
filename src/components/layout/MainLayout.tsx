@@ -54,7 +54,7 @@ export const MainLayout = ({ children, currentPage, onPageChange, hideBottomNav 
       <motion.main
         className="flex-1 overflow-y-auto main-content-safe"
         style={{
-          height: fullscreenActive ? 'calc(100dvh - 80px)' : 'calc(100vh - 80px)',
+          height: fullscreenActive ? 'calc(100dvh - 60px)' : 'calc(100vh - 60px)',
           paddingBottom: hideBottomNav ? '0px' : '5px',
           overscrollBehavior: 'none',
           WebkitOverflowScrolling: 'touch'
