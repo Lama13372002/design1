@@ -72,12 +72,12 @@ const renderNavItem = (
         size="sm"
         onClick={() => onPageChange(item.id as PageType)}
         className={`
-          flex flex-col items-center justify-center h-12 w-12 p-0 rounded-full transition-all duration-200 backdrop-blur-md shadow-lg shadow-black/30
+          flex flex-col items-center justify-center h-12 w-12 p-0 rounded-full transition-all duration-200 shadow-lg shadow-black/40
           ${isActive
             ? isCreateButton
               ? "bg-gradient-to-r from-purple-500 to-blue-600 text-white shadow-xl scale-105 border border-white/40 animate-glow"
               : "bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-xl scale-105 border border-white/40 animate-glow"
-            : "bg-gradient-to-r from-gray-800/70 to-gray-700/70 text-white hover:text-white hover:bg-white/30 shadow-lg border border-white/30"}
+            : "bg-gradient-to-r from-gray-900/85 to-gray-800/85 text-white hover:text-white hover:from-gray-800/85 hover:to-gray-700/85 shadow-lg border border-white/30"}
         `}
       >
         <item.icon className={`h-5 w-5 ${isActive ? "text-white" : ""} mb-0.5`} />
