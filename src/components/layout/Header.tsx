@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useTelegram } from "@/components/providers/TelegramProvider";
-import { TrendingUp, Award, Sparkles, MessageCircle, Users, Pin, MoreHorizontal, Plus, Coins, Star, Wallet, DollarSign } from "lucide-react";
+import { TrendingUp, Award, Sparkles, MessageCircle, Users, Pin, MoreHorizontal, Plus, Coins, Star, Wallet, DollarSign, ArrowRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   DropdownMenu,
@@ -206,29 +206,79 @@ export const Header = ({ currentPage, isFullscreen = false }: HeaderProps) => {
                   <span className="text-xs font-medium">{balance}</span>
                 </div>
 
-                {/* Кнопка пополнения с выпадающим меню */}
+                {/* Кнопка пополнения с красивым выпадающим меню */}
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button
                       size="sm"
-                      className="h-6 w-6 rounded-full bg-gradient-to-r from-green-400 to-emerald-500 hover:from-green-500 hover:to-emerald-600 text-white border-none shadow-sm p-0 ml-1"
+                      className="h-6 w-6 rounded-full bg-gradient-to-r from-green-400 to-emerald-500 hover:from-green-500 hover:to-emerald-600 text-white border-none shadow-sm p-0 ml-1 relative overflow-hidden group"
                     >
-                      <Plus className="h-3 w-3" />
+                      <div className="absolute inset-0 bg-white/20 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                      <Plus className="h-3 w-3 relative z-10" />
                     </Button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent side="bottom" align="end" className="w-36 bg-background/95 backdrop-blur-lg border border-white/10">
-                    <DropdownMenuItem className="flex items-center space-x-2 focus:bg-white/10">
-                      <div className="h-4 w-4 rounded-full bg-gradient-to-r from-blue-500 to-blue-600 flex items-center justify-center">
-                        <Coins className="h-2.5 w-2.5 text-white" />
-                      </div>
-                      <span className="text-sm">Пополнить TON</span>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem className="flex items-center space-x-2 focus:bg-white/10">
-                      <div className="h-4 w-4 rounded-full bg-gradient-to-r from-yellow-500 to-yellow-600 flex items-center justify-center">
-                        <Star className="h-2.5 w-2.5 text-white" />
-                      </div>
-                      <span className="text-sm">Пополнить Stars</span>
-                    </DropdownMenuItem>
+                  <DropdownMenuContent
+                    side="bottom"
+                    align="end"
+                    className="w-52 border-0 shadow-xl overflow-hidden p-0 bg-transparent"
+                    sideOffset={5}
+                    alignOffset={10}
+                  >
+                    <AnimatePresence>
+                      <motion.div
+                        initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                        transition={{ duration: 0.2, type: "spring", stiffness: 500, damping: 30 }}
+                        className="overflow-hidden rounded-xl bg-background/95 backdrop-blur-xl border border-white/10 shadow-[0_0_25px_rgba(0,200,100,0.15)]"
+                      >
+                        <div className="p-2">
+                          <div className="text-xs text-foreground/60 font-medium mb-1 ml-1">Выберите способ пополнения</div>
+
+                          {/* TON Option */}
+                          <DropdownMenuItem className="focus:outline-none" asChild>
+                            <motion.div
+                              whileHover={{ x: 3 }}
+                              className="rounded-lg p-2.5 cursor-pointer hover:bg-white/5 transition-colors relative overflow-hidden group"
+                            >
+                              <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-blue-600/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg"></div>
+                              <div className="flex items-center space-x-3 relative z-10">
+                                <div className="h-10 w-10 rounded-lg bg-gradient-to-r from-blue-500 to-blue-600 flex items-center justify-center shadow-sm relative overflow-hidden group-hover:shadow-[0_0_20px_rgba(59,130,246,0.3)] transition-all duration-300">
+                                  <div className="absolute inset-0 bg-white/20 rounded-lg translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+                                  <Coins className="h-5 w-5 text-white relative z-10" />
+                                </div>
+                                <div className="flex-1">
+                                  <div className="font-semibold text-sm bg-gradient-to-r from-blue-500 to-blue-400 bg-clip-text text-transparent group-hover:from-blue-400 group-hover:to-blue-300 transition-all duration-300">Пополнить TON</div>
+                                  <div className="text-xs text-foreground/60 group-hover:text-foreground/80 transition-colors duration-300">Быстрый блокчейн-перевод</div>
+                                </div>
+                                <ArrowRight className="h-4 w-4 text-blue-500/50 group-hover:text-blue-400 transform translate-x-0 group-hover:translate-x-1 transition-all duration-300" />
+                              </div>
+                            </motion.div>
+                          </DropdownMenuItem>
+
+                          {/* STARS Option */}
+                          <DropdownMenuItem className="focus:outline-none" asChild>
+                            <motion.div
+                              whileHover={{ x: 3 }}
+                              className="rounded-lg p-2.5 cursor-pointer hover:bg-white/5 transition-colors relative overflow-hidden group mt-1"
+                            >
+                              <div className="absolute inset-0 bg-gradient-to-r from-yellow-500/10 to-amber-600/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg"></div>
+                              <div className="flex items-center space-x-3 relative z-10">
+                                <div className="h-10 w-10 rounded-lg bg-gradient-to-r from-yellow-500 to-amber-500 flex items-center justify-center shadow-sm relative overflow-hidden group-hover:shadow-[0_0_20px_rgba(245,158,11,0.3)] transition-all duration-300">
+                                  <div className="absolute inset-0 bg-white/20 rounded-lg translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+                                  <Star className="h-5 w-5 text-white relative z-10" />
+                                </div>
+                                <div className="flex-1">
+                                  <div className="font-semibold text-sm bg-gradient-to-r from-yellow-500 to-amber-400 bg-clip-text text-transparent group-hover:from-yellow-400 group-hover:to-amber-300 transition-all duration-300">Пополнить Stars</div>
+                                  <div className="text-xs text-foreground/60 group-hover:text-foreground/80 transition-colors duration-300">Внутренняя валюта платформы</div>
+                                </div>
+                                <ArrowRight className="h-4 w-4 text-yellow-500/50 group-hover:text-yellow-400 transform translate-x-0 group-hover:translate-x-1 transition-all duration-300" />
+                              </div>
+                            </motion.div>
+                          </DropdownMenuItem>
+                        </div>
+                      </motion.div>
+                    </AnimatePresence>
                   </DropdownMenuContent>
                 </DropdownMenu>
               </div>
