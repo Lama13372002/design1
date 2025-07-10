@@ -196,7 +196,7 @@ export const Header = ({ currentPage, isFullscreen = false }: HeaderProps) => {
             </motion.div>
 
             {/* Интегрированный баланс и кнопка пополнения везде, кроме страниц меню и чата */}
-            {currentPage !== 'menu' && currentPage !== 'chat' && (
+            {!['menu', 'chat'].includes(currentPage) && (
               <div className="flex items-center space-x-2 bg-white/5 backdrop-blur-md rounded-full border border-white/10 pl-2 pr-1 py-1">
                 {/* Баланс в долларах */}
                 <div className="flex items-center space-x-1">
