@@ -7,8 +7,14 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useTelegram } from "@/components/providers/TelegramProvider";
-import { TrendingUp, Award, Sparkles, MessageCircle, Users, Pin, MoreHorizontal, Plus, Coins, Star, Wallet } from "lucide-react";
+import { TrendingUp, Award, Sparkles, MessageCircle, Users, Pin, MoreHorizontal, Plus, Coins, Star, Wallet, DollarSign } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger
+} from "@/components/ui/dropdown-menu";
 
 interface HeaderProps {
   currentPage: PageType;
@@ -140,10 +146,7 @@ export const Header = ({ currentPage, isFullscreen = false }: HeaderProps) => {
   const { user } = useTelegram();
   const PageIcon = pageIcons[currentPage];
 
-  const [balances] = useState({
-    ton: 23.45,
-    stars: 1240
-  });
+  const [balance] = useState(23.45); // Один баланс в долларах
 
   // Если это страница чата, используем специальный header
   if (currentPage === 'chat') {
@@ -195,32 +198,39 @@ export const Header = ({ currentPage, isFullscreen = false }: HeaderProps) => {
             {/* Интегрированный баланс и кнопка пополнения везде, кроме страниц меню и чата */}
             {currentPage !== 'menu' && currentPage !== 'chat' && (
               <div className="flex items-center space-x-2 bg-white/5 backdrop-blur-md rounded-full border border-white/10 pl-2 pr-1 py-1">
-                {/* TON баланс */}
+                {/* Баланс в долларах */}
                 <div className="flex items-center space-x-1">
-                  <div className="h-4 w-4 rounded-full bg-gradient-to-r from-blue-500 to-blue-600 flex items-center justify-center">
-                    <Coins className="h-2.5 w-2.5 text-white" />
+                  <div className="h-4 w-4 rounded-full bg-gradient-to-r from-green-500 to-green-600 flex items-center justify-center">
+                    <DollarSign className="h-2.5 w-2.5 text-white" />
                   </div>
-                  <span className="text-xs font-medium">{balances.ton}</span>
+                  <span className="text-xs font-medium">{balance}</span>
                 </div>
 
-                {/* Разделитель */}
-                <div className="h-3 w-px bg-white/20"></div>
-
-                {/* STARS баланс */}
-                <div className="flex items-center space-x-1">
-                  <div className="h-4 w-4 rounded-full bg-gradient-to-r from-yellow-500 to-yellow-600 flex items-center justify-center">
-                    <Star className="h-2.5 w-2.5 text-white" />
-                  </div>
-                  <span className="text-xs font-medium">{balances.stars}</span>
-                </div>
-
-                {/* Кнопка пополнения */}
-                <Button
-                  size="sm"
-                  className="h-6 w-6 rounded-full bg-gradient-to-r from-green-400 to-emerald-500 hover:from-green-500 hover:to-emerald-600 text-white border-none shadow-sm p-0 ml-1"
-                >
-                  <Plus className="h-3 w-3" />
-                </Button>
+                {/* Кнопка пополнения с выпадающим меню */}
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      size="sm"
+                      className="h-6 w-6 rounded-full bg-gradient-to-r from-green-400 to-emerald-500 hover:from-green-500 hover:to-emerald-600 text-white border-none shadow-sm p-0 ml-1"
+                    >
+                      <Plus className="h-3 w-3" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent side="bottom" align="end" className="w-36 bg-background/95 backdrop-blur-lg border border-white/10">
+                    <DropdownMenuItem className="flex items-center space-x-2 focus:bg-white/10">
+                      <div className="h-4 w-4 rounded-full bg-gradient-to-r from-blue-500 to-blue-600 flex items-center justify-center">
+                        <Coins className="h-2.5 w-2.5 text-white" />
+                      </div>
+                      <span className="text-sm">Пополнить TON</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem className="flex items-center space-x-2 focus:bg-white/10">
+                      <div className="h-4 w-4 rounded-full bg-gradient-to-r from-yellow-500 to-yellow-600 flex items-center justify-center">
+                        <Star className="h-2.5 w-2.5 text-white" />
+                      </div>
+                      <span className="text-sm">Пополнить Stars</span>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </div>
             )}
           </div>
