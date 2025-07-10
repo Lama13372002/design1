@@ -64,8 +64,8 @@ const ChatPageHeader = ({ isFullscreen }: { isFullscreen: boolean }) => {
           WebkitBackdropFilter: "blur(10px)"
         }}
       >
-        <div className="p-4">
-          <div className="flex items-center justify-between mb-3">
+        <div className="p-3">
+          <div className="flex items-center justify-between mb-2">
             <div className="flex items-center space-x-3">
               <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center shadow-md">
                 <MessageCircle className="h-5 w-5 text-white" />
