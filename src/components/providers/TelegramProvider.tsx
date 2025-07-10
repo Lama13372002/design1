@@ -94,20 +94,31 @@ export const TelegramProvider = ({ children }: TelegramProviderProps) => {
         // Запросить полноэкранный режим через различные API
         const docElement = document.documentElement;
 
+        const docElementWithMethods = docElement as HTMLElement & {
+          webkitRequestFullscreen?: () => Promise<void>;
+          mozRequestFullScreen?: () => Promise<void>;
+          msRequestFullscreen?: () => Promise<void>;
+        };
+
         if (docElement.requestFullscreen) {
           docElement.requestFullscreen().catch(() => {});
-        } else if ((docElement as any).webkitRequestFullscreen) {
-          (docElement as any).webkitRequestFullscreen().catch(() => {});
-        } else if ((docElement as any).mozRequestFullScreen) {
-          (docElement as any).mozRequestFullScreen().catch(() => {});
-        } else if ((docElement as any).msRequestFullscreen) {
-          (docElement as any).msRequestFullscreen().catch(() => {});
+        } else if (docElementWithMethods.webkitRequestFullscreen) {
+          docElementWithMethods.webkitRequestFullscreen().catch(() => {});
+        } else if (docElementWithMethods.mozRequestFullScreen) {
+          docElementWithMethods.mozRequestFullScreen().catch(() => {});
+        } else if (docElementWithMethods.msRequestFullscreen) {
+          docElementWithMethods.msRequestFullscreen().catch(() => {});
         }
 
         // Дополнительные методы для Android
-        if (typeof (window as any).AndroidInterface !== 'undefined') {
+        const windowWithAndroid = window as Window & {
+          AndroidInterface?: {
+            hideSystemUI: () => void;
+          };
+        };
+        if (typeof windowWithAndroid.AndroidInterface !== 'undefined') {
           try {
-            (window as any).AndroidInterface.hideSystemUI();
+            windowWithAndroid.AndroidInterface.hideSystemUI();
           } catch (e) {}
         }
       };
