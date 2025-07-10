@@ -38,8 +38,8 @@ export const BottomNavigation = ({ currentPage, onPageChange, isFullscreen = fal
         <div className="absolute inset-0 bg-background/50 backdrop-blur-md"></div>
         <nav className={`glass-nav relative border-t border-white/20 shadow-xl backdrop-blur-md flex items-center justify-between px-4 ${
           isFullscreen
-            ? 'pb-[max(env(safe-area-inset-bottom),var(--tg-safe-area-inset-bottom,20px))] pt-2'
-            : 'py-2'
+            ? 'pb-[max(env(safe-area-inset-bottom),var(--tg-safe-area-inset-bottom,10px))] pt-1'
+            : 'py-1'
         }`}>
           <div className="flex justify-between w-full items-center">
             {/* Все кнопки в одной линии */}
@@ -75,7 +75,7 @@ const renderNavItem = (
         size="sm"
         onClick={() => onPageChange(item.id as PageType)}
         className={`
-          flex flex-col items-center justify-center h-10 w-10 p-0 rounded-full transition-all duration-200
+          flex flex-col items-center justify-center h-11 w-11 p-0 rounded-full transition-all duration-200
           ${isActive
             ? isCreateButton
               ? "bg-gradient-to-r from-purple-500 to-blue-600 text-white shadow-md scale-105"
@@ -83,8 +83,8 @@ const renderNavItem = (
             : "bg-transparent text-muted-foreground hover:text-foreground hover:bg-white/10"}
         `}
       >
-        <item.icon className={`h-4 w-4 ${isActive ? "text-white" : ""}`} />
-        <span className="text-[9px] font-medium opacity-90 mt-0.5">{item.label}</span>
+        <item.icon className={`h-4 w-4 ${isActive ? "text-white" : ""} mb-0.5`} />
+        <span className="text-[10px] font-medium opacity-90">{item.label}</span>
 
         {item.badge && (
           <Badge
