@@ -64,14 +64,14 @@ const ChatPageHeader = ({ isFullscreen }: { isFullscreen: boolean }) => {
           WebkitBackdropFilter: "blur(10px)"
         }}
       >
-        <div className="p-3">
-          <div className="flex items-center justify-between mb-2">
+        <div className="p-2">
+          <div className="flex items-center justify-between mb-1">
             <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center shadow-md">
+              <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center shadow-md">
                 <MessageCircle className="h-5 w-5 text-white" />
               </div>
               <div>
-                <h2 className="font-bold text-lg bg-gradient-to-r from-blue-400 to-purple-500 text-transparent bg-clip-text">Общий чат</h2>
+                <h2 className="font-bold text-base bg-gradient-to-r from-blue-400 to-purple-500 text-transparent bg-clip-text">Общий чат</h2>
                 <div className="flex items-center space-x-2 text-sm text-foreground/70">
                   <Users className="h-4 w-4 text-blue-400" />
                   <span>127 онлайн</span>
@@ -85,14 +85,14 @@ const ChatPageHeader = ({ isFullscreen }: { isFullscreen: boolean }) => {
                 variant="ghost"
                 size="sm"
                 onClick={handleToggleRules}
-                className="hover:bg-white/10 rounded-full h-9 w-9 p-0 flex items-center justify-center"
+                className="hover:bg-white/10 rounded-full h-7 w-7 p-0 flex items-center justify-center"
               >
                 <Pin className={`h-4 w-4 ${showRules ? 'text-yellow-400' : 'text-foreground/70'}`} />
               </Button>
               <Button
                 variant="ghost"
                 size="sm"
-                className="hover:bg-white/10 rounded-full h-9 w-9 p-0 flex items-center justify-center"
+                className="hover:bg-white/10 rounded-full h-7 w-7 p-0 flex items-center justify-center"
               >
                 <MoreHorizontal className="h-4 w-4 text-foreground/70" />
               </Button>
@@ -110,7 +110,7 @@ const ChatPageHeader = ({ isFullscreen }: { isFullscreen: boolean }) => {
               >
                 <Card className="glass-card border-none overflow-hidden relative">
                   <div className="absolute inset-0 bg-gradient-to-r from-yellow-500/10 to-amber-500/10 rounded-xl"></div>
-                  <CardContent className="p-3 relative z-10">
+                  <CardContent className="p-2 relative z-10">
                     <div className="flex items-center space-x-2 mb-2">
                       <Pin className="h-4 w-4 text-yellow-400" />
                       <span className="font-semibold text-yellow-400 text-sm">
@@ -164,14 +164,14 @@ export const Header = ({ currentPage, isFullscreen = false }: HeaderProps) => {
           WebkitBackdropFilter: "blur(10px)"
         }}
       >
-        <div className="flex items-center justify-between px-4 py-3">
+        <div className="flex items-center justify-between px-4 py-2">
           <motion.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ type: "spring", stiffness: 500, damping: 30 }}
             className="flex items-center space-x-3"
           >
-            <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center shadow-md relative overflow-hidden group">
+            <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center shadow-md relative overflow-hidden group">
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-all duration-700"></div>
               <PageIcon className="h-5 w-5 text-white" />
             </div>
@@ -181,7 +181,7 @@ export const Header = ({ currentPage, isFullscreen = false }: HeaderProps) => {
                 initial={{ opacity: 0, x: -5 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.2 }}
-                className="font-bold text-lg leading-none bg-gradient-to-r from-blue-500 to-purple-500 text-transparent bg-clip-text"
+                className="font-bold text-base leading-none bg-gradient-to-r from-blue-500 to-purple-500 text-transparent bg-clip-text"
               >
                 {pageNames[currentPage]}
               </motion.h1>
@@ -202,7 +202,7 @@ export const Header = ({ currentPage, isFullscreen = false }: HeaderProps) => {
                 <motion.div
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
-                  className="h-9 w-9 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center hover:bg-white/20 transition-all cursor-pointer"
+                  className="h-7 w-7 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center hover:bg-white/20 transition-all cursor-pointer"
                 >
                   <Bell className="h-5 w-5 text-foreground/80" />
                 </motion.div>
@@ -214,7 +214,7 @@ export const Header = ({ currentPage, isFullscreen = false }: HeaderProps) => {
               whileHover={{ scale: 1.05 }}
               className="flex items-center space-x-2 bg-white/10 backdrop-blur-md px-2 py-1 rounded-full border border-white/10"
             >
-              <Avatar className="h-8 w-8 border-2 border-white/20">
+              <Avatar className="h-7 w-7 border-2 border-white/20">
                 <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-600 text-white font-semibold">
                   {user?.first_name?.[0] || "T"}
                 </AvatarFallback>
