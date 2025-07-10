@@ -63,7 +63,7 @@ const renderNavItem = (
   return (
     <motion.div
       key={item.id}
-      whileTap={{ scale: 0.85 }}
+      whileTap={{ scale: 0.9 }}
       className="relative flex flex-col items-center"
     >
       <Button
@@ -71,11 +71,11 @@ const renderNavItem = (
         size="sm"
         onClick={() => onPageChange(item.id as PageType)}
         className={`
-          flex flex-col items-center justify-center h-14 w-14 p-0 rounded-full transition-all duration-200
+          flex flex-col items-center justify-center h-12 w-12 p-0 rounded-full transition-all duration-200
           ${isActive
             ? isCreateButton
-              ? "bg-gradient-to-r from-purple-500 to-blue-600 text-white shadow-lg scale-110"
-              : "bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-lg scale-110"
+              ? "bg-gradient-to-r from-purple-500 to-blue-600 text-white shadow-md scale-105"
+              : "bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-md scale-105"
             : "bg-transparent text-muted-foreground hover:text-foreground hover:bg-white/10"}
         `}
       >
