@@ -20,6 +20,7 @@ export default function App() {
   const [currentPage, setCurrentPage] = useState<PageType>("home");
   const [isFirstTime, setIsFirstTime] = useState(true);
   const [isChatInputFocused, setIsChatInputFocused] = useState(false);
+  const [isCreateBetInputFocused, setIsCreateBetInputFocused] = useState(false);
 
   useEffect(() => {
     if (isReady) {
@@ -60,7 +61,7 @@ export default function App() {
       case "home":
         return <HomePage onPageChange={setCurrentPage} />;
       case "create-bet":
-        return <CreateBetPage onBack={() => setCurrentPage("home")} />;
+        return <CreateBetPage onBack={() => setCurrentPage("home")} onInputFocusChange={setIsCreateBetInputFocused} />;
       case "open-bets":
         return <OpenBetsPage />;
       case "chat":
@@ -107,7 +108,7 @@ export default function App() {
         <MainLayout
           currentPage={currentPage}
           onPageChange={setCurrentPage}
-          hideBottomNav={currentPage === "chat" && isChatInputFocused}
+          hideBottomNav={(currentPage === "chat" && isChatInputFocused) || (currentPage === "create-bet" && isCreateBetInputFocused)}
         >
           {renderPage()}
         </MainLayout>
