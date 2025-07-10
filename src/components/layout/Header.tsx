@@ -230,18 +230,18 @@ export const Header = ({ currentPage, isFullscreen = false }: HeaderProps) => {
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 10, scale: 0.95 }}
                         transition={{ duration: 0.2, type: "spring", stiffness: 500, damping: 30 }}
-                        className="relative overflow-hidden rounded-xl"
+                        className="relative overflow-hidden rounded-2xl"
                       >
                         {/* Фоновый эффект - внешний градиент и свечение */}
-                        <div className="absolute inset-0 rounded-xl blur-[2px] bg-gradient-to-br from-purple-500/20 via-blue-500/20 to-emerald-500/20"></div>
+                        <div className="absolute inset-0 rounded-2xl blur-[2px] bg-gradient-to-br from-purple-500/20 via-blue-500/20 to-emerald-500/20"></div>
 
                         {/* Основной контейнер с стеклянным эффектом */}
-                        <div className="glass-card relative border-0 overflow-hidden">
+                        <div className="relative overflow-hidden rounded-2xl backdrop-blur-xl border border-white/10 bg-background/40">
                           {/* Внутренний градиент эффект */}
-                          <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 via-blue-500/5 to-emerald-500/10 rounded-xl"></div>
+                          <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 via-blue-500/5 to-emerald-500/10 rounded-2xl"></div>
 
                           {/* Движущееся свечение */}
-                          <div className="absolute inset-0 opacity-30">
+                          <div className="absolute inset-0 opacity-30 overflow-hidden rounded-2xl">
                             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full animate-[shimmer_2s_infinite]"></div>
                           </div>
 
@@ -250,15 +250,15 @@ export const Header = ({ currentPage, isFullscreen = false }: HeaderProps) => {
                             <div className="text-xs text-foreground/70 font-medium mb-1 ml-1">Выберите способ пополнения</div>
 
                             {/* TON Option */}
-                            <DropdownMenuItem className="focus:outline-none" asChild>
+                            <DropdownMenuItem className="focus:outline-none p-0" asChild>
                               <motion.div
                                 whileHover={{ x: 3 }}
-                                className="rounded-lg p-2.5 cursor-pointer hover:bg-white/10 transition-colors relative overflow-hidden group"
+                                className="rounded-xl p-2.5 cursor-pointer hover:bg-white/10 transition-colors relative overflow-hidden group"
                               >
-                                <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-blue-600/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg"></div>
+                                <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-blue-600/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl"></div>
                                 <div className="flex items-center space-x-3 relative z-10">
-                                  <div className="h-10 w-10 rounded-lg bg-gradient-to-r from-blue-500 to-blue-600 flex items-center justify-center shadow-sm relative overflow-hidden group-hover:shadow-[0_0_20px_rgba(59,130,246,0.3)] transition-all duration-300">
-                                    <div className="absolute inset-0 bg-white/20 rounded-lg translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+                                  <div className="h-10 w-10 rounded-xl bg-gradient-to-r from-blue-500 to-blue-600 flex items-center justify-center shadow-sm relative overflow-hidden group-hover:shadow-[0_0_20px_rgba(59,130,246,0.3)] transition-all duration-300">
+                                    <div className="absolute inset-0 bg-white/20 rounded-xl translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
                                     <Coins className="h-5 w-5 text-white relative z-10" />
                                   </div>
                                   <div className="flex-1">
@@ -271,15 +271,15 @@ export const Header = ({ currentPage, isFullscreen = false }: HeaderProps) => {
                             </DropdownMenuItem>
 
                             {/* STARS Option */}
-                            <DropdownMenuItem className="focus:outline-none" asChild>
+                            <DropdownMenuItem className="focus:outline-none p-0" asChild>
                               <motion.div
                                 whileHover={{ x: 3 }}
-                                className="rounded-lg p-2.5 cursor-pointer hover:bg-white/10 transition-colors relative overflow-hidden group mt-1"
+                                className="rounded-xl p-2.5 cursor-pointer hover:bg-white/10 transition-colors relative overflow-hidden group mt-1"
                               >
-                                <div className="absolute inset-0 bg-gradient-to-r from-yellow-500/10 to-amber-600/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg"></div>
+                                <div className="absolute inset-0 bg-gradient-to-r from-yellow-500/10 to-amber-600/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl"></div>
                                 <div className="flex items-center space-x-3 relative z-10">
-                                  <div className="h-10 w-10 rounded-lg bg-gradient-to-r from-yellow-500 to-amber-500 flex items-center justify-center shadow-sm relative overflow-hidden group-hover:shadow-[0_0_20px_rgba(245,158,11,0.3)] transition-all duration-300">
-                                    <div className="absolute inset-0 bg-white/20 rounded-lg translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+                                  <div className="h-10 w-10 rounded-xl bg-gradient-to-r from-yellow-500 to-amber-500 flex items-center justify-center shadow-sm relative overflow-hidden group-hover:shadow-[0_0_20px_rgba(245,158,11,0.3)] transition-all duration-300">
+                                    <div className="absolute inset-0 bg-white/20 rounded-xl translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
                                     <Star className="h-5 w-5 text-white relative z-10" />
                                   </div>
                                   <div className="flex-1">
