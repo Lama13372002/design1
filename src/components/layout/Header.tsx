@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useTelegram } from "@/components/providers/TelegramProvider";
-import { TrendingUp, Bell, Award, Sparkles, MessageCircle, Users, Pin, MoreHorizontal, Plus, Coins, Star, Wallet } from "lucide-react";
+import { TrendingUp, Award, Sparkles, MessageCircle, Users, Pin, MoreHorizontal, Plus, Coins, Star, Wallet } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface HeaderProps {
@@ -16,7 +16,7 @@ interface HeaderProps {
 }
 
 const pageNames = {
-  "home": "Спортивные события",
+  "home": "Sports",
   "create-bet": "Создать спор",
   "open-bets": "Открытые споры",
   "chat": "Чат",
@@ -136,54 +136,14 @@ const ChatPageHeader = ({ isFullscreen }: { isFullscreen: boolean }) => {
   );
 };
 
-// Компонент баланса для главной страницы
-const BalanceInfo = () => {
+export const Header = ({ currentPage, isFullscreen = false }: HeaderProps) => {
+  const { user } = useTelegram();
+  const PageIcon = pageIcons[currentPage];
+
   const [balances] = useState({
     ton: 23.45,
     stars: 1240
   });
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, height: 0 }}
-      animate={{ opacity: 1, height: "auto" }}
-      transition={{ duration: 0.2 }}
-      className="w-full mt-3 pb-1"
-    >
-      <div className="flex items-center">
-        <div className="flex space-x-2">
-          {/* TON баланс */}
-          <div className="flex items-center space-x-1 bg-white/5 backdrop-blur-md px-1.5 py-0.5 rounded-lg border border-white/10">
-            <div className="h-4 w-4 rounded-full bg-gradient-to-r from-blue-500 to-blue-600 flex items-center justify-center">
-              <Coins className="h-2.5 w-2.5 text-white" />
-            </div>
-            <span className="text-xs font-medium">{balances.ton}</span>
-          </div>
-
-          {/* STARS баланс */}
-          <div className="flex items-center space-x-1 bg-white/5 backdrop-blur-md px-1.5 py-0.5 rounded-lg border border-white/10">
-            <div className="h-4 w-4 rounded-full bg-gradient-to-r from-yellow-500 to-yellow-600 flex items-center justify-center">
-              <Star className="h-2.5 w-2.5 text-white" />
-            </div>
-            <span className="text-xs font-medium">{balances.stars}</span>
-          </div>
-        </div>
-
-        {/* Кнопка пополнения - вариант с текстом "Пополнить" */}
-        <Button
-          size="sm"
-          className="h-6 ml-auto rounded-lg bg-gradient-to-r from-green-400 to-emerald-500 hover:from-green-500 hover:to-emerald-600 text-white border-none shadow-sm px-2"
-        >
-          <span className="text-xs font-medium whitespace-nowrap">Пополнить</span>
-        </Button>
-      </div>
-    </motion.div>
-  );
-};
-
-export const Header = ({ currentPage, isFullscreen = false }: HeaderProps) => {
-  const { user } = useTelegram();
-  const PageIcon = pageIcons[currentPage];
 
   // Если это страница чата, используем специальный header
   if (currentPage === 'chat') {
@@ -200,8 +160,6 @@ export const Header = ({ currentPage, isFullscreen = false }: HeaderProps) => {
         paddingTop: isFullscreen ? 'var(--system-safe-top)' : '0'
       }}
     >
-      {/* Удалена градиентная линия */}
-
       <div
         className="glass-header backdrop-blur-xl bg-background/50 border-b border-white/10"
         style={{
@@ -231,28 +189,39 @@ export const Header = ({ currentPage, isFullscreen = false }: HeaderProps) => {
                 >
                   {pageNames[currentPage]}
                 </motion.h1>
-                {currentPage === "home" && (
-                  <div className="flex items-center mt-1">
-                    <div className="h-1.5 w-1.5 bg-green-500 rounded-full mr-1.5 animate-pulse"></div>
-                    <p className="text-xs text-muted-foreground font-medium">
-                      Live обновления
-                    </p>
-                  </div>
-                )}
               </div>
             </motion.div>
 
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-3">
+              {/* Интегрированный баланс и кнопка пополнения для главной страницы */}
               {currentPage === "home" && (
-                <div className="relative">
-                  <motion.div
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.9 }}
-                    className="h-9 w-9 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center hover:bg-white/20 transition-all cursor-pointer"
+                <div className="flex items-center space-x-2 bg-white/5 backdrop-blur-md rounded-full border border-white/10 pl-2 pr-1 py-1">
+                  {/* TON баланс */}
+                  <div className="flex items-center space-x-1">
+                    <div className="h-4 w-4 rounded-full bg-gradient-to-r from-blue-500 to-blue-600 flex items-center justify-center">
+                      <Coins className="h-2.5 w-2.5 text-white" />
+                    </div>
+                    <span className="text-xs font-medium">{balances.ton}</span>
+                  </div>
+
+                  {/* Разделитель */}
+                  <div className="h-3 w-px bg-white/20"></div>
+
+                  {/* STARS баланс */}
+                  <div className="flex items-center space-x-1">
+                    <div className="h-4 w-4 rounded-full bg-gradient-to-r from-yellow-500 to-yellow-600 flex items-center justify-center">
+                      <Star className="h-2.5 w-2.5 text-white" />
+                    </div>
+                    <span className="text-xs font-medium">{balances.stars}</span>
+                  </div>
+
+                  {/* Кнопка пополнения */}
+                  <Button
+                    size="sm"
+                    className="h-6 w-6 rounded-full bg-gradient-to-r from-green-400 to-emerald-500 hover:from-green-500 hover:to-emerald-600 text-white border-none shadow-sm p-0 ml-1"
                   >
-                    <Bell className="h-5 w-5 text-foreground/80" />
-                  </motion.div>
-                  <span className="absolute -top-1 -right-1 h-4 w-4 bg-red-500 rounded-full flex items-center justify-center text-[10px] text-white font-semibold">2</span>
+                    <Plus className="h-3 w-3" />
+                  </Button>
                 </div>
               )}
 
@@ -280,9 +249,6 @@ export const Header = ({ currentPage, isFullscreen = false }: HeaderProps) => {
               </motion.div>
             </div>
           </div>
-
-          {/* Информация о балансе только для главной страницы */}
-          {currentPage === "home" && <BalanceInfo />}
         </div>
       </div>
     </header>
