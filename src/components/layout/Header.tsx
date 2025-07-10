@@ -64,16 +64,16 @@ const ChatPageHeader = ({ isFullscreen }: { isFullscreen: boolean }) => {
           WebkitBackdropFilter: "blur(10px)"
         }}
       >
-        <div className="p-4">
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center shadow-md">
-                <MessageCircle className="h-5 w-5 text-white" />
+        <div className="p-2">
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center space-x-2">
+              <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center shadow-md">
+                <MessageCircle className="h-4 w-4 text-white" />
               </div>
               <div>
-                <h2 className="font-bold text-lg bg-gradient-to-r from-blue-400 to-purple-500 text-transparent bg-clip-text">Общий чат</h2>
-                <div className="flex items-center space-x-2 text-sm text-foreground/70">
-                  <Users className="h-4 w-4 text-blue-400" />
+                <h2 className="font-bold text-base bg-gradient-to-r from-blue-400 to-purple-500 text-transparent bg-clip-text">Общий чат</h2>
+                <div className="flex items-center space-x-2 text-xs text-foreground/70">
+                  <Users className="h-3 w-3 text-blue-400" />
                   <span>127 онлайн</span>
                   <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></div>
                 </div>
@@ -85,16 +85,16 @@ const ChatPageHeader = ({ isFullscreen }: { isFullscreen: boolean }) => {
                 variant="ghost"
                 size="sm"
                 onClick={handleToggleRules}
-                className="hover:bg-white/10 rounded-full h-9 w-9 p-0 flex items-center justify-center"
+                className="hover:bg-white/10 rounded-full h-7 w-7 p-0 flex items-center justify-center"
               >
-                <Pin className={`h-4 w-4 ${showRules ? 'text-yellow-400' : 'text-foreground/70'}`} />
+                <Pin className={`h-3.5 w-3.5 ${showRules ? 'text-yellow-400' : 'text-foreground/70'}`} />
               </Button>
               <Button
                 variant="ghost"
                 size="sm"
-                className="hover:bg-white/10 rounded-full h-9 w-9 p-0 flex items-center justify-center"
+                className="hover:bg-white/10 rounded-full h-7 w-7 p-0 flex items-center justify-center"
               >
-                <MoreHorizontal className="h-4 w-4 text-foreground/70" />
+                <MoreHorizontal className="h-3.5 w-3.5 text-foreground/70" />
               </Button>
             </div>
           </div>
