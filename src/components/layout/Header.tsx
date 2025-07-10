@@ -148,7 +148,7 @@ const BalanceInfo = () => {
       initial={{ opacity: 0, height: 0 }}
       animate={{ opacity: 1, height: "auto" }}
       transition={{ duration: 0.2 }}
-      className="w-full mt-1 pb-1"
+      className="w-full mt-3 pb-1"
     >
       <div className="flex items-center">
         <div className="flex space-x-2">
@@ -204,7 +204,7 @@ export const Header = ({ currentPage, isFullscreen = false }: HeaderProps) => {
       {/* Удалена градиентная линия */}
 
       <div
-        className="glass-header backdrop-blur-xl bg-background/50"
+        className="glass-header backdrop-blur-xl bg-background/50 border-b border-white/10"
         style={{
           backdropFilter: "blur(10px)",
           WebkitBackdropFilter: "blur(10px)"
