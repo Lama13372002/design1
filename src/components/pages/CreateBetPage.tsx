@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,15 +14,16 @@ import {
   CheckCircle,
   TrendingUp,
   Trophy,
-  Scale,
   Zap,
   ChevronRight,
-  MessageCircle
+  MessageCircle,
+  CurrencyIcon
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface CreateBetPageProps {
   onBack: () => void;
+  onInputFocusChange?: (focused: boolean) => void;
 }
 
 const currencies = [
@@ -32,13 +33,16 @@ const currencies = [
 
 // outcomes будет создаваться динамически на основе выбранного матча
 
-export const CreateBetPage = ({ onBack }: CreateBetPageProps) => {
+export const CreateBetPage = ({ onBack, onInputFocusChange }: CreateBetPageProps) => {
   const [selectedCurrency, setSelectedCurrency] = useState("TON");
   const [amount, setAmount] = useState("");
   const [selectedOutcome, setSelectedOutcome] = useState("");
   const [comment, setComment] = useState("");
   const [showPreview, setShowPreview] = useState(false);
   const [validationError, setValidationError] = useState<string | null>(null);
+  const [isInputFocused, setIsInputFocused] = useState(false);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
+  const initialViewportHeight = useRef<number>(0);
   const [selectedMatch, setSelectedMatch] = useState({
     homeTeam: "Реал Мадрид",
     awayTeam: "Барселона",
@@ -63,6 +67,43 @@ export const CreateBetPage = ({ onBack }: CreateBetPageProps) => {
       }
     }
   }, []);
+
+  // Отслеживание закрытия клавиатуры через изменение размера
+  useEffect(() => {
+    initialViewportHeight.current = window.innerHeight;
+
+    const handleViewportChange = () => {
+      const currentHeight = window.innerHeight;
+      const heightDifference = initialViewportHeight.current - currentHeight;
+
+      // Если инпут в фокусе, но высота экрана восстановилась (клавиатура закрылась)
+      if (isInputFocused && heightDifference < 100) {
+        console.log('Keyboard closed detected - showing bottom nav');
+        setIsInputFocused(false);
+        onInputFocusChange?.(false);
+
+        // Убираем фокус с инпута
+        if (inputRef.current) {
+          inputRef.current.blur();
+        }
+      }
+    };
+
+    // Используем Visual Viewport API если доступно, иначе resize
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener('resize', handleViewportChange);
+    } else {
+      window.addEventListener('resize', handleViewportChange);
+    }
+
+    return () => {
+      if (window.visualViewport) {
+        window.visualViewport.removeEventListener('resize', handleViewportChange);
+      } else {
+        window.removeEventListener('resize', handleViewportChange);
+      }
+    };
+  }, [isInputFocused, onInputFocusChange]);
 
   // Создаем outcomes динамически на основе выбранного матча
   const outcomes = [
@@ -137,6 +178,19 @@ export const CreateBetPage = ({ onBack }: CreateBetPageProps) => {
     if (value.length <= 222) {
       setComment(value);
     }
+  };
+
+  // ПРОСТЫЕ обработчики фокуса
+  const handleInputFocus = () => {
+    console.log('Input focused - hiding bottom nav');
+    setIsInputFocused(true);
+    onInputFocusChange?.(true);
+  };
+
+  const handleInputBlur = () => {
+    console.log('Input blurred - showing bottom nav');
+    setIsInputFocused(false);
+    onInputFocusChange?.(false);
   };
 
   if (showPreview) {
@@ -308,7 +362,7 @@ export const CreateBetPage = ({ onBack }: CreateBetPageProps) => {
         <Card className="glass-card border-none overflow-hidden">
           <CardHeader className="pb-3">
             <CardTitle className="text-lg flex items-center space-x-2">
-              <Scale className="h-5 w-5 text-blue-400" />
+              <CurrencyIcon className="h-5 w-5 text-blue-400" />
               <span>Валюта</span>
             </CardTitle>
           </CardHeader>
@@ -381,18 +435,8 @@ export const CreateBetPage = ({ onBack }: CreateBetPageProps) => {
               </div>
             )}
 
-            <div className="flex space-x-2">
-              {[currentCurrency.min, currentCurrency.min * 2, currentCurrency.min * 5].map((preset) => (
-                <Button
-                  key={preset}
-                  variant="outline"
-                  size="sm"
-                  onClick={() => handleSetPresetAmount(preset)}
-                  className="rounded-lg bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10"
-                >
-                  {preset}
-                </Button>
-              ))}
+            <div className="text-sm text-foreground/80 py-1">
+              Минимальная сумма 10$ в TON и STARS
             </div>
           </CardContent>
         </Card>
@@ -446,9 +490,12 @@ export const CreateBetPage = ({ onBack }: CreateBetPageProps) => {
           </CardHeader>
           <CardContent>
             <textarea
+              ref={inputRef}
               placeholder="Ваш комментарий к спору..."
               value={comment}
               onChange={handleCommentChange}
+              onFocus={handleInputFocus}
+              onBlur={handleInputBlur}
               className="w-full p-3 rounded-xl resize-none h-20 bg-white/5 backdrop-blur-sm border border-white/10 focus:border-blue-400 focus:ring-1 focus:ring-blue-400"
               maxLength={222}
             />
@@ -458,8 +505,6 @@ export const CreateBetPage = ({ onBack }: CreateBetPageProps) => {
           </CardContent>
         </Card>
       </motion.div>
-
-
 
       {/* Create Button */}
       <motion.div
