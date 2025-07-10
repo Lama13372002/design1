@@ -7,6 +7,8 @@ import { Header } from "./Header";
 
 import { motion } from "framer-motion";
 import { useTelegram } from "@/components/providers/TelegramProvider";
+import { useFullscreen } from "@/lib/useFullscreen";
+import { useEffect } from "react";
 
 interface MainLayoutProps {
   children: ReactNode;
@@ -16,18 +18,46 @@ interface MainLayoutProps {
 }
 
 export const MainLayout = ({ children, currentPage, onPageChange, hideBottomNav }: MainLayoutProps) => {
-  const { isFullscreen } = useTelegram();
+  const { isFullscreen: tgFullscreen } = useTelegram();
+  const { isFullscreen, hideSystemUI } = useFullscreen();
+
+  // Автоматически скрываем системный UI при загрузке
+  useEffect(() => {
+    // Небольшая задержка для полной инициализации
+    const timer = setTimeout(() => {
+      hideSystemUI();
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [hideSystemUI]);
+
+  const fullscreenActive = isFullscreen || tgFullscreen;
 
   return (
-    <div className={`bg-background flex flex-col ${isFullscreen ? 'fullscreen-app' : 'min-h-screen'}`}
-         style={{ height: '100vh', overflow: 'hidden' }}>
-      <Header currentPage={currentPage} isFullscreen={isFullscreen} />
+    <div
+      className={`bg-background flex flex-col safe-area-content ${
+        fullscreenActive ? 'fullscreen-app immersive-fullscreen' : 'min-h-screen'
+      }`}
+      style={{
+        height: fullscreenActive ? '100dvh' : '100vh',
+        overflow: 'hidden',
+        position: fullscreenActive ? 'fixed' : 'relative',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        zIndex: fullscreenActive ? 9999 : 'auto'
+      }}
+    >
+      <Header currentPage={currentPage} isFullscreen={fullscreenActive} />
 
       <motion.main
-        className="flex-1 overflow-y-auto"
+        className="flex-1 overflow-y-auto main-content-safe"
         style={{
-          height: 'calc(100vh - 70px)',
-          paddingBottom: hideBottomNav ? '0px' : '70px'
+          height: fullscreenActive ? 'calc(100dvh - 140px)' : 'calc(100vh - 140px)',
+          paddingBottom: hideBottomNav ? '0px' : '20px',
+          overscrollBehavior: 'none',
+          WebkitOverflowScrolling: 'touch'
         }}
         key={currentPage}
         initial={{ opacity: 0, x: 20 }}
@@ -39,7 +69,11 @@ export const MainLayout = ({ children, currentPage, onPageChange, hideBottomNav 
       </motion.main>
 
       {!hideBottomNav && (
-        <BottomNavigation currentPage={currentPage} onPageChange={onPageChange} isFullscreen={isFullscreen} />
+        <BottomNavigation
+          currentPage={currentPage}
+          onPageChange={onPageChange}
+          isFullscreen={fullscreenActive}
+        />
       )}
     </div>
   );
