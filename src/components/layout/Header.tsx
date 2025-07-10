@@ -270,7 +270,7 @@ export const Header = ({ currentPage, isFullscreen = false }: HeaderProps) => {
                                 </div>
                                 <div className="flex-1">
                                   <div className="font-semibold text-sm bg-gradient-to-r from-yellow-500 to-amber-400 bg-clip-text text-transparent group-hover:from-yellow-400 group-hover:to-amber-300 transition-all duration-300">Пополнить Stars</div>
-                                  <div className="text-xs text-foreground/60 group-hover:text-foreground/80 transition-colors duration-300">Внутренняя валюта платформы</div>
+                                  <div className="text-xs text-foreground/60 group-hover:text-foreground/80 transition-colors duration-300">Внутренняя валюта Telegram</div>
                                 </div>
                                 <ArrowRight className="h-4 w-4 text-yellow-500/50 group-hover:text-yellow-400 transform translate-x-0 group-hover:translate-x-1 transition-all duration-300" />
                               </div>
