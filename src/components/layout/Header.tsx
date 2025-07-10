@@ -148,34 +148,34 @@ const BalanceInfo = () => {
       initial={{ opacity: 0, height: 0 }}
       animate={{ opacity: 1, height: "auto" }}
       transition={{ duration: 0.2 }}
-      className="w-full mt-1 pb-2"
+      className="w-full mt-1 pb-1"
     >
-      <div className="flex items-center justify-between">
-        <div className="flex space-x-3">
+      <div className="flex items-center">
+        <div className="flex space-x-2">
           {/* TON баланс */}
-          <div className="flex items-center space-x-1.5 bg-white/5 backdrop-blur-md px-2 py-1 rounded-lg border border-white/10">
-            <div className="h-5 w-5 rounded-full bg-gradient-to-r from-blue-500 to-blue-600 flex items-center justify-center">
-              <Coins className="h-3 w-3 text-white" />
+          <div className="flex items-center space-x-1 bg-white/5 backdrop-blur-md px-1.5 py-0.5 rounded-lg border border-white/10">
+            <div className="h-4 w-4 rounded-full bg-gradient-to-r from-blue-500 to-blue-600 flex items-center justify-center">
+              <Coins className="h-2.5 w-2.5 text-white" />
             </div>
-            <span className="text-sm font-medium">{balances.ton} TON</span>
+            <span className="text-xs font-medium">{balances.ton}</span>
           </div>
 
           {/* STARS баланс */}
-          <div className="flex items-center space-x-1.5 bg-white/5 backdrop-blur-md px-2 py-1 rounded-lg border border-white/10">
-            <div className="h-5 w-5 rounded-full bg-gradient-to-r from-yellow-500 to-yellow-600 flex items-center justify-center">
-              <Star className="h-3 w-3 text-white" />
+          <div className="flex items-center space-x-1 bg-white/5 backdrop-blur-md px-1.5 py-0.5 rounded-lg border border-white/10">
+            <div className="h-4 w-4 rounded-full bg-gradient-to-r from-yellow-500 to-yellow-600 flex items-center justify-center">
+              <Star className="h-2.5 w-2.5 text-white" />
             </div>
-            <span className="text-sm font-medium">{balances.stars} STARS</span>
+            <span className="text-xs font-medium">{balances.stars}</span>
           </div>
         </div>
 
         {/* Кнопка пополнения */}
         <Button
           size="sm"
-          className="h-7 rounded-lg bg-gradient-to-r from-green-400 to-emerald-500 hover:from-green-500 hover:to-emerald-600 text-white border-none shadow-md"
+          className="h-6 ml-auto rounded-lg bg-gradient-to-r from-green-400 to-emerald-500 hover:from-green-500 hover:to-emerald-600 text-white border-none shadow-sm px-2"
         >
-          <Plus className="h-3.5 w-3.5 mr-1" />
-          <span className="text-xs font-medium">Пополнить</span>
+          <Plus className="h-3 w-3 mr-0.5" />
+          <span className="text-xs font-medium whitespace-nowrap">+</span>
         </Button>
       </div>
     </motion.div>
