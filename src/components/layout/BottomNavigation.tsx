@@ -32,12 +32,12 @@ const navItems = [
 
 export const BottomNavigation = ({ currentPage, onPageChange, isFullscreen = false }: BottomNavigationProps) => {
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-50">
+    <div className="fixed bottom-0 left-0 right-0 z-50 pb-0">
       {/* Кнопки без фонового контейнера */}
       <div className={`flex items-center justify-center px-4 ${
         isFullscreen
-          ? 'pb-[max(env(safe-area-inset-bottom),var(--tg-safe-area-inset-bottom,8px))] pt-2'
-          : 'pb-4 pt-2'
+          ? 'pb-0 pt-2'
+          : 'pb-0 pt-2'
       }`}>
         <div className="flex justify-center w-full items-center">
           {/* Все кнопки в одной линии с красивым spacing */}
@@ -72,12 +72,12 @@ const renderNavItem = (
         size="sm"
         onClick={() => onPageChange(item.id as PageType)}
         className={`
-          flex flex-col items-center justify-center h-12 w-12 p-0 rounded-full transition-all duration-200 backdrop-blur-sm
+          flex flex-col items-center justify-center h-12 w-12 p-0 rounded-full transition-all duration-200 backdrop-blur-md shadow-lg shadow-black/30
           ${isActive
             ? isCreateButton
-              ? "bg-gradient-to-r from-purple-500 to-blue-600 text-white shadow-md scale-105"
-              : "bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-md scale-105"
-            : "bg-white/10 text-muted-foreground hover:text-foreground hover:bg-white/20 border border-white/20"}
+              ? "bg-gradient-to-r from-purple-500 to-blue-600 text-white shadow-xl scale-105 border border-white/40 animate-glow"
+              : "bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-xl scale-105 border border-white/40 animate-glow"
+            : "bg-gradient-to-r from-gray-800/70 to-gray-700/70 text-white hover:text-white hover:bg-white/30 shadow-lg border border-white/30"}
         `}
       >
         <item.icon className={`h-5 w-5 ${isActive ? "text-white" : ""} mb-0.5`} />
