@@ -14,10 +14,21 @@ interface TelegramUser {
 interface TelegramWebApp {
   ready: () => void;
   expand: () => void;
-  colorScheme: string;
+  requestFullscreen?: () => void;
+  exitFullscreen?: () => void;
+  lockOrientation?: () => void;
+  unlockOrientation?: () => void;
   isFullscreen?: boolean;
+  colorScheme: string;
   viewportHeight?: number;
+  viewportStableHeight?: number;
   safeAreaInset?: {
+    top: number;
+    bottom: number;
+    left: number;
+    right: number;
+  };
+  contentSafeAreaInset?: {
     top: number;
     bottom: number;
     left: number;
@@ -31,6 +42,7 @@ interface TelegramWebApp {
     textColor: string;
   };
   onEvent: (event: string, callback: () => void) => void;
+  offEvent: (event: string, callback: () => void) => void;
 }
 
 interface TelegramContextType {
@@ -74,6 +86,32 @@ export const TelegramProvider = ({ children }: TelegramProviderProps) => {
     if (typeof window !== "undefined") {
       const tg = window.Telegram?.WebApp;
 
+      // Функция для скрытия системной навигации Android
+      const hideSystemUI = () => {
+        // Скрыть системную навигацию через CSS
+        document.documentElement.style.setProperty('--system-ui-hidden', '1');
+
+        // Запросить полноэкранный режим через различные API
+        const docElement = document.documentElement;
+
+        if (docElement.requestFullscreen) {
+          docElement.requestFullscreen().catch(() => {});
+        } else if ((docElement as any).webkitRequestFullscreen) {
+          (docElement as any).webkitRequestFullscreen().catch(() => {});
+        } else if ((docElement as any).mozRequestFullScreen) {
+          (docElement as any).mozRequestFullScreen().catch(() => {});
+        } else if ((docElement as any).msRequestFullscreen) {
+          (docElement as any).msRequestFullscreen().catch(() => {});
+        }
+
+        // Дополнительные методы для Android
+        if (typeof (window as any).AndroidInterface !== 'undefined') {
+          try {
+            (window as any).AndroidInterface.hideSystemUI();
+          } catch (e) {}
+        }
+      };
+
       // Функция для установки CSS переменных safe area
       const updateSafeAreaVars = (safeArea?: { top: number; bottom: number; left: number; right: number }) => {
         const area = safeArea || { top: 0, bottom: 0, left: 0, right: 0 };
@@ -87,6 +125,16 @@ export const TelegramProvider = ({ children }: TelegramProviderProps) => {
         tg.ready();
         tg.expand();
 
+        // Попытка запросить полноэкранный режим в Telegram
+        if (tg.requestFullscreen) {
+          tg.requestFullscreen();
+        }
+
+        // Заблокировать ориентацию если возможно
+        if (tg.lockOrientation) {
+          tg.lockOrientation();
+        }
+
         setWebApp(tg);
         setUser(tg.initDataUnsafe?.user || null);
         setTheme(tg.colorScheme === "dark" ? "dark" : "light");
@@ -96,25 +144,39 @@ export const TelegramProvider = ({ children }: TelegramProviderProps) => {
         setIsFullscreen(fullscreen);
 
         // Устанавливаем CSS переменные для safe area
-        updateSafeAreaVars(tg.safeAreaInset);
+        updateSafeAreaVars(tg.safeAreaInset || tg.contentSafeAreaInset);
 
         setIsReady(true);
 
+        // Попытка скрыть системный UI после инициализации
+        setTimeout(hideSystemUI, 100);
+
         // Слушаем изменения темы
-        tg.onEvent("themeChanged", () => {
+        const themeHandler = () => {
           setTheme(tg.colorScheme === "dark" ? "dark" : "light");
-        });
+        };
+        tg.onEvent("themeChanged", themeHandler);
 
         // Слушаем изменения viewport
-        tg.onEvent("viewportChanged", () => {
+        const viewportHandler = () => {
           const newFullscreen = tg.isFullscreen || window.innerHeight >= screen.height * 0.9;
           setIsFullscreen(newFullscreen);
-          updateSafeAreaVars(tg.safeAreaInset);
-        });
+          updateSafeAreaVars(tg.safeAreaInset || tg.contentSafeAreaInset);
+
+          // Повторно скрыть системный UI при изменении viewport
+          setTimeout(hideSystemUI, 50);
+        };
+        tg.onEvent("viewportChanged", viewportHandler);
 
         // Настройка главной кнопки
-        tg.MainButton.color = "#3b82f6";
+        tg.MainButton.color = "#667eea";
         tg.MainButton.textColor = "#ffffff";
+
+        // Очистка при размонтировании
+        return () => {
+          tg.offEvent?.("themeChanged", themeHandler);
+          tg.offEvent?.("viewportChanged", viewportHandler);
+        };
       } else {
         // Для разработки без Telegram - устанавливаем безопасные отступы
         setIsReady(true);
@@ -122,6 +184,9 @@ export const TelegramProvider = ({ children }: TelegramProviderProps) => {
 
         // Симулируем safe area для разработки (типичные значения для мобильных устройств)
         updateSafeAreaVars({ top: 60, bottom: 34, left: 0, right: 0 });
+
+        // Попытка скрыть системный UI и в режиме разработки
+        setTimeout(hideSystemUI, 100);
 
         setUser({
           id: 123456789,
