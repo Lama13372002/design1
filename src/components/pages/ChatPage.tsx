@@ -322,7 +322,7 @@ export const ChatPage = ({ onInputFocusChange }: ChatPageProps) => {
               }}
               onFocus={handleInputFocus}
               onBlur={handleInputBlur}
-              className="pl-4 pr-4 rounded-2xl bg-white/5 backdrop-blur-sm border-white/10 focus:border-blue-400 focus:ring-1 focus:ring-blue-400 resize-none overflow-hidden flex items-center"
+              className="pl-4 pr-10 rounded-2xl bg-white/5 backdrop-blur-sm border-white/10 focus:border-blue-400 focus:ring-1 focus:ring-blue-400 resize-none overflow-hidden flex items-center"
               style={{
                 minHeight: '40px',
                 height: '40px',
@@ -332,7 +332,7 @@ export const ChatPage = ({ onInputFocusChange }: ChatPageProps) => {
               maxLength={500}
               rows={1}
             />
-            <div className="absolute right-3 bottom-3 flex items-center space-x-2">
+            <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center space-x-2">
               <Paperclip className="h-4 w-4 text-foreground/50 hover:text-foreground/80 cursor-pointer" onClick={handleAttachFile} />
             </div>
           </div>
