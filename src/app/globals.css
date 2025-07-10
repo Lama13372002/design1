@@ -696,3 +696,72 @@ body.fullscreen-mode {
   padding-left: max(env(safe-area-inset-left), var(--tg-safe-area-inset-left, 0px));
   padding-right: max(env(safe-area-inset-right), var(--tg-safe-area-inset-right, 0px));
 }
+
+/* 🔮 ФУТУРИСТИЧЕСКИЕ СТИЛИ НАВИГАЦИИ 🔮 */
+
+/* Неоморфные кнопки - активная фиолетовая */
+.neo-active-purple {
+  background: linear-gradient(145deg, rgba(147, 51, 234, 0.9), rgba(79, 70, 229, 0.8));
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.3),
+    inset 0 -1px 1px rgba(0, 0, 0, 0.2),
+    0 4px 8px rgba(88, 28, 135, 0.5),
+    0 8px 16px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: white;
+  text-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
+}
+
+/* Неоморфные кнопки - активная синяя */
+.neo-active-blue {
+  background: linear-gradient(145deg, rgba(59, 130, 246, 0.9), rgba(37, 99, 235, 0.8));
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.3),
+    inset 0 -1px 1px rgba(0, 0, 0, 0.2),
+    0 4px 8px rgba(29, 78, 216, 0.5),
+    0 8px 16px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: white;
+  text-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
+}
+
+/* Неоморфные кнопки - неактивная */
+.neo-inactive {
+  background: rgba(30, 41, 59, 0.8);
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.05),
+    inset 0 -1px 1px rgba(0, 0, 0, 0.1),
+    0 4px 6px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* Голографический эффект кольца */
+.holographic-ring {
+  background: conic-gradient(
+    from 0deg,
+    transparent,
+    rgba(56, 189, 248, 0.3),
+    rgba(217, 70, 239, 0.3),
+    rgba(251, 146, 60, 0.3),
+    rgba(56, 189, 248, 0.3),
+    transparent
+  );
+  animation: rotate-holo 4s linear infinite;
+}
+
+@keyframes rotate-holo {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Эффект свечения текста */
+.text-glow {
+  text-shadow: 0 0 8px currentColor;
+  filter: brightness(1.2);
+}
+
+.text-glow-sm {
+  text-shadow: 0 0 4px currentColor;
+  filter: brightness(1.2);
+}
