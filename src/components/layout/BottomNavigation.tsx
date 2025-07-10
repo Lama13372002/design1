@@ -36,14 +36,14 @@ export const BottomNavigation = ({ currentPage, onPageChange, isFullscreen = fal
       {/* Прямоугольное меню на всю ширину без закруглений */}
       <div className="relative">
         <div className="absolute inset-0 bg-background/50 backdrop-blur-md"></div>
-        <nav className={`glass-nav relative border-t border-white/20 shadow-xl backdrop-blur-md flex items-center justify-between px-4 ${
+        <nav className={`glass-nav relative border-t border-white/20 shadow-xl backdrop-blur-md flex items-center justify-center px-2 ${
           isFullscreen
-            ? 'pb-[max(env(safe-area-inset-bottom),var(--tg-safe-area-inset-bottom,6px))] pt-0'
-            : 'py-0'
+            ? 'pb-[max(env(safe-area-inset-bottom),var(--tg-safe-area-inset-bottom,4px))] pt-0 min-h-[50px]'
+            : 'py-0 min-h-[50px]'
         }`}>
-          <div className="flex justify-between w-full items-center">
-            {/* Все кнопки в одной линии */}
-            <div className="flex justify-between w-full space-x-1 items-center">
+          <div className="flex justify-center w-full items-center">
+            {/* Все кнопки в одной линии с лучшим центрированием */}
+            <div className="flex justify-between w-full max-w-sm space-x-1 items-center">
               {navItems.map((item) => renderNavItem(item, currentPage, onPageChange))}
             </div>
           </div>
@@ -75,7 +75,7 @@ const renderNavItem = (
         size="sm"
         onClick={() => onPageChange(item.id as PageType)}
         className={`
-          flex flex-col items-center justify-center h-9 w-9 p-0 rounded-full transition-all duration-200
+          flex flex-col items-center justify-center h-8 w-8 p-0 rounded-full transition-all duration-200
           ${isActive
             ? isCreateButton
               ? "bg-gradient-to-r from-purple-500 to-blue-600 text-white shadow-md scale-105"
@@ -83,8 +83,8 @@ const renderNavItem = (
             : "bg-transparent text-muted-foreground hover:text-foreground hover:bg-white/10"}
         `}
       >
-        <item.icon className={`h-4 w-4 ${isActive ? "text-white" : ""} mb-0.5`} />
-        <span className="text-[10px] font-medium opacity-90">{item.label}</span>
+        <item.icon className={`h-3.5 w-3.5 ${isActive ? "text-white" : ""} mb-0.5`} />
+        <span className="text-[9px] font-medium opacity-90">{item.label}</span>
 
         {item.badge && (
           <Badge
