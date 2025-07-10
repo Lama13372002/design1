@@ -14,7 +14,7 @@ import {
   CheckCircle,
   TrendingUp,
   Trophy,
-  Scale,
+  DollarSign,
   Zap,
   ChevronRight,
   MessageCircle
@@ -23,6 +23,7 @@ import { motion, AnimatePresence } from "framer-motion";
 
 interface CreateBetPageProps {
   onBack: () => void;
+  onInputFocusChange?: (focused: boolean) => void;
 }
 
 const currencies = [
@@ -32,7 +33,7 @@ const currencies = [
 
 // outcomes будет создаваться динамически на основе выбранного матча
 
-export const CreateBetPage = ({ onBack }: CreateBetPageProps) => {
+export const CreateBetPage = ({ onBack, onInputFocusChange }: CreateBetPageProps) => {
   const [selectedCurrency, setSelectedCurrency] = useState("TON");
   const [amount, setAmount] = useState("");
   const [selectedOutcome, setSelectedOutcome] = useState("");
@@ -308,7 +309,7 @@ export const CreateBetPage = ({ onBack }: CreateBetPageProps) => {
         <Card className="glass-card border-none overflow-hidden">
           <CardHeader className="pb-3">
             <CardTitle className="text-lg flex items-center space-x-2">
-              <Scale className="h-5 w-5 text-blue-400" />
+              <DollarSign className="h-5 w-5 text-blue-400" />
               <span>Валюта</span>
             </CardTitle>
           </CardHeader>
@@ -358,6 +359,8 @@ export const CreateBetPage = ({ onBack }: CreateBetPageProps) => {
                 placeholder={`Минимум ${currentCurrency.min} ${selectedCurrency}`}
                 value={amount}
                 onChange={(e) => handleSetAmount(e.target.value)}
+                onFocus={() => onInputFocusChange?.(true)}
+                onBlur={() => onInputFocusChange?.(false)}
                 className={`text-lg rounded-xl bg-white/5 backdrop-blur-sm border border-white/10 focus:border-blue-400 focus:ring-1 focus:ring-blue-400 ${!isValidAmount && amount ? "border-red-500 focus:border-red-500 focus:ring-red-500" : ""}`}
               />
               <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
@@ -381,18 +384,8 @@ export const CreateBetPage = ({ onBack }: CreateBetPageProps) => {
               </div>
             )}
 
-            <div className="flex space-x-2">
-              {[currentCurrency.min, currentCurrency.min * 2, currentCurrency.min * 5].map((preset) => (
-                <Button
-                  key={preset}
-                  variant="outline"
-                  size="sm"
-                  onClick={() => handleSetPresetAmount(preset)}
-                  className="rounded-lg bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10"
-                >
-                  {preset}
-                </Button>
-              ))}
+            <div className="text-sm text-foreground/70 bg-white/5 p-3 rounded-lg border border-white/10">
+              <span>Минимальная сумма 10$ в Ton и Stars</span>
             </div>
           </CardContent>
         </Card>
