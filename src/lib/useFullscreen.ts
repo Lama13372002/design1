@@ -26,16 +26,20 @@ export const useFullscreen = (): FullscreenAPI => {
       }
 
       // Попытка через стандартный Fullscreen API
-      const docElement = document.documentElement;
+      const docElement = document.documentElement as HTMLElement & {
+        webkitRequestFullscreen?: () => Promise<void>;
+        mozRequestFullScreen?: () => Promise<void>;
+        msRequestFullscreen?: () => Promise<void>;
+      };
 
       if (docElement.requestFullscreen) {
         await docElement.requestFullscreen();
-      } else if ((docElement as any).webkitRequestFullscreen) {
-        await (docElement as any).webkitRequestFullscreen();
-      } else if ((docElement as any).mozRequestFullScreen) {
-        await (docElement as any).mozRequestFullScreen();
-      } else if ((docElement as any).msRequestFullscreen) {
-        await (docElement as any).msRequestFullscreen();
+      } else if (docElement.webkitRequestFullscreen) {
+        await docElement.webkitRequestFullscreen();
+      } else if (docElement.mozRequestFullScreen) {
+        await docElement.mozRequestFullScreen();
+      } else if (docElement.msRequestFullscreen) {
+        await docElement.msRequestFullscreen();
       }
 
       setIsFullscreen(true);
@@ -55,14 +59,20 @@ export const useFullscreen = (): FullscreenAPI => {
       }
 
       // Попытка через стандартный Fullscreen API
+      const documentWithMethods = document as Document & {
+        webkitExitFullscreen?: () => Promise<void>;
+        mozCancelFullScreen?: () => Promise<void>;
+        msExitFullscreen?: () => Promise<void>;
+      };
+
       if (document.exitFullscreen) {
         await document.exitFullscreen();
-      } else if ((document as any).webkitExitFullscreen) {
-        await (document as any).webkitExitFullscreen();
-      } else if ((document as any).mozCancelFullScreen) {
-        await (document as any).mozCancelFullScreen();
-      } else if ((document as any).msExitFullscreen) {
-        await (document as any).msExitFullscreen();
+      } else if (documentWithMethods.webkitExitFullscreen) {
+        await documentWithMethods.webkitExitFullscreen();
+      } else if (documentWithMethods.mozCancelFullScreen) {
+        await documentWithMethods.mozCancelFullScreen();
+      } else if (documentWithMethods.msExitFullscreen) {
+        await documentWithMethods.msExitFullscreen();
       }
 
       setIsFullscreen(false);
@@ -85,9 +95,14 @@ export const useFullscreen = (): FullscreenAPI => {
       window.scrollTo(0, 1);
 
       // Попытка скрыть системную навигацию через Android WebView
-      if (typeof (window as any).AndroidInterface !== 'undefined') {
+      const windowWithAndroid = window as Window & {
+        AndroidInterface?: {
+          hideSystemUI: () => void;
+        };
+      };
+      if (typeof windowWithAndroid.AndroidInterface !== 'undefined') {
         try {
-          (window as any).AndroidInterface.hideSystemUI();
+          windowWithAndroid.AndroidInterface.hideSystemUI();
         } catch (e) {
           console.log('Android interface not available');
         }
@@ -121,9 +136,14 @@ export const useFullscreen = (): FullscreenAPI => {
       document.documentElement.setAttribute('data-fullscreen', 'false');
 
       // Попытка показать системную навигацию через Android WebView
-      if (typeof (window as any).AndroidInterface !== 'undefined') {
+      const windowWithAndroid = window as Window & {
+        AndroidInterface?: {
+          showSystemUI: () => void;
+        };
+      };
+      if (typeof windowWithAndroid.AndroidInterface !== 'undefined') {
         try {
-          (window as any).AndroidInterface.showSystemUI();
+          windowWithAndroid.AndroidInterface.showSystemUI();
         } catch (e) {
           console.log('Android interface not available');
         }
@@ -140,11 +160,17 @@ export const useFullscreen = (): FullscreenAPI => {
   // Отслеживание изменений полноэкранного режима
   useEffect(() => {
     const handleFullscreenChange = () => {
+      const documentWithElements = document as Document & {
+        webkitFullscreenElement?: Element | null;
+        mozFullScreenElement?: Element | null;
+        msFullscreenElement?: Element | null;
+      };
+
       const isCurrentlyFullscreen = !!(
         document.fullscreenElement ||
-        (document as any).webkitFullscreenElement ||
-        (document as any).mozFullScreenElement ||
-        (document as any).msFullscreenElement
+        documentWithElements.webkitFullscreenElement ||
+        documentWithElements.mozFullScreenElement ||
+        documentWithElements.msFullscreenElement
       );
 
       setIsFullscreen(isCurrentlyFullscreen || tgFullscreen);
