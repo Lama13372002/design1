@@ -34,14 +34,14 @@ export const BottomNavigation = ({ currentPage, onPageChange, isFullscreen = fal
   return (
     <div className="fixed bottom-0 left-0 right-0 z-50 bottom-nav-safe">
       {/* Прямоугольное меню на всю ширину без закруглений */}
-      <nav className={`glass-nav border-t border-white/20 shadow-xl backdrop-blur-md flex items-end justify-center px-2 ${
+      <nav className={`glass-nav border-t border-white/20 shadow-xl backdrop-blur-md flex items-center justify-center px-2 ${
         isFullscreen
-          ? 'pb-[max(env(safe-area-inset-bottom),var(--tg-safe-area-inset-bottom,2px))] pt-0 h-[40px]'
-          : 'pb-1 pt-0 h-[40px]'
+          ? 'pb-[max(env(safe-area-inset-bottom),var(--tg-safe-area-inset-bottom,2px))] pt-0 h-[35px]'
+          : 'pb-0 pt-0 h-[35px]'
       }`}>
-        <div className="flex justify-center w-full items-end">
+        <div className="flex justify-center w-full items-center">
           {/* Все кнопки в одной линии с лучшим центрированием */}
-          <div className="flex justify-between w-full max-w-sm space-x-1 items-end">
+          <div className="flex justify-between w-full max-w-sm space-x-1 items-center">
             {navItems.map((item) => renderNavItem(item, currentPage, onPageChange))}
           </div>
         </div>
