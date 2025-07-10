@@ -27,7 +27,7 @@ export const MainLayout = ({ children, currentPage, onPageChange, hideBottomNav 
         className="flex-1 overflow-y-auto"
         style={{
           height: 'calc(100vh - 70px)',
-          paddingBottom: hideBottomNav ? '0px' : '80px'
+          paddingBottom: hideBottomNav ? '0px' : '70px'
         }}
         key={currentPage}
         initial={{ opacity: 0, x: 20 }}
