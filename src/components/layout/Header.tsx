@@ -192,35 +192,37 @@ export const Header = ({ currentPage, isFullscreen = false }: HeaderProps) => {
               </div>
             </motion.div>
 
-            {/* Интегрированный баланс и кнопка пополнения */}
-            <div className="flex items-center space-x-2 bg-white/5 backdrop-blur-md rounded-full border border-white/10 pl-2 pr-1 py-1">
-              {/* TON баланс */}
-              <div className="flex items-center space-x-1">
-                <div className="h-4 w-4 rounded-full bg-gradient-to-r from-blue-500 to-blue-600 flex items-center justify-center">
-                  <Coins className="h-2.5 w-2.5 text-white" />
+            {/* Интегрированный баланс и кнопка пополнения везде, кроме страниц меню и чата */}
+            {currentPage !== 'menu' && currentPage !== 'chat' && (
+              <div className="flex items-center space-x-2 bg-white/5 backdrop-blur-md rounded-full border border-white/10 pl-2 pr-1 py-1">
+                {/* TON баланс */}
+                <div className="flex items-center space-x-1">
+                  <div className="h-4 w-4 rounded-full bg-gradient-to-r from-blue-500 to-blue-600 flex items-center justify-center">
+                    <Coins className="h-2.5 w-2.5 text-white" />
+                  </div>
+                  <span className="text-xs font-medium">{balances.ton}</span>
                 </div>
-                <span className="text-xs font-medium">{balances.ton}</span>
-              </div>
 
-              {/* Разделитель */}
-              <div className="h-3 w-px bg-white/20"></div>
+                {/* Разделитель */}
+                <div className="h-3 w-px bg-white/20"></div>
 
-              {/* STARS баланс */}
-              <div className="flex items-center space-x-1">
-                <div className="h-4 w-4 rounded-full bg-gradient-to-r from-yellow-500 to-yellow-600 flex items-center justify-center">
-                  <Star className="h-2.5 w-2.5 text-white" />
+                {/* STARS баланс */}
+                <div className="flex items-center space-x-1">
+                  <div className="h-4 w-4 rounded-full bg-gradient-to-r from-yellow-500 to-yellow-600 flex items-center justify-center">
+                    <Star className="h-2.5 w-2.5 text-white" />
+                  </div>
+                  <span className="text-xs font-medium">{balances.stars}</span>
                 </div>
-                <span className="text-xs font-medium">{balances.stars}</span>
-              </div>
 
-              {/* Кнопка пополнения */}
-              <Button
-                size="sm"
-                className="h-6 w-6 rounded-full bg-gradient-to-r from-green-400 to-emerald-500 hover:from-green-500 hover:to-emerald-600 text-white border-none shadow-sm p-0 ml-1"
-              >
-                <Plus className="h-3 w-3" />
-              </Button>
-            </div>
+                {/* Кнопка пополнения */}
+                <Button
+                  size="sm"
+                  className="h-6 w-6 rounded-full bg-gradient-to-r from-green-400 to-emerald-500 hover:from-green-500 hover:to-emerald-600 text-white border-none shadow-sm p-0 ml-1"
+                >
+                  <Plus className="h-3 w-3" />
+                </Button>
+              </div>
+            )}
           </div>
         </div>
       </div>
