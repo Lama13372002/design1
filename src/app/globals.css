@@ -537,20 +537,12 @@ body {
   z-index: 50;
 }
 
-/* Bottom navigation with safe area */
-.bottom-nav-safe {
-  padding-bottom: 0;
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: 50;
-}
+/* Bottom navigation styling removed to prevent system buttons interference */
 
 /* Main content with proper spacing for fullscreen */
 .main-content-safe {
   padding-top: calc(1.5rem + var(--system-safe-top)); /* Header height + safe area */
-  padding-bottom: calc(1.5rem + var(--system-safe-bottom)); /* Bottom nav height + safe area */
+  padding-bottom: calc(4rem + var(--system-safe-bottom)); /* Bottom nav height + safe area + extra space */
   padding-left: var(--tg-safe-area-inset-left);
   padding-right: var(--tg-safe-area-inset-right);
   height: 100vh;
