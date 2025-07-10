@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import {
@@ -179,6 +180,23 @@ export const CreateBetPage = ({ onBack, onInputFocusChange }: CreateBetPageProps
       setComment(value);
     }
   };
+
+  // Автоматическое изменение высоты textarea
+  useEffect(() => {
+    const textarea = inputRef.current;
+    if (textarea) {
+      // Сбрасываем высоту до минимальной
+      textarea.style.height = '40px';
+
+      // Вычисляем нужную высоту (максимум 80px = ~2-3 строки)
+      const scrollHeight = textarea.scrollHeight;
+      const maxHeight = 80;
+      const newHeight = Math.min(scrollHeight, maxHeight);
+
+      textarea.style.height = newHeight + 'px';
+      textarea.style.overflowY = scrollHeight > maxHeight ? 'auto' : 'hidden';
+    }
+  }, [amount]);
 
   // ПРОСТЫЕ обработчики фокуса
   const handleInputFocus = () => {
@@ -407,12 +425,21 @@ export const CreateBetPage = ({ onBack, onInputFocusChange }: CreateBetPageProps
           </CardHeader>
           <CardContent className="space-y-3">
             <div className="relative">
-              <Input
-                type="number"
+              <Textarea
+                ref={inputRef}
                 placeholder={`Минимум ${currentCurrency.min} ${selectedCurrency}`}
                 value={amount}
                 onChange={(e) => handleSetAmount(e.target.value)}
-                className={`text-lg rounded-xl bg-white/5 backdrop-blur-sm border border-white/10 focus:border-blue-400 focus:ring-1 focus:ring-blue-400 ${!isValidAmount && amount ? "border-red-500 focus:border-red-500 focus:ring-red-500" : ""}`}
+                onFocus={handleInputFocus}
+                onBlur={handleInputBlur}
+                className={`text-base rounded-xl bg-white/5 backdrop-blur-sm border border-white/10 focus:border-blue-400 focus:ring-1 focus:ring-blue-400 resize-none overflow-hidden ${!isValidAmount && amount ? "border-red-500 focus:border-red-500 focus:ring-red-500" : ""}`}
+                style={{
+                  minHeight: '40px',
+                  height: '40px',
+                  paddingTop: '10px',
+                  lineHeight: '20px'
+                }}
+                maxLength={10}
               />
               <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
                 <Badge variant="secondary" className="bg-gradient-to-r from-blue-400 to-purple-500 text-white border-none">
