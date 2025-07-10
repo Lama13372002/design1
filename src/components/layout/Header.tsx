@@ -169,13 +169,12 @@ const BalanceInfo = () => {
           </div>
         </div>
 
-        {/* Кнопка пополнения */}
+        {/* Кнопка пополнения - вариант с текстом "Пополнить" */}
         <Button
           size="sm"
           className="h-6 ml-auto rounded-lg bg-gradient-to-r from-green-400 to-emerald-500 hover:from-green-500 hover:to-emerald-600 text-white border-none shadow-sm px-2"
         >
-          <Plus className="h-3 w-3 mr-0.5" />
-          <span className="text-xs font-medium whitespace-nowrap">+</span>
+          <span className="text-xs font-medium whitespace-nowrap">Пополнить</span>
         </Button>
       </div>
     </motion.div>
