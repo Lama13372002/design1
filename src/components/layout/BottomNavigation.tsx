@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import type React from "react";
 import type { PageType } from "@/app/page";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -33,12 +33,12 @@ const navItems = [
 export const BottomNavigation = ({ currentPage, onPageChange, isFullscreen = false }: BottomNavigationProps) => {
   return (
     <div
-      className={`fixed bottom-0 left-0 right-0 z-50 px-3 pb-3 ${isFullscreen ? 'bottom-nav-safe pb-[calc(0.75rem+var(--system-safe-bottom))]' : 'pb-3'}`}
+      className={`fixed bottom-0 left-0 right-0 z-50 ${isFullscreen ? 'bottom-nav-safe' : ''}`}
     >
-      {/* Стильное овальное меню */}
+      {/* Прямоугольное меню на всю ширину */}
       <div className="relative">
-        <div className="absolute inset-0 rounded-full blur-md bg-background/50 backdrop-blur-md"></div>
-        <nav className="glass relative rounded-full border border-white/20 shadow-xl backdrop-blur-md flex items-center justify-between px-4 py-3">
+        <div className="absolute inset-0 bg-background/50 backdrop-blur-md"></div>
+        <nav className="glass relative border-t border-white/20 shadow-xl backdrop-blur-md flex items-center justify-between px-4 py-4">
           <div className="flex justify-between w-full items-center">
             {/* Все кнопки в одной линии */}
             <div className="flex justify-between w-full space-x-1 items-center">
@@ -65,7 +65,7 @@ const renderNavItem = (
   return (
     <motion.div
       key={item.id}
-      whileTap={{ scale: 0.92 }}
+      whileTap={{ scale: 0.85 }}
       className="relative flex flex-col items-center"
     >
       <Button
@@ -73,12 +73,12 @@ const renderNavItem = (
         size="sm"
         onClick={() => onPageChange(item.id as PageType)}
         className={`
-          flex flex-col items-center justify-center h-12 w-12 p-0 rounded-full
+          flex flex-col items-center justify-center h-14 w-14 p-0 rounded-full transition-all duration-200
           ${isActive
             ? isCreateButton
-              ? "bg-gradient-to-r from-purple-500 to-blue-600 text-white shadow-md"
-              : "bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-md"
-            : "bg-transparent text-muted-foreground hover:text-foreground"}
+              ? "bg-gradient-to-r from-purple-500 to-blue-600 text-white shadow-lg scale-110"
+              : "bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-lg scale-110"
+            : "bg-transparent text-muted-foreground hover:text-foreground hover:bg-white/10"}
         `}
       >
         <item.icon className={`h-5 w-5 ${isActive ? "text-white" : ""} mb-0.5`} />
