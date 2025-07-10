@@ -468,7 +468,7 @@ input:focus-visible {
   --tg-safe-area-inset-right: env(safe-area-inset-right, 0px);
 
   /* Additional padding for system elements */
-  --system-safe-top: max(var(--tg-safe-area-inset-top), 60px);
+  --system-safe-top: max(var(--tg-safe-area-inset-top), 20px);
   --system-safe-bottom: max(var(--tg-safe-area-inset-bottom), 20px);
 }
 
@@ -549,8 +549,8 @@ body {
 
 /* Main content with proper spacing for fullscreen */
 .main-content-safe {
-  padding-top: calc(4rem + var(--system-safe-top)); /* Header height + safe area */
-  padding-bottom: calc(5rem + var(--system-safe-bottom)); /* Bottom nav height + safe area */
+  padding-top: calc(2.5rem + var(--system-safe-top)); /* Header height + safe area */
+  padding-bottom: calc(4rem + var(--system-safe-bottom)); /* Bottom nav height + safe area */
   padding-left: var(--tg-safe-area-inset-left);
   padding-right: var(--tg-safe-area-inset-right);
   height: 100vh;
