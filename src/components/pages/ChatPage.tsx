@@ -349,7 +349,7 @@ export const ChatPage = ({ onInputFocusChange }: ChatPageProps) => {
           </Button>
         </div>
 
-        <div className="flex items-center justify-between mt-2 pb-14 text-xs text-foreground/60">
+        <div className="flex items-center justify-between mt-2 pb-24 text-xs text-foreground/60">
           <div className="flex items-center space-x-2">
             <Shield className="h-3 w-3 text-blue-400" />
             <span>Модерация включена</span>
