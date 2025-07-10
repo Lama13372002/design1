@@ -219,14 +219,14 @@ export const ChatPage = ({ onInputFocusChange }: ChatPageProps) => {
     const textarea = inputRef.current;
     if (textarea) {
       // Сбрасываем высоту до минимальной
-      textarea.style.height = '48px';
+      textarea.style.height = '36px';
 
-      // Вычисляем нужную высоту (максимум 120px = ~4 строки)
+      // Вычисляем нужную высоту (максимум 100px = ~3 строки)
       const scrollHeight = textarea.scrollHeight;
-      const maxHeight = 120;
+      const maxHeight = 100;
       const newHeight = Math.min(scrollHeight, maxHeight);
 
-      textarea.style.height = newHeight + 'px';
+      textarea.style.height = `${newHeight}px`;
       textarea.style.overflowY = scrollHeight > maxHeight ? 'auto' : 'hidden';
     }
   }, [newMessage]);
@@ -310,7 +310,7 @@ export const ChatPage = ({ onInputFocusChange }: ChatPageProps) => {
 
       {/* Message Input - фиксированный внизу */}
       <div className="p-4 backdrop-blur-md bg-background/50 border-t border-white/10">
-        <div className="flex items-end space-x-2 mb-4">
+        <div className="flex items-center space-x-2 mb-4">
           <div className="flex-1 relative">
             <Textarea
               ref={inputRef}
@@ -325,27 +325,27 @@ export const ChatPage = ({ onInputFocusChange }: ChatPageProps) => {
               }}
               onFocus={handleInputFocus}
               onBlur={handleInputBlur}
-              className="pl-10 pr-12 rounded-2xl bg-white/5 backdrop-blur-sm border-white/10 focus:border-blue-400 focus:ring-1 focus:ring-blue-400 resize-none overflow-hidden"
+              className="px-4 py-2 rounded-2xl bg-white/5 backdrop-blur-sm border-white/10 focus:border-blue-400 focus:ring-1 focus:ring-blue-400 resize-none overflow-hidden flex items-center"
               style={{
-                minHeight: '48px',
-                height: '48px'
+                minHeight: '36px',
+                height: '36px',
+                lineHeight: '1.4',
+                display: 'flex',
+                alignItems: 'center'
               }}
               maxLength={500}
               rows={1}
             />
-            <div className="absolute left-3 bottom-3">
-              <Smile className="h-5 w-5 text-foreground/50 hover:text-foreground/80 cursor-pointer" onClick={handleOpenEmoji} />
-            </div>
-            <div className="absolute right-3 bottom-3 flex items-center space-x-2">
-              <Paperclip className="h-5 w-5 text-foreground/50 hover:text-foreground/80 cursor-pointer" onClick={handleAttachFile} />
+            <div className="absolute right-3 top-1/2 transform -translate-y-1/2 flex items-center space-x-2">
+              <Paperclip className="h-4 w-4 text-foreground/50 hover:text-foreground/80 cursor-pointer" onClick={handleAttachFile} />
             </div>
           </div>
           <Button
             onClick={handleSendMessage}
             disabled={!newMessage.trim()}
-            className="rounded-full h-12 w-12 p-0 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 disabled:opacity-50 shadow-md"
+            className="rounded-full h-9 w-9 p-0 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 disabled:opacity-50 shadow-md"
           >
-            <Send className="h-5 w-5" />
+            <Send className="h-4 w-4" />
           </Button>
         </div>
 
