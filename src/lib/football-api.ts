@@ -9,7 +9,7 @@ class FootballApiClient {
     this.apiKey = process.env.FOOTBALL_API_KEY || '';
   }
 
-  private async request<T>(endpoint: string, params: Record<string, any> = {}): Promise<FootballApiResponse<T>> {
+  private async request<T>(endpoint: string, params: Record<string, string | number | boolean> = {}): Promise<FootballApiResponse<T>> {
     const url = new URL(endpoint, this.baseUrl);
 
     // Добавляем параметры к URL
