@@ -17,7 +17,7 @@ class FootballService {
     }
   }
 
-  private async setCachedData(key: string, data: any, expirationMinutes: number = 60): Promise<void> {
+  private async setCachedData(key: string, data: unknown, expirationMinutes: number = 60): Promise<void> {
     try {
       const expiresAt = new Date(Date.now() + expirationMinutes * 60 * 1000);
       await pool.query(
