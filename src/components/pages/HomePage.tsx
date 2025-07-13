@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,53 +14,22 @@ import {
   Play,
   Pause,
   MoreHorizontal,
-  Trophy
+  Trophy,
+  RefreshCw
 } from "lucide-react";
 import { motion } from "framer-motion";
-
-interface MatchEvent {
-  id: string;
-  homeTeam: string;
-  awayTeam: string;
-  league: string;
-  startTime: string;
-  status: "upcoming" | "live" | "halftime" | "finished";
-  score?: { home: number; away: number };
-  minute?: number;
-}
+import { MatchEvent, League } from "@/types/football";
+import Image from "next/image";
 
 interface HomePageProps {
   onPageChange?: (page: "home" | "create-bet" | "open-bets" | "chat" | "my-bets" | "menu") => void;
 }
 
-const mockEvents: MatchEvent[] = [
-  {
-    id: "1",
-    homeTeam: "Реал Мадрид",
-    awayTeam: "Барселона",
-    league: "Ла Лига",
-    startTime: "19:00",
-    status: "upcoming"
-  },
-  {
-    id: "2",
-    homeTeam: "Манчестер Сити",
-    awayTeam: "Ливерпуль",
-    league: "АПЛ",
-    startTime: "17:30",
-    status: "live",
-    score: { home: 1, away: 0 },
-    minute: 34
-  },
-  {
-    id: "3",
-    homeTeam: "ПСЖ",
-    awayTeam: "Марсель",
-    league: "Лига 1",
-    startTime: "21:45",
-    status: "upcoming"
-  }
-];
+interface HomePageData {
+  liveMatches: MatchEvent[];
+  todayMatches: MatchEvent[];
+  popularLeagues: League[];
+}
 
 const getStatusBadge = (status: string, minute?: number) => {
   switch (status) {
@@ -93,10 +62,49 @@ const getStatusBadge = (status: string, minute?: number) => {
 export const HomePage = ({ onPageChange }: HomePageProps) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedLeague, setSelectedLeague] = useState<string>("all");
+  const [data, setData] = useState<HomePageData>({
+    liveMatches: [],
+    todayMatches: [],
+    popularLeagues: []
+  });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const leagues = ["all", "Ла Лига", "АПЛ", "Лига 1", "Бундеслига"];
+  // Получение данных с сервера
+  useEffect(() => {
+    fetchHomeData();
 
-  const filteredEvents = mockEvents.filter(event => {
+    // Обновляем данные каждые 30 секунд для live матчей
+    const interval = setInterval(fetchHomeData, 30000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const fetchHomeData = async () => {
+    try {
+      setError(null);
+      const response = await fetch('/api/football/home');
+      const result = await response.json();
+
+      if (result.success) {
+        setData(result.data);
+      } else {
+        setError(result.error || 'Ошибка загрузки данных');
+      }
+    } catch (err) {
+      console.error('Error fetching data:', err);
+      setError('Ошибка подключения к серверу');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Объединяем все матчи для отображения
+  const allMatches = [...data.liveMatches, ...data.todayMatches];
+
+  // Получаем уникальные лиги для фильтрации
+  const leagues = ["all", ...Array.from(new Set(allMatches.map(match => match.league)))];
+
+  const filteredEvents = allMatches.filter(event => {
     const matchesSearch = searchTerm === "" ||
       event.homeTeam.toLowerCase().includes(searchTerm.toLowerCase()) ||
       event.awayTeam.toLowerCase().includes(searchTerm.toLowerCase());
@@ -118,7 +126,7 @@ export const HomePage = ({ onPageChange }: HomePageProps) => {
   const handleCreateBet = (eventId: string) => {
     if (onPageChange) {
       // Сохраняем выбранное событие в localStorage для использования на странице создания спора
-      const selectedEvent = mockEvents.find(event => event.id === eventId);
+      const selectedEvent = allMatches.find(event => event.id === eventId);
       if (selectedEvent) {
         localStorage.setItem('selectedEvent', JSON.stringify(selectedEvent));
       }
@@ -127,11 +135,56 @@ export const HomePage = ({ onPageChange }: HomePageProps) => {
   };
 
   const handleViewLiveEvents = () => {
-    alert("Функция просмотра всех live-событий будет доступна в следующей версии");
+    // Показываем только live матчи
+    setSelectedLeague("all");
+    setSearchTerm("");
   };
+
+  const handleRefresh = () => {
+    setLoading(true);
+    fetchHomeData();
+  };
+
+  if (loading && allMatches.length === 0) {
+    return (
+      <div className="p-4 space-y-4 pb-24">
+        <div className="flex items-center justify-center min-h-[400px]">
+          <div className="text-center space-y-3">
+            <RefreshCw className="h-8 w-8 animate-spin mx-auto text-primary" />
+            <p className="text-muted-foreground">Загрузка футбольных данных...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="p-4 space-y-4 pb-24">
+      {/* Header with refresh button */}
+      <div className="flex items-center justify-between">
+        <h1 className="text-xl font-bold">Футбольные матчи</h1>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={handleRefresh}
+          disabled={loading}
+          className="text-muted-foreground"
+        >
+          <RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
+        </Button>
+      </div>
+
+      {error && (
+        <Card className="border-red-200 bg-red-50">
+          <CardContent className="p-4">
+            <p className="text-red-600 text-sm">{error}</p>
+            <Button variant="outline" size="sm" onClick={handleRefresh} className="mt-2">
+              Попробовать снова
+            </Button>
+          </CardContent>
+        </Card>
+      )}
+
       {/* Search bar with enhanced styling */}
       <div className="space-y-3">
         <div className="relative">
@@ -176,7 +229,7 @@ export const HomePage = ({ onPageChange }: HomePageProps) => {
               <div className="flex items-center space-x-2">
                 <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
                 <span className="font-semibold text-red-500 dark:text-red-400">
-                  2 матча идут сейчас
+                  {data.liveMatches.length} матчей идут сейчас
                 </span>
               </div>
               <Button
@@ -225,10 +278,29 @@ export const HomePage = ({ onPageChange }: HomePageProps) => {
                   <div className="space-y-4">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-3">
-                        <div className="w-8 h-8 rounded-full bg-gradient-cosmic flex items-center justify-center text-white font-bold">
-                          {event.homeTeam.charAt(0)}
-                        </div>
-                        <span className="font-semibold">{event.homeTeam}</span>
+                        {event.homeTeamLogo ? (
+                          <div className="w-8 h-8 relative">
+                            <Image
+                              src={event.homeTeamLogo}
+                              alt={event.homeTeam}
+                              fill
+                              className="object-contain rounded-full"
+                              onError={(e) => {
+                                const target = e.target as HTMLImageElement;
+                                target.style.display = 'none';
+                                target.nextElementSibling?.classList.remove('hidden');
+                              }}
+                            />
+                            <div className="w-8 h-8 rounded-full bg-gradient-cosmic flex items-center justify-center text-white font-bold text-xs hidden">
+                              {event.homeTeam.charAt(0)}
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="w-8 h-8 rounded-full bg-gradient-cosmic flex items-center justify-center text-white font-bold text-xs">
+                            {event.homeTeam.charAt(0)}
+                          </div>
+                        )}
+                        <span className="font-semibold text-sm">{event.homeTeam}</span>
                       </div>
                       {event.score && (
                         <span className="text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 text-transparent bg-clip-text">
@@ -238,10 +310,29 @@ export const HomePage = ({ onPageChange }: HomePageProps) => {
                     </div>
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-3">
-                        <div className="w-8 h-8 rounded-full bg-gradient-fire flex items-center justify-center text-white font-bold">
-                          {event.awayTeam.charAt(0)}
-                        </div>
-                        <span className="font-semibold">{event.awayTeam}</span>
+                        {event.awayTeamLogo ? (
+                          <div className="w-8 h-8 relative">
+                            <Image
+                              src={event.awayTeamLogo}
+                              alt={event.awayTeam}
+                              fill
+                              className="object-contain rounded-full"
+                              onError={(e) => {
+                                const target = e.target as HTMLImageElement;
+                                target.style.display = 'none';
+                                target.nextElementSibling?.classList.remove('hidden');
+                              }}
+                            />
+                            <div className="w-8 h-8 rounded-full bg-gradient-fire flex items-center justify-center text-white font-bold text-xs hidden">
+                              {event.awayTeam.charAt(0)}
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="w-8 h-8 rounded-full bg-gradient-fire flex items-center justify-center text-white font-bold text-xs">
+                            {event.awayTeam.charAt(0)}
+                          </div>
+                        )}
+                        <span className="font-semibold text-sm">{event.awayTeam}</span>
                       </div>
                       {event.score && (
                         <span className="text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 text-transparent bg-clip-text">
