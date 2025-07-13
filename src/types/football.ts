@@ -61,8 +61,8 @@ export interface Fixture {
 
 export interface FootballApiResponse<T> {
   get: string;
-  parameters: Record<string, any>;
-  errors: any[];
+  parameters: Record<string, string | number | boolean>;
+  errors: string[];
   results: number;
   paging: {
     current: number;
