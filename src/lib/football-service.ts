@@ -5,7 +5,9 @@ import { Fixture, League, Team, MatchEvent } from '@/types/football';
 class FootballService {
   // Кэширование данных
   private async getCachedData<T>(key: string): Promise<T | null> {
-    try {
+    // Временно отключаем кэширование для отладки
+    return null;
+    /* try {
       const result = await pool.query(
         'SELECT data FROM api_cache WHERE key = $1 AND expires_at > NOW()',
         [key]
@@ -14,11 +16,13 @@ class FootballService {
     } catch (error) {
       console.error('Cache read error:', error);
       return null;
-    }
+    } */
   }
 
   private async setCachedData(key: string, data: unknown, expirationMinutes: number = 60): Promise<void> {
-    try {
+    // Временно отключаем кэширование для отладки
+    return;
+    /* try {
       const expiresAt = new Date(Date.now() + expirationMinutes * 60 * 1000);
       await pool.query(
         `INSERT INTO api_cache (key, data, expires_at)
@@ -29,7 +33,7 @@ class FootballService {
       );
     } catch (error) {
       console.error('Cache write error:', error);
-    }
+    } */
   }
 
   // Получить популярные лиги
