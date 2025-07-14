@@ -85,9 +85,17 @@ export const HomePage = ({ onPageChange }: HomePageProps) => {
       const response = await fetch('/api/football/home');
       const result = await response.json();
 
+      console.log('API Response:', result);
+      console.log('Success:', result.success);
+      console.log('Data:', result.data);
+
       if (result.success) {
+        console.log('Live matches:', result.data?.liveMatches?.length || 0);
+        console.log('Today matches:', result.data?.todayMatches?.length || 0);
+        console.log('Popular leagues:', result.data?.popularLeagues?.length || 0);
         setData(result.data);
       } else {
+        console.error('API Error:', result.error);
         setError(result.error || 'Ошибка загрузки данных');
       }
     } catch (err) {
@@ -100,6 +108,10 @@ export const HomePage = ({ onPageChange }: HomePageProps) => {
 
   // Объединяем все матчи для отображения
   const allMatches = [...data.liveMatches, ...data.todayMatches];
+
+  console.log('All matches for display:', allMatches.length);
+  console.log('Live matches from state:', data.liveMatches.length);
+  console.log('Today matches from state:', data.todayMatches.length);
 
   // Получаем уникальные лиги для фильтрации
   const leagues = ["all", ...Array.from(new Set(allMatches.map(match => match.league)))];
