@@ -88,6 +88,9 @@ export const HomePage = ({ onPageChange }: HomePageProps) => {
       console.log('API Response:', result);
       console.log('Success:', result.success);
       console.log('Data:', result.data);
+      console.log('Data.liveMatches:', result.data?.liveMatches);
+      console.log('Data.todayMatches:', result.data?.todayMatches);
+      console.log('Data.popularLeagues:', result.data?.popularLeagues);
 
       if (result.success) {
         console.log('Live matches:', result.data?.liveMatches?.length || 0);
