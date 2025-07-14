@@ -45,7 +45,6 @@ class FootballService {
       // Получаем популярные лиги из API
       console.log('Fetching leagues from Football API...');
       const response = await footballApi.getLeagues({});
-      });
 
       // Фильтруем самые популярные лиги
       const popularLeagueIds = [39, 140, 78, 61, 135, 94]; // Premier League, La Liga, Bundesliga, Ligue 1, Serie A, Champions League
