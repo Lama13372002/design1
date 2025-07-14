@@ -47,15 +47,21 @@ class FootballService {
 
     try {
       // Получаем популярные лиги из API
+      console.log('Fetching leagues from Football API...');
       const response = await footballApi.getLeagues({
         current: true
       });
+
+      console.log('Leagues API response:', response);
+      console.log('Leagues count:', response.response?.length || 0);
 
       // Фильтруем самые популярные лиги
       const popularLeagueIds = [39, 140, 78, 61, 135, 94]; // Premier League, La Liga, Bundesliga, Ligue 1, Serie A, Champions League
       const popularLeagues = response.response.filter(league =>
         popularLeagueIds.includes(league.id)
       );
+
+      console.log('Filtered popular leagues:', popularLeagues.length);
 
       await this.setCachedData(cacheKey, popularLeagues, 1440); // 24 часа
       return popularLeagues;
@@ -98,7 +104,11 @@ class FootballService {
     }
 
     try {
+      console.log('Fetching live fixtures from Football API...');
       const response = await footballApi.getLiveFixtures();
+
+      console.log('Live fixtures API response:', response);
+      console.log('Live fixtures count:', response.response?.length || 0);
 
       const liveMatches: MatchEvent[] = response.response.map(fixture => ({
         id: fixture.id.toString(),
@@ -142,7 +152,11 @@ class FootballService {
     }
 
     try {
+      console.log('Fetching today fixtures for date:', today);
       const response = await footballApi.getFixturesByDate(today);
+
+      console.log('Today fixtures API response:', response);
+      console.log('Today fixtures count:', response.response?.length || 0);
 
       const todayMatches: MatchEvent[] = response.response.map(fixture => ({
         id: fixture.id.toString(),
