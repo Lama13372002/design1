@@ -19,9 +19,6 @@ class FootballApiClient {
       }
     });
 
-    console.log('Football API request:', url.toString());
-    console.log('API Key length:', this.apiKey.length);
-
     const response = await fetch(url.toString(), {
       headers: {
         'x-rapidapi-host': 'v3.football.api-sports.io',
@@ -29,17 +26,11 @@ class FootballApiClient {
       },
     });
 
-    console.log('Football API response status:', response.status);
-
     if (!response.ok) {
-      const errorText = await response.text();
-      console.error('Football API error response:', errorText);
       throw new Error(`API request failed: ${response.status} ${response.statusText}`);
     }
 
-    const result = await response.json();
-    console.log('Football API JSON response:', result);
-    return result;
+    return response.json();
   }
 
   // Получить популярные лиги
