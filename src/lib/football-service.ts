@@ -5,9 +5,7 @@ import { Fixture, League, Team, MatchEvent } from '@/types/football';
 class FootballService {
   // Кэширование данных
   private async getCachedData<T>(key: string): Promise<T | null> {
-    // Временно отключаем кэширование для отладки
-    return null;
-    /* try {
+    try {
       const result = await pool.query(
         'SELECT data FROM api_cache WHERE key = $1 AND expires_at > NOW()',
         [key]
@@ -16,13 +14,11 @@ class FootballService {
     } catch (error) {
       console.error('Cache read error:', error);
       return null;
-    } */
+    }
   }
 
   private async setCachedData(key: string, data: unknown, expirationMinutes: number = 60): Promise<void> {
-    // Временно отключаем кэширование для отладки
-    return;
-    /* try {
+    try {
       const expiresAt = new Date(Date.now() + expirationMinutes * 60 * 1000);
       await pool.query(
         `INSERT INTO api_cache (key, data, expires_at)
@@ -33,7 +29,7 @@ class FootballService {
       );
     } catch (error) {
       console.error('Cache write error:', error);
-    } */
+    }
   }
 
   // Получить популярные лиги
@@ -48,20 +44,14 @@ class FootballService {
     try {
       // Получаем популярные лиги из API
       console.log('Fetching leagues from Football API...');
-      const response = await footballApi.getLeagues({
-        current: true
+      const response = await footballApi.getLeagues({});
       });
-
-      console.log('Leagues API response:', response);
-      console.log('Leagues count:', response.response?.length || 0);
 
       // Фильтруем самые популярные лиги
       const popularLeagueIds = [39, 140, 78, 61, 135, 94]; // Premier League, La Liga, Bundesliga, Ligue 1, Serie A, Champions League
       const popularLeagues = response.response.filter(league =>
         popularLeagueIds.includes(league.id)
       );
-
-      console.log('Filtered popular leagues:', popularLeagues.length);
 
       await this.setCachedData(cacheKey, popularLeagues, 1440); // 24 часа
       return popularLeagues;
@@ -104,11 +94,7 @@ class FootballService {
     }
 
     try {
-      console.log('Fetching live fixtures from Football API...');
       const response = await footballApi.getLiveFixtures();
-
-      console.log('Live fixtures API response:', response);
-      console.log('Live fixtures count:', response.response?.length || 0);
 
       const liveMatches: MatchEvent[] = response.response.map(fixture => ({
         id: fixture.id.toString(),
@@ -152,11 +138,7 @@ class FootballService {
     }
 
     try {
-      console.log('Fetching today fixtures for date:', today);
       const response = await footballApi.getFixturesByDate(today);
-
-      console.log('Today fixtures API response:', response);
-      console.log('Today fixtures count:', response.response?.length || 0);
 
       const todayMatches: MatchEvent[] = response.response.map(fixture => ({
         id: fixture.id.toString(),
